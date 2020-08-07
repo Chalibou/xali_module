@@ -9,14 +9,13 @@
   "author": "Chalibou",
   "license": "ISC",
   "dependencies": {
-    "bd": "file:db",
     "auth": "file:auth",
+    "db_mongo": "file:db_mongo",
+    "fs": "0.0.1-security",
+    "https": "^1.0.0",
     "logger": "file:logger",
     "router": "file:router",
     "templater": "file:templater",
-    "tools": "file:tools",
-    "dotenv": "^8.2.0",
-    "fs": "0.0.1-security",
-    "https": "^1.0.0"
+    "tools": "file:tools"
   }
 }
