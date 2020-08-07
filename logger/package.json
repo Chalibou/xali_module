@@ -1,0 +1,11 @@
+{
+  "name": "logger",
+  "version": "0.0.1",
+  "description": "Logger for Xali's products",
+  "main": "logger.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chalibou",
+  "license": "ISC"
+}
