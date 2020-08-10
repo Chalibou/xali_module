@@ -6,8 +6,8 @@
 
 const fs = require('fs');
 
-const logger = require('./logger');
-const templater = require('./templater/templater');
+const logger = require('logger.js');
+const templater = require('templater.js');
 
 this.freeGetRequests = [];
 this.freePostRequests = [];

@@ -5,7 +5,7 @@
  */
 
 const fs = require('fs');
-const logger = require("./../logger");
+const logger = require("logger.js");
 
 //Data verification
 this.templates={};

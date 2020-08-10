@@ -5,7 +5,7 @@
  */
 
 const mongoClient = require('mongodb').MongoClient;
-const logger = require("./../logger");
+const logger = require("logger.js");
 
 //Pure DB
 this.db;
