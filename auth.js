@@ -9,9 +9,9 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const fs = require('fs');
 
-const tools = require("./../tools");
-const db = require("./../db_mongo");
-const logger = require("./../logger");
+const tools = require("./tools");
+const db = require("./db_mongo/db_mongo");
+const logger = require("./logger");
 
 try{
     this.KEY_PUBLIC = fs.readFileSync(`${process.cwd()}/server_data/jwt/public.key`);
