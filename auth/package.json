@@ -12,8 +12,5 @@
   "author": "Chalibou",
   "license": "ISC",
   "dependencies": {
-    "jsonwebtoken": "^8.5.1",
-    "bcrypt": "^5.0.0",
-    "fs": "0.0.1-security"
   }
 }
