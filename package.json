@@ -4,9 +4,7 @@
   "description": "Xali's NodeJS service module",
   "main": "xali.js",
   "scripts": {
-    "postinstall": "mkdir .\\server_data\\https,.\\server_data\\jwt,.\\server_data\\lang,.\\server_data\\mail,.\\server_data\\post,.\\public && type nul > .\\server_data\\post\\post.js",
-    "install": "mkdir .\\server_data\\https,.\\server_data\\jwt,.\\server_data\\lang,.\\server_data\\mail,.\\server_data\\post,.\\public && type nul > .\\server_data\\post\\post.js",
-    "preinstall": "mkdir .\\server_data\\https,.\\server_data\\jwt,.\\server_data\\lang,.\\server_data\\mail,.\\server_data\\post,.\\public && type nul > .\\server_data\\post\\post.js"
+    "install": "mkdir .\\server_data\\https,.\\server_data\\jwt,.\\server_data\\lang,.\\server_data\\mail,.\\server_data\\post,.\\public && type nul > .\\server_data\\post\\post.js"
   },
   "author": "Chalibou",
   "license": "ISC",
