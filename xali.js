@@ -102,10 +102,18 @@ module.exports.run = ()=>{
         process.exit();
     }
 
-    const httpsOption = {
-        key: fs.readFileSync('./server_data/https/server.key'),
-        cert: fs.readFileSync('./server_data/https/server.cert')
+    let httpsOption;
+
+    try{
+        httpsOption = {
+            key: fs.readFileSync('./server_data/https/server.key'),
+            cert: fs.readFileSync('./server_data/https/server.cert')
+        }
+    }catch{
+        logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server_data/https/ should contain valids server.key and server.cert `);
+        process.exit();
     }
+   
 
     const app = async (req,res)=>{
         try{
