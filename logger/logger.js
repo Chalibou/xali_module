@@ -12,9 +12,11 @@ module.exports = {
     log:(origin,type,message)=>{
         console.log('\x1b[34m%s\x1b[0m',`[${origin}]@{${type}} -> ${message}`);
     },
-
-    error:(origin,type,message)=>{
+    alert:(origin,type,message)=>{
         console.log('\x1b[33m%s\x1b[0m',`[${origin}]@{${type}} -> ${message}`);
+    },
+    error:(origin,type,message)=>{
+        console.log('\x1b[31m%s\x1b[0m',`[${origin}]@{${type}} -> ${message}`);
     },
     good:(origin,type,message)=>{
         console.log('\x1b[32m%s\x1b[0m',`[${origin}]@{${type}} -> ${message}`);

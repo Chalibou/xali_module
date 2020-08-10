@@ -39,7 +39,7 @@ module.exports.checkAuth = (req)=>{
         if(!req.headers.cookie){
             user.id = "UKN";
             user.lang="en-EN";
-            reject(user);
+            resolve(user);
         }else{
             let cookie_array = req.headers.cookie.split('; ');
             for(let i=0;i<cookie_array.length;i++){
@@ -57,7 +57,7 @@ module.exports.checkAuth = (req)=>{
         if(!cookie.id||!cookie.token){
             user.id = "UKN";
             user.lang = cookie.lang;
-            reject(user);
+            resolve(user);
         }
         
         const checkOptions = {
@@ -77,18 +77,22 @@ module.exports.checkAuth = (req)=>{
         }
         
         //Check if user is allready registered and his token is valid
-        const isLocallyRegistered = authenticatedUsers[id].id == cookie.id ? true:false;
-        const validToken = authenticatedUsers[id].token == cookie.token ? true:false;
+        let isLocallyRegistered;
+        try{
+            isLocallyRegistered = authenticatedUsers[cookie.id].token == cookie.token;
+        }catch{
+            isLocallyRegistered = false;
+        }
 
         //If user is allready connected we check the token to limit one connexion per account
-        if(legit.val && isLocallyRegistered && validToken){
+        if(legit.val && isLocallyRegistered){
             user.id = cookie.id;
             user.lang=cookie.lang;
             resolve(user);
         }else{
             user.id = "UKN";
             user.lang=cookie.lang;
-            reject(user);
+            resolve(user);
         }
     })
 }
@@ -97,11 +101,8 @@ module.exports.checkAuth = (req)=>{
  * Register a validated user in the database
  * @param {User_register} user Validated user_register object
  */
-module.exports.register = (user)=>{
+module.exports.register = (user,default_data)=>{
     return new Promise((resolve,reject)=>{
-
-        //Get a random seed for email confirmation
-        const rnd_seed = tools.getRandomHexa(25);
 
         //Register pending user
         bcrypt.hash(user.pwd, saltRounds, function(err, hash) {
@@ -115,13 +116,7 @@ module.exports.register = (user)=>{
                 user_pwd:hash,
                 mail:user.mail,
                 query_date:Date.now(),
-                data:{
-                    isDemoActive:false,
-                    seed:rnd_seed,
-                    subs:[],
-                    shared:[],
-                    lastOpened:""
-                }
+                data:default_data
             }
             
             db.client.collection("credentials").insertOne(userData)
@@ -135,10 +130,52 @@ module.exports.register = (user)=>{
     });
 }
 
+
+module.exports.login = (db_user,req_user)=>{
+    return new Promise((resolve,reject)=>{
+        bcrypt.compare(req_user.pwd, db_user.user_pwd, function(err, res) {
+            if(err){
+                reject(logger.buildError(500,"compare_error","Internal error"));
+            }
+            if(res){
+                //Send back a cookie with user and a token
+                //Generate token
+                const payload = {val:true};
+                const logOptions = {
+                    issuer:  "xali",
+                    subject:  db_user.id,
+                    audience:  "xali.com.co",
+                    expiresIn:  "12h",
+                    algorithm:  "RS256"
+                };
+                const token = jwt.sign(payload, KEY_PRIVATE, logOptions);
+
+                //Add the user to the curently active local (nodeJS) database
+                authenticatedUsers[db_user.id] = {token:token};
+                logger.good("AUTH","Login",`User ${db_user.id}:${db_user.name} has been logged-in successfully`);
+                
+                resolve({id:db_user.id,token:token});
+            }else{
+                reject(logger.buildError(401,"wrong_key","Incorrect password"));
+            }
+        });
+    });
+}
+
+
 /**
  * Send a mail confirmation mail to a user
  * @param {User} user User object
  */
 module.exports.confirmMail = (user)=>{
     logger.log("AUTH","Mail confirmation",`Confirming mail : ${user.mail}`);
+}
+
+/**
+ * Logout a user by poping him from the authenticatedUsers object
+ * @param {String} id Id of the user
+ */
+module.exports.logout = (id)=>{
+    logger.good("AUTH","Logout",`User ${id} has been logged-out successfully`)
+    authenticatedUsers[id] = null;
 }

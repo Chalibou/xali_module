@@ -7,24 +7,75 @@
 const fs = require('fs');
 const logger = require("./../logger");
 
+//Data verification
+this.templates={};
+
+this.dataDefaultModel={};
+
 /**
  * Contains the text to be placed in HTML documents and the associated keys
  * @type {Object}
  */
 this.dictionary = {};
 
+
+/**
+ * Load a bacth of object templates for object structure matching
+ * @param {Array} array Array with data
+ */
+module.exports.loadDataStructures = (array)=>{
+    for (let i = 0; i < array.length; i++) {
+        const element = array[i];
+        this.templates[element[i,0]] = element[i,1];
+    }
+}
+
+/**
+ * Compare some data structure with predefined template
+ * @param {String} name 
+ * @param {Object} data 
+ */
+module.exports.checkDataStructure = (name,data)=>{
+    return new Promise((resolve,reject)=>{
+        const temp = this.templates[name];
+        if(!temp){
+            logger.error("DB","load template",`Template ${name} is not loaded`);
+            throw logger.buildError(501,"template_error",`Object type not referenced`);
+        } 
+        const dataKeys = Object.keys(data);
+        if(arrayEquals(temp.sort(),dataKeys.sort())){
+            resolve();
+        }else{
+            throw logger.buildError(400,"wrong_format",`Object ${JSON.stringify(data)} must only contain these keys : ${temp}`);
+        }
+    });
+}
+
+/**
+ * Check if two arrays are equals
+ * @param {Array} a Array A
+ * @param {Array} b Array B
+ */
+arrayEquals = (a, b)=>{
+    return Array.isArray(a) &&
+    Array.isArray(b) &&
+    a.length === b.length &&
+    a.every((val, index) => val === b[index]);
+}
+
+
 /**
  * Load a batch of languages in the current {@link module-templater} to be used in text translation
  * @param {Array} langArray Array of string containing the language we want to load
  */
-module.exports.load = (langArray)=>{
+module.exports.loadLanguages = (langArray)=>{
     for (let i = 0; i < langArray.length; i++) {
         const lang = langArray[i]; 
         this.dictionary[lang] = fs.promises.readFile(`${process.cwd()}/server_data/lang/${lang}.json`,'utf-8').then((data)=>{
             this.dictionary[lang] = JSON.parse(data);
         },
         (error)=>{
-            logger.error("templater","File reading",`${error}`);
+            logger.error("Templater","File reading",`${error}`);
         });
     }
 }
@@ -43,6 +94,30 @@ module.exports.translateData = (data,lang)=>{
             return dico.hasOwnProperty(key) ? dico[key] : "N.A";
         }
     )
+}
+
+/**
+ * Define a default data structure for application objects
+ * @param {String} name Name of the object
+ * @param {Object} object Object structure
+ */
+module.exports.loadDataDefaultModel = (object)=>{
+    for (const key in object) {
+        this.dataDefaultModel[key] = object[key];
+    }
+}
+
+/**
+ * Get the default data structure for application objects
+ * @param {String} name Name of the object
+ */
+module.exports.getDataDefaultModel = (name)=>{
+    if (this.dataDefaultModel.hasOwnProperty(name)) {
+        return this.dataDefaultModel[name];
+    }else{
+        logger.error("SETUP","DataDefault",`Requested Data Default model ${name} does not exists in dataDefaultModel : ${JSON.stringify(this.dataDefaultModel)}`);
+        return {};
+    }
 }
 
 /**

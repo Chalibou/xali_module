@@ -49,12 +49,12 @@ module.exports.checkIfFree = (user,req,res)=>{
     if(req.method === "GET"){
         const file = req.url;
         if(this.freeGetRequests.includes(file)){
-            this.manageGET(file,user,res);
+            this.manageGET(res,file,user);
         }else{
             // means AUTH has failed and request is not free  
             //If request is html type we send default toute 
             if(file=="/" || file.indexOf(".")==-1){
-                this.sendDefaultRoute(res);
+                this.sendDefaultRoute(res,user);
             }else{
                 //We send nothing
                 this.respond(res,"",504);
@@ -64,13 +64,16 @@ module.exports.checkIfFree = (user,req,res)=>{
         let body = '';
         req.on('data', chunk => {
             body += chunk.toString();
+        });   
+        req.on('end',()=>{
             const data = JSON.parse(body);
-            if (this.freePostRequests.includes(data.type)) {
-                this.managePOST(data,res);
+            if (this.freePostRequests.includes(data.type)){
+                this.managePOST(res,data);
             }else{
-                this.respond(res,"unauthorized",403)
+                logger.alert("ROUTE","POST",`User ${user.id} emmiting unauthaurized post request ${data.type}`);
+                this.respond(res,"Unauthorized POST request",403)
             }
-        });           
+        })        
     }
 }
 
@@ -84,15 +87,16 @@ module.exports.checkPermission = (user,req,res)=>{
     if(req.method === "GET"){
         //GET METHOD
         const file = req.url;
-        this.manageGET(file,user,res);
+        this.manageGET(res,file,user);
     }else{
         //POST METHOD
         let body = '';
-        request.on('data', chunk => {
+        req.on('data', chunk => {
             body += chunk.toString();
         });
-        const data = JSON.parse(body);
-        this.managePOST(data,res);
+        req.on('end',()=>{
+            this.managePOST(res,JSON.parse(body),user);
+        })
     }
 }
 
@@ -101,7 +105,7 @@ module.exports.checkPermission = (user,req,res)=>{
  * @param {String} getRequest Path of the request
  * @param {Object} res Passed response object
  */
-module.exports.manageGET = (getRequest,user,res)=>{
+module.exports.manageGET = (res,getRequest,user)=>{
     logger.log("ROUTER","GET",`Responding ${user.id} for URL ${getRequest}`);
     //Solve path for '/' == index.html and no extension == .html
     if (getRequest=="/") getRequest="/index.html";
@@ -145,29 +149,25 @@ module.exports.manageGET = (getRequest,user,res)=>{
 
 /**
  * Manage the Post request response, at  stage no more verifications are needed
- * @param {Object} postRequest 
- * @param {Object} res 
+ * @param {Object} postRequest Name of the POST request
+ * @param {Object} res HTTPS Response
+ * @param {Object} user Cookie user informations
  */
-module.exports.managePOST = (postRequest,res)=>{
+module.exports.managePOST = (res,postRequest,user)=>{
     logger.log("ROUTER","POST",`Responding POST for ${postRequest.type}`);
     //Extract the method to be used for  POST call and execute it
     const postMethod = this.postCallbacks[postRequest.type];
-    postMethod(res,postRequest.data);
+    postMethod(res,postRequest.data,user);
 }
 
 /**
  * Send the user back to the default route (Login for example)
  * @param {Object} res Passed response object
+ * @param {Object} user user data
  */
-module.exports.sendDefaultRoute = (res)=>{
-    fs.readFile(`${process.cwd()}/${this.getFolder}/${this.defaultRoute}`,(error,data)=>{
-        console.log("default route");
-        if(error){
-            this.respond(res,`${this.defaultRoute} not found`,500);
-        }else{
-            this.respond(res,data);
-        }
-    });
+module.exports.sendDefaultRoute = (res,user)=>{
+    const defaultRoute = `${this.defaultRoute}`;
+    this.manageGET(res,defaultRoute,user)
 }
 
 /**
