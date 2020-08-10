@@ -1,13 +1,12 @@
 const fs = require("fs");
 const https = require("https");
 
-const db = require("db_mongo.js");
-const auth = require("auth.js");
-const logger = require("logger.js");
-const router = require("router.js");
-const tools = require("tools.js");
-const templater = require("templater.js");
-
+const db = require("./local_modules/db_mongo.js");
+const auth = require("./local_modules/auth.js");
+const logger = require("./local_modules/logger.js");
+const router = require("./local_modules/router.js");
+const tools = require("./local_modules/tools.js");
+const templater = require("./local_modules/templater.js");
 
 
 module.exports.db = db;

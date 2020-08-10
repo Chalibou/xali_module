@@ -9,12 +9,6 @@
   "author": "Chalibou",
   "license": "ISC",
   "dependencies": {
-    "db_mongo": "file:db_mongo",
-    "auth": "file:auth",
-    "logger": "file:logger",
-    "router": "file:router",
-    "templater": "file:templater",
-    "tools": "file:tools",
     "jsonwebtoken": "^8.5.1",
     "bcrypt": "^5.0.0",
     "mongodb": "^3.6.0",
