@@ -8,7 +8,6 @@ const router = require("./local_modules/router.js");
 const tools = require("./local_modules/tools.js");
 const templater = require("./local_modules/templater.js");
 
-
 module.exports.db = db;
 module.exports.auth = auth;
 module.exports.logger = logger;
