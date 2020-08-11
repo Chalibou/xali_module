@@ -14,7 +14,7 @@ this.freePostRequests = [];
 this.errorPage = "The content you want has not been found";
 this.postCallbacks = [];
 this.defaultRoute = "";
-this.getFolder = "";
+this.getFolder = "client";
 
 
 /**

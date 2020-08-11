@@ -67,7 +67,6 @@ module.exports.setup = (setup)=>{
     
     //Setup the router for the application
     router.setup({
-        getFolder:setup.routes.getFolder,
         defaultRoute:setup.routes.defaultRoute,
         freeGetRequests:setup.routes.freeGetRequests
     })
