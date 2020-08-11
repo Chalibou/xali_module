@@ -71,7 +71,7 @@ arrayEquals = (a, b)=>{
 module.exports.loadLanguages = (langArray)=>{
     for (let i = 0; i < langArray.length; i++) {
         const lang = langArray[i]; 
-        this.dictionary[lang] = fs.promises.readFile(`${process.cwd()}/server_data/lang/${lang}.json`,'utf-8').then((data)=>{
+        this.dictionary[lang] = fs.promises.readFile(`${process.cwd()}/server/lang/${lang}.json`,'utf-8').then((data)=>{
             this.dictionary[lang] = JSON.parse(data);
         },
         (error)=>{

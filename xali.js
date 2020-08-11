@@ -73,7 +73,7 @@ module.exports.setup = (setup)=>{
     })
     
     //Load post methods
-    const post = require(process.cwd()+"/server_data/post/post.js");
+    const post = require(process.cwd()+"/server/post/post.js");
 
     //initialize the mandatory routes
     router.post("user_register",true,this.register);
@@ -107,11 +107,11 @@ module.exports.run = ()=>{
 
     try{
         httpsOption = {
-            key: fs.readFileSync('./server_data/https/server.key'),
-            cert: fs.readFileSync('./server_data/https/server.cert')
+            key: fs.readFileSync('./server/https/server.key'),
+            cert: fs.readFileSync('./server/https/server.cert')
         }
     }catch{
-        logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server_data/https/ should contain valids server.key and server.cert `);
+        logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server/https/ should contain valids server.key and server.cert `);
         process.exit();
     }
    

@@ -14,10 +14,10 @@ const db = require("./db_mongo.js");
 const logger = require("./logger.js");
 
 try{
-    this.KEY_PUBLIC = fs.readFileSync(`${process.cwd()}/server_data/jwt/public.key`);
-    this.KEY_PRIVATE = fs.readFileSync(`${process.cwd()}/server_data/jwt/private.key`);
+    this.KEY_PUBLIC = fs.readFileSync(`${process.cwd()}/server/jwt/public.key`);
+    this.KEY_PRIVATE = fs.readFileSync(`${process.cwd()}/server/jwt/private.key`);
 }catch{
-    logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server_data/jwt/ should contain valids (JWT)-RSA public and private key `)
+    logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server/jwt/ should contain valids (JWT)-RSA public and private key `)
     process.exit();
 }
 
