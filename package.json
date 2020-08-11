@@ -4,7 +4,7 @@
   "description": "Xali's NodeJS service module",
   "main": "xali.js",
   "scripts": {
-    "install": "/install/install.js"
+    "install": "node ./install/install.js"
   },
   "author": "Chalibou",
   "license": "ISC",
