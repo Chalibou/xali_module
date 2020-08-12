@@ -36,7 +36,7 @@ fs.copyFile('./templates/lang/es-ES.json', './../../server/lang/es-ES.json',{ fl
 fs.copyFile('./templates/https/server.cert', './../../server/https/server.cert',{ flag: 'wx' },callback);
 fs.copyFile('./templates/https/server.key', './../../server/https/server.key',{ flag: 'wx' },callback);
 
-console.log('\x1b[33m%s\x1b[0m',"[XALI]--ALL CERT AND KEYS PROVIDED IN THE TEMPLATES SHOULD BE REPLACED BY YOUR OWN VERSIONS");
+console.log('\x1b[33m%s\x1b[0m',"[XALI]--HTTPS CERT AND KEYS PROVIDED IN THE TEMPLATES SHOULD BE REPLACED BY YOUR OWN VERSIONS");
 
 //Generate RSA KEY PAIR for JWT
 crypto.generateKeyPair('rsa', {
@@ -48,8 +48,7 @@ crypto.generateKeyPair('rsa', {
     privateKeyEncoding: {
         type: 'pkcs8',
         format: 'pem',
-        cipher: 'aes-256-cbc',
-        passphrase: 'chalibou'
+        cipher: 'aes-256-cbc'
     }
     },
     (err, publicKey, privateKey) => {

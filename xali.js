@@ -109,9 +109,6 @@ module.exports.run = ()=>{
             key: fs.readFileSync(`${process.cwd()}\\server\\https\\server.key`,'utf-8'),
             cert: fs.readFileSync(`${process.cwd()}\\server\\https\\server.cert`,'utf-8')
         }
-        if(httpsOption.key=""){
-            logger.alert("SETUP","AUTH",`HTTPS .key and .cert files are not correctly set-up`);
-        }
     }catch{
         logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server/https/ should contain valids server.key and server.cert `);
         process.exit();
