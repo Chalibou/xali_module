@@ -14,8 +14,8 @@ const db = require("./db_mongo.js");
 const logger = require("./logger.js");
 
 try{
-    this.KEY_PUBLIC = fs.readFileSync(`./../../server/jwt/public.key`);
-    this.KEY_PRIVATE = fs.readFileSync(`./../../server/jwt/private.key`);
+    this.KEY_PUBLIC = fs.readFileSync(`${process.cwd()}\\server\\jwt\\public.key`,"utf-8");
+    this.KEY_PRIVATE = fs.readFileSync(`${process.cwd()}\\/server\\jwt\\private.key`,"utf-8");
 }catch{
     logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server/jwt/ should contain valids (JWT)-RSA public and private key `)
     process.exit();

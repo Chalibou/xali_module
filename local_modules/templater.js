@@ -146,5 +146,5 @@ module.exports.fillTemplate = (template,data,lang)=>{
 }
 
 getTemplate = (fileName,type,lang)=>{
-    return fs.promises.readFile(process.cwd()+"/resources/templates/"+ lang + "/" + fileName, {encoding: type});
+    return fs.promises.readFile(process.cwd()+"/server/templates/"+ lang + "/" + fileName, {encoding: type});
 }
