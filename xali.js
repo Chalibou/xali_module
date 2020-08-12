@@ -61,10 +61,7 @@ module.exports.setup = (setup)=>{
 
     //Setup the default data models
     templater.loadDataDefaultModel(setup.templates.dataDefault)
-    
-    //Setup the languages parameters
-    templater.loadLanguages(setup.templates.languages);
-    
+        
     //Setup the router for the application
     router.setup({
         defaultRoute:setup.routes.defaultRoute,

@@ -18,6 +18,12 @@ this.dataDefaultModel={};
  */
 this.dictionary = {};
 
+//Load mandatory data structure
+const mandatoryDataStructure = [
+    ["user_register",["name","mail","pwd"]],
+    ["user_login",["mail","pwd"]]
+]
+this.loadDataStructures(mandatoryDataStructure);
 
 /**
  * Load a bacth of object templates for object structure matching
@@ -66,18 +72,13 @@ arrayEquals = (a, b)=>{
 
 /**
  * Load a batch of languages in the current {@link module-templater} to be used in text translation
- * @param {Array} langArray Array of string containing the language we want to load
  */
-module.exports.loadLanguages = (langArray)=>{
-    for (let i = 0; i < langArray.length; i++) {
-        const lang = langArray[i]; 
-        this.dictionary[lang] = fs.promises.readFile(`${process.cwd()}/server/lang/${lang}.json`,'utf-8').then((data)=>{
-            this.dictionary[lang] = JSON.parse(data);
-        },
-        (error)=>{
-            logger.error("Templater","File reading",`${error}`);
-        });
-    }
+module.exports.loadLanguages = ()=>{
+    fs.readdirSync(`${process.cwd()}/server/lang/`).forEach(file => {
+        const lang = file.split(".")[0];
+        const data = fs.readFileSync(`${process.cwd()}/server/lang/${file}`,'utf-8')
+        this.dictionary[lang] = JSON.parse(data);
+    });
 }
 
 /**
