@@ -8,14 +8,14 @@ const fs = require('fs');
 const logger = require("./logger.js");
 
 //Data verification
-module.exports.templates={};
-module.exports.dataDefaultModel={};
+this.templates={};
+this.dataDefaultModel={};
 
 /**
  * Contains the text to be placed in HTML documents and the associated keys
  * @type {Object}
  */
-module.exports.dictionary = {};
+this.dictionary = {};
 
 /**
  * Load a bacth of object templates for object structure matching
@@ -117,5 +117,6 @@ fs.readdirSync(`${process.cwd()}/server/lang/`).forEach(file => {
     if(file.split(".")[0]=="json"){
         const data = fs.readFileSync(`${process.cwd()}/server/lang/${file}`,'utf-8')
         this.dictionary[lang] = JSON.parse(data);
+        logger.log("TEMPLATES","Load",`Language ${lang} loaded`);
     }
 });

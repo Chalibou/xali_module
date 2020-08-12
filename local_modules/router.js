@@ -12,9 +12,9 @@ const templater = require('./templater.js');
 this.freePostRequests = [];
 this.errorPage = "The content you want has not been found";
 this.postCallbacks = [];
-module.exports.freeGetRequests = [];
-module.exports.defaultRoute = "/login.html";
-module.exports.getFolder = "client";
+this.freeGetRequests = [];
+this.defaultRoute = "";
+this.getFolder = "";
 
 
 /**
@@ -194,7 +194,7 @@ module.exports.respond = (res,data,status=200,type='text/html')=>{
     res.end();
 }
 
-//Setup
+//Setup default behavior
 this.setup({
     freeGetRequests:[
         "/login.html",
@@ -203,5 +203,7 @@ this.setup({
         "/js/common.js",
         "/js/login.js",
         "/css/common.css"
-    ]
+    ],
+    defaultRoute:"/login.html",
+    getFolder:"client",
 })
