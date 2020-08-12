@@ -13,7 +13,7 @@ this.freeGetRequests = [];
 this.freePostRequests = [];
 this.errorPage = "The content you want has not been found";
 this.postCallbacks = [];
-this.defaultRoute = "";
+this.defaultRoute = "/login.html";
 this.getFolder = "client";
 
 
@@ -23,7 +23,15 @@ this.getFolder = "client";
  */
 module.exports.setup = (input)=>{
     Object.entries(input).forEach((elmt)=>{
-        this[elmt[0]] = elmt[1];
+        const name = elmt[0];
+        const item = elmt[1];
+        if(name=="freeGetRequests"){
+            for (const elmt of item) {
+                this[name].push(elmt);
+            }
+        }else{
+            this[name] = item;
+        }
     })
 }
 
@@ -186,3 +194,15 @@ module.exports.respond = (res,data,status=200,type='text/html')=>{
     res.write(data);
     res.end();
 }
+
+//Setup
+this.setup({
+    freeGetRequests:[
+        "/login.html",
+        "/images/logo.svg",
+        "/images/flaticon.png",
+        "/js/common.js",
+        "/js/login.js",
+        "/css/common.css"
+    ]
+})

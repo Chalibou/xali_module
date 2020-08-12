@@ -114,8 +114,10 @@ this.loadDataStructures(mandatoryDataStructure);
  * Load a batch of languages in the current {@link module-templater} to be used in text translation
  */
 fs.readdirSync(`${process.cwd()}/server/lang/`).forEach(file => {
-    console.log(file);
     const lang = file.split(".")[0];
+    if(file.split(".")[0]!="json"){
+        continue;
+    }
     const data = fs.readFileSync(`${process.cwd()}/server/lang/${file}`,'utf-8')
     this.dictionary[lang] = JSON.parse(data);
 });
