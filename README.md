@@ -12,8 +12,7 @@ Fast emplementation of Xali's type nodeJS service. Sort of a lighter and special
   "description": "Template for module installation",
   "main": "xali_app.js",
   "scripts": {
-    "del": "rimraf ./client && rimraf ./node_modules",
-    "del2": "rimraf ./server && del package-lock.json"
+    "run":"node xali_app.js",
   },
   "author": "Chalibou",
   "license": "ISC",

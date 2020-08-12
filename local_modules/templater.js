@@ -115,9 +115,8 @@ this.loadDataStructures(mandatoryDataStructure);
  */
 fs.readdirSync(`${process.cwd()}/server/lang/`).forEach(file => {
     const lang = file.split(".")[0];
-    if(file.split(".")[0]!="json"){
-        continue;
+    if(file.split(".")[0]=="json"){
+        const data = fs.readFileSync(`${process.cwd()}/server/lang/${file}`,'utf-8')
+        this.dictionary[lang] = JSON.parse(data);
     }
-    const data = fs.readFileSync(`${process.cwd()}/server/lang/${file}`,'utf-8')
-    this.dictionary[lang] = JSON.parse(data);
 });
