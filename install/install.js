@@ -20,8 +20,6 @@ const callback = (err)=>{
 fs.writeFile(`./../../server/post/post.js`, '//Write here your post methods',{ flag: 'wx' },callback);
 fs.writeFile(`./../../server/https/server.cert`, '',{ flag: 'wx' },callback);
 fs.writeFile(`./../../server/https/server.key`, '',{ flag: 'wx' },callback);
-fs.writeFile(`./../../server/lang/en-EN.json`, '//Write your parameters as "param1":"This is some text thazt will replace the HTML beacon #{param1}"',{ flag: 'wx' },callback);
-fs.writeFile(`./../../server/lang/es-ES.json`, '//Inscribe su parametros como "param1":"Eso es untexto que va remplazar la baliza HTML #{param1}"',{ flag: 'wx' },callback);
 fs.writeFile(`./../../server/mail/dkim_private.key`, '',{ flag: 'wx' },callback);
 fs.writeFile(`./../../server/mail/dkim_public.key`, '',{ flag: 'wx' },callback);
 
@@ -34,6 +32,9 @@ fs.copyFile('./templates/images/logo.svg', './../../client/images/logo.svg',{ fl
 fs.copyFile('./templates/images/flaticon.png', './../../client/images/flaticon.png',{ flag: 'wx' },callback);
 fs.copyFile('./templates/index.html', './../../client/index.html',{ flag: 'wx' },callback);
 fs.copyFile('./templates/login.html', './../../client/login.html',{ flag: 'wx' },callback);
+
+fs.copyFile('./templates/lang/en-EN.json', './../../server/lang/en-EN.json',{ flag: 'wx' },callback);
+fs.copyFile('./templates/lang/es-ES.json', './../../server/lang/es-ES.json',{ flag: 'wx' },callback);
 
 //Generate RSA KEY PAIR for JWT
 crypto.generateKeyPair('rsa', {
