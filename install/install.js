@@ -35,9 +35,36 @@ fs.copyFile('./templates/lang/en-EN.json', './../../server/lang/en-EN.json',{ fl
 fs.copyFile('./templates/lang/es-ES.json', './../../server/lang/es-ES.json',{ flag: 'wx' },callback);
 fs.copyFile('./templates/https/server.cert', './../../server/https/server.cert',{ flag: 'wx' },callback);
 fs.copyFile('./templates/https/server.key', './../../server/https/server.key',{ flag: 'wx' },callback);
-fs.copyFile('./templates/jwt/private.key', './../../server/jwt/private.key',{ flag: 'wx' },callback);
-fs.copyFile('./templates/jwt/public.key', './../../server/jwt/public.key',{ flag: 'wx' },callback);
+//fs.copyFile('./templates/jwt/private.key', './../../server/jwt/private.key',{ flag: 'wx' },callback);
+//fs.copyFile('./templates/jwt/public.key', './../../server/jwt/public.key',{ flag: 'wx' },callback);
+
 
 console.log('\x1b[33m%s\x1b[0m',"[XALI]--HTTPS CERT AND KEYS PROVIDED IN THE TEMPLATES SHOULD BE REPLACED BY YOUR OWN VERSIONS");
 
+
 console.log('[XALI]--SCRIPT END');
+
+//Generate RSA KEY PAIR for JWT
+crypto.generateKeyPair('rsa', {
+        modulusLength: 4096,
+        publicKeyEncoding: {
+        type: 'spki',
+        format: 'pem'
+    },
+    privateKeyEncoding: {
+        type: 'pkcs8',
+        format: 'pem',
+        cipher: 'aes-256-cbc'
+    }
+    },
+    (err, publicKey, privateKey) => {
+        if (err) {
+            return console.log(err);
+        }
+        // Handle errors and use the generated key pair.
+        fs.writeFile(`./../../server/jwt/private.key`,privateKey,{ flag: 'wx' },callback);
+        fs.writeFile(`./../../server/jwt/public.key`,publicKey,{ flag: 'wx' },callback);
+
+        
+    }
+);
