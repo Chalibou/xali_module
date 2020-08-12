@@ -8,15 +8,14 @@ const fs = require('fs');
 const logger = require("./logger.js");
 
 //Data verification
-this.templates={};
-
-this.dataDefaultModel={};
+module.exports.templates={};
+module.exports.dataDefaultModel={};
 
 /**
  * Contains the text to be placed in HTML documents and the associated keys
  * @type {Object}
  */
-this.dictionary = {};
+module.exports.dictionary = {};
 
 /**
  * Load a bacth of object templates for object structure matching

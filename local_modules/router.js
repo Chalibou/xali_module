@@ -9,12 +9,12 @@ const fs = require('fs');
 const logger = require('./logger.js');
 const templater = require('./templater.js');
 
-this.freeGetRequests = [];
 this.freePostRequests = [];
 this.errorPage = "The content you want has not been found";
 this.postCallbacks = [];
-this.defaultRoute = "/login.html";
-this.getFolder = "client";
+module.exports.freeGetRequests = [];
+module.exports.defaultRoute = "/login.html";
+module.exports.getFolder = "client";
 
 
 /**
@@ -174,8 +174,7 @@ module.exports.managePOST = (res,postRequest,user)=>{
  * @param {Object} user user data
  */
 module.exports.sendDefaultRoute = (res,user)=>{
-    const defaultRoute = `${this.defaultRoute}`;
-    this.manageGET(res,defaultRoute,user)
+    this.manageGET(res,`${this.defaultRoute}`,user)
 }
 
 /**
