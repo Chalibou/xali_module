@@ -13,9 +13,12 @@ const tools = require("./tools.js");
 const db = require("./db_mongo.js");
 const logger = require("./logger.js");
 
+let KEY_PUBLIC;
+let KEY_PRIVATE;
+
 try{
-    this.KEY_PUBLIC = fs.readFileSync(`${process.cwd()}\\server\\jwt\\public.key`,"utf-8");
-    this.KEY_PRIVATE = fs.readFileSync(`${process.cwd()}\\/server\\jwt\\private.key`,"utf-8");
+    KEY_PUBLIC = fs.readFileSync(`${process.cwd()}\\server\\jwt\\public.key`,"utf-8");
+    KEY_PRIVATE = fs.readFileSync(`${process.cwd()}\\server\\jwt\\private.key`,"utf-8");
 }catch{
     logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server/jwt/ should contain valids (JWT)-RSA public and private key `)
     process.exit();
@@ -77,7 +80,7 @@ module.exports.checkAuth = (req)=>{
         let legit;
 
         try{
-            legit = jwt.verify(cookie.token,this.KEY_PUBLIC,checkOptions);
+            legit = jwt.verify(cookie.token,KEY_PUBLIC,checkOptions);
         }catch{
             legit = {val:false};
         }
@@ -154,7 +157,7 @@ module.exports.login = (db_user,req_user)=>{
                     expiresIn:  "12h",
                     algorithm:  "RS256"
                 };
-                const token = jwt.sign(payload, this.KEY_PRIVATE, logOptions);
+                const token = jwt.sign(payload, KEY_PRIVATE, logOptions);
 
                 //Add the user to the curently active local (nodeJS) database
                 authenticatedUsers[db_user.id] = {token:token};
