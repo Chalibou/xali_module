@@ -104,6 +104,9 @@ module.exports.run = ()=>{
 
     let httpsOption;
 
+    console.log("PROCESS :",process.cwd());
+    console.log("DIRNAME :",__dirname);
+
     try{
         httpsOption = {
             key: fs.readFileSync('./../../server/https/server.key'),
