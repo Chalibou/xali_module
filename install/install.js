@@ -30,6 +30,7 @@ fs.copyFile('./templates/images/logo.svg', './../../client/images/logo.svg',{ fl
 fs.copyFile('./templates/images/flaticon.png', './../../client/images/flaticon.png',{ flag: 'wx' },callback);
 fs.copyFile('./templates/index.html', './../../client/index.html',{ flag: 'wx' },callback);
 fs.copyFile('./templates/login.html', './../../client/login.html',{ flag: 'wx' },callback);
+fs.copyFile('./templates/xali_app.js', './../../xali_app.js',{ flag: 'wx' },callback);
 
 fs.copyFile('./templates/lang/en-EN.json', './../../server/lang/en-EN.json',{ flag: 'wx' },callback);
 fs.copyFile('./templates/lang/es-ES.json', './../../server/lang/es-ES.json',{ flag: 'wx' },callback);
