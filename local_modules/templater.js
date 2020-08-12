@@ -18,13 +18,6 @@ this.dataDefaultModel={};
  */
 this.dictionary = {};
 
-//Load mandatory data structure
-const mandatoryDataStructure = [
-    ["user_register",["name","mail","pwd"]],
-    ["user_login",["mail","pwd"]]
-]
-this.loadDataStructures(mandatoryDataStructure);
-
 /**
  * Load a bacth of object templates for object structure matching
  * @param {Array} array Array with data
@@ -69,18 +62,6 @@ arrayEquals = (a, b)=>{
     a.every((val, index) => val === b[index]);
 }
 
-
-/**
- * Load a batch of languages in the current {@link module-templater} to be used in text translation
- */
-module.exports.loadLanguages = ()=>{
-    fs.readdirSync(`${process.cwd()}/server/lang/`).forEach(file => {
-        const lang = file.split(".")[0];
-        const data = fs.readFileSync(`${process.cwd()}/server/lang/${file}`,'utf-8')
-        this.dictionary[lang] = JSON.parse(data);
-    });
-}
-
 /**
  * Translate an text by replacing "#{key}" beacons with data from {@link module:templater.dictionary}
  * @param {String} file Path of the file to translate
@@ -121,31 +102,20 @@ module.exports.getDataDefaultModel = (name)=>{
     }
 }
 
-/**
- * Fill an html template 
- * @param {htmlContent} template Template used to pour some data
- * @param {Object} data Input data 
- * @param {String} lang Language configuration
- */
-module.exports.fillTemplate = (template,data,lang)=>{
-    return new Promise(function(resolve, reject){
-        getTemplate(template,"utf-8",lang).then(content=>{
-            if(content){
-                //Template is built as a html file with some ${var_data} to inject data
-                let result = content.replace(
-                    /{(\w*)}/g, // or /{(\w*)}/g for "{this} instead of %this%"
-                    function( m, key ){
-                        return data.hasOwnProperty( key ) ? data[ key ] : "N.A";
-                    }
-                )
-                resolve(result);
-            }else{
-                reject("Error");
-            }
-        });
-    });
-}
+//Setup the module
+const mandatoryDataStructure = [
+    ["user_register",["name","mail","pwd"]],
+    ["user_login",["mail","pwd"]]
+]
+//Load mandatory data structure
+this.loadDataStructures(mandatoryDataStructure);
 
-getTemplate = (fileName,type,lang)=>{
-    return fs.promises.readFile(process.cwd()+"/server/templates/"+ lang + "/" + fileName, {encoding: type});
-}
+/**
+ * Load a batch of languages in the current {@link module-templater} to be used in text translation
+ */
+fs.readdirSync(`${process.cwd()}/server/lang/`).forEach(file => {
+    console.log(file);
+    const lang = file.split(".")[0];
+    const data = fs.readFileSync(`${process.cwd()}/server/lang/${file}`,'utf-8')
+    this.dictionary[lang] = JSON.parse(data);
+});
