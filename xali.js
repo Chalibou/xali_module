@@ -106,8 +106,8 @@ module.exports.run = ()=>{
 
     try{
         httpsOption = {
-            key: fs.readFileSync('./server/https/server.key'),
-            cert: fs.readFileSync('./server/https/server.cert')
+            key: fs.readFileSync('./../../server/https/server.key'),
+            cert: fs.readFileSync('./../../server/https/server.cert')
         }
     }catch{
         logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server/https/ should contain valids server.key and server.cert `);
