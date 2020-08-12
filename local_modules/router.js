@@ -21,18 +21,14 @@ this.getFolder = "";
  * Setup the handler object
  * @param {Object} input Object containing the properties we want to change
  */
-module.exports.setup = (input)=>{
-    Object.entries(input).forEach((elmt)=>{
-        const name = elmt[0];
-        const item = elmt[1];
-        if(name=="freeGetRequests"){
-            for (const elmt of item) {
-                this[name].push(elmt);
-            }
-        }else{
-            this[name] = item;
+module.exports.setup = (target,input,method="")=>{
+    if(method=="push"){
+        for (const elmt of input) {
+            this[target].push(elmt);
         }
-    })
+    }else{
+        this[target] = input;
+    }
 }
 
 /**
@@ -195,8 +191,8 @@ module.exports.respond = (res,data,status=200,type='text/html')=>{
 }
 
 //Setup default behavior
-this.setup({
-    freeGetRequests:[
+this.setup("freeGetRequests",
+    [
         "/login.html",
         "/images/logo.svg",
         "/images/flaticon.png",
@@ -204,6 +200,6 @@ this.setup({
         "/js/login.js",
         "/css/common.css"
     ],
-    defaultRoute:"/login.html",
-    getFolder:"client",
-})
+    "push");
+this.setup("defaultRoute","/login.html");
+this.setup("getFolder","client");

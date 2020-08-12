@@ -63,10 +63,12 @@ module.exports.setup = (setup)=>{
     templater.loadDataDefaultModel(setup.templates.dataDefault)
         
     //Setup the router for the application
-    router.setup({
-        defaultRoute:setup.routes.defaultRoute,
-        freeGetRequests:setup.routes.freeGetRequests
-    })
+    if(setup.routes.defaultRoute){
+        router.setup("defaultRoute",setup.routes.defaultRoute);
+    }
+    if(setup.routes.freeGetRequests){
+        router.setup("freeGetRequests",setup.routes.freeGetRequests,"push")
+    }
     
     //Load post methods
     const post = require(process.cwd()+"/server/post/post.js");
