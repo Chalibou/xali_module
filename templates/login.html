@@ -9,16 +9,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="icon" type="images/png" href="images/flaticon.png">
     <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/login.css">
 </head>
 
 <body>
 
-    <div class="head_container">
+    <div class="nav_container">
         <nav>
-            <img class="i_logo" alt="Your product">
+            <div class="nav_title">
+                <img src="/images/logo.svg" alt="Logo" class="logo">
+                <h1>PRODUCT NAME</h1>
+            </div>
+            
             <ul>
                 <li>
                     <a href="http://google.fr">A link</a>
+                </li>
+                <li>
                     <button class="b_register">Register</button>
                 </li>
             </ul>
@@ -26,11 +33,10 @@
     </div>
 
     
-    <section class="home">
+    <section class="content">
         LOGIN
         <button id="registerButton">#{register}</button>
         <button id="loginButton">#{login}</button>
-        <img src="/images/logo.png">
         <button id="langES">#{langES}</button>
         <button id="langEN">#{langEN}</button>
         <button id="logoutButton">#{logout}</button>

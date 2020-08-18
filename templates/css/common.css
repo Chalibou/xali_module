@@ -6,7 +6,74 @@ Vert (29, 156, 57) #1D9C39
 Jaune(206, 156, 39) #CE9C27
 
 */
+:root{
+    --nav_bkg:#1d6fbb;
+    --nav_title_bkg:rgb(216, 216, 216);
+}
 
 html{
+    font-size: 62.5%;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
     font-family: 'Mulish', sans-serif;
+    font-weight: 300;
+    color: white;
+}
+h1{
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+h2{
+    font-size: 8rem;
+    font-weight: 400;
+}
+h3{
+    font-size: 3.5rem;
+}
+h4{
+    font-size: 2.5rem;
+}
+p{
+    font-size: 2rem;
+}
+
+.nav_container{
+    background:var(--nav_bkg);
+}
+nav{
+    width: 80%;
+    margin: auto;
+    min-height: 10vh;
+    padding: 1rem 0rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+nav ul{
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+}
+
+nav li{
+    margin: 0px 5px;
+}
+
+nav .nav_title{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color:var(--nav_title_bkg);
+    border-radius: 5px;
+    padding: 1px 10px;
+}
+nav .nav_title .logo{
+    margin-right: 1rem;
+    height: 3rem;
+    width: 3rem;
 }

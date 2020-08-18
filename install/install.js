@@ -18,6 +18,7 @@ const callback = (err)=>{
 }
 //Creating files
 fs.writeFile(`./../../server/post/post.js`, '//Write here your post methods',{ flag: 'wx' },callback);
+
 fs.writeFile(`./../../server/mail/dkim_private.key`, '',{ flag: 'wx' },callback);
 fs.writeFile(`./../../server/mail/dkim_public.key`, '',{ flag: 'wx' },callback);
 
