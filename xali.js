@@ -60,7 +60,7 @@ module.exports.setup = (setup)=>{
     templater.loadDataStructures(setup.templates.objectStructures);
 
     //Setup the default data models
-    templater.loadDataDefaultModel(setup.templates.dataDefault)
+    templater.loadObjectConstructors(setup.templates.objectConstructors)
         
     //Setup the router for the application
     if(setup.routes.defaultRoute){
@@ -160,7 +160,7 @@ this.register = async (res,req_user)=>{
             throw logger.buildError(409,'unaviable',`Mail ${req_user.mail} already in use`);
         }else{
             //Get the default data for the user
-            const default_user_data = templater.getDataDefaultModel("user_register");
+            const default_user_data = templater.getObjectConstructors("user")("default");
             //Register the user
             const registered_user = await auth.register(req_user,default_user_data);
             //Confirm mail
