@@ -155,7 +155,7 @@ this.register = async (res,req_user)=>{
         //Check if user has good template
         await templater.checkDataStructure("user_register",req_user);
         //Check if user does not exists already
-        const found_user = await db.client.collection("credentials").findOne({"mail":req_user.mail})
+        const found_user = await db.findOne("credentials",{"mail":req_user.mail});
         if(found_user){
             throw logger.buildError(409,'unaviable',`Mail ${req_user.mail} already in use`);
         }else{
@@ -180,7 +180,7 @@ this.login = async (res,req_user)=>{
         //Check if user has good template
         await templater.checkDataStructure("user_login",req_user);
         //Get the user referenced under the req_user.mail mail
-        const found_user = await db.client.collection("credentials").findOne({"mail":req_user.mail})
+        const found_user = await db.findOne("credentials",{"mail":req_user.mail});
         if(found_user){
             //Check authenticity 
             const auth_user = await auth.login(found_user,req_user);

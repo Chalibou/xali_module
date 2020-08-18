@@ -7,8 +7,6 @@
 const mongoClient = require('mongodb').MongoClient;
 const logger = require("./logger.js");
 
-let me = this;
-
 //Pure DB
 this.db;
 this.url="";
@@ -57,11 +55,16 @@ module.exports.reconnect = ()=>{
     });
 }
 
-
-module.exports.insertOne = async (collection,data)=>{
-    return new Promise ((resolve,reject)=>{
+/**
+ * Insert some data in the database
+ * @param {String} collection Name of the collection
+ * @param {Object} data Object to insert
+ * @returns {Promise} Void message
+ */
+module.exports.insertOne = (collection,data)=>{
+    return new Promise (async(resolve,reject)=>{
         try{
-            await client.collection(collection).insertOne(data)
+            await this.client.collection(collection).insertOne(data);
             resolve();
         }catch(error){
             throw error
@@ -69,9 +72,23 @@ module.exports.insertOne = async (collection,data)=>{
     })
 }
 
+/**
+ * Find a given object in the database
+ * @param {String} collection Name of the collection
+ * @param {Object} critera Critera for search
+ * @param {Object} projection Returned object projection
+ * @returns {Promise} Database object
+ */
+module.exports.findOne = (collection,critera,projection={_id: 0})=>{
+    return new Promise (async(resolve,reject)=>{
+        try{
+            resolve(await client.collection(collection).findOne(critera,projection));
+        }catch(error){
+            throw error
+        }
+    })
+}
 
-module.exports.compare = ()=>{}
-module.exports.findOne = ()=>{}
 module.exports.findSeveral = ()=>{}
 module.exports.deleteOne = ()=>{}
 module.exports.changeOne = ()=>{}
