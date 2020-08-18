@@ -46,28 +46,17 @@ const setup = {
             //["user_action",true,"action"],
         ],
         accreditation:{
-            UKN:{
-                get:[
-                    "/login.html",
-                    "/images/logo.svg",
-                    "/images/flaticon.png",
-                    "/js/common.js",
-                    "/js/login.js",
-                    "/css/common.css"
-                ],
-                post:[
-                    "register",
-                    "login"
-                ]
-            },  
-            standard:{
-                get:[
-                    "/index.html"
-                ],
-                post:[
-                    "logout"
-                ]
-            }
+            "/login.html":["UKN","standard"],
+            "/images/logo.svg":["UKN","standard"],
+            "/images/flaticon.png":["UKN","standard"],
+            "/js/common.js":["UKN","standard"],
+            "/js/login.js":["UKN","standard"],
+            "/css/common.css":["UKN","standard"],
+            "/css/login.css":["UKN","standard"],
+            "user_register":["UKN","standard"],
+            "user_login":["UKN","standard"],
+            "/index.html":["standard"],
+            "user_logout":["standard"]
         }
     }
 }

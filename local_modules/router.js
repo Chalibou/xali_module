@@ -51,10 +51,11 @@ module.exports.treat = (user,req,res)=>{
         //GET METHOD
         const file = req.url;
         //Check if user has allowance
-        if(this.accreditation[user.group].get.includes(file)){
+        if(this.accreditation[file].includes(user.group)){
             this.manageGET(res,file,user);
         }else{
-            throw logger.buildError(403,"low_accreditation",`Your credentials levels does not allow you to access this section`);
+            logger.alert("ROUTER","Treat GET",`User ${user.id} try to access ${file} without permision. Responding default route.`);
+            this.sendDefaultRoute(res,user);
         }
     }else{
         //POST METHOD
@@ -65,10 +66,12 @@ module.exports.treat = (user,req,res)=>{
         req.on('end',()=>{
             //Check if user has allowance
             const post = JSON.parse(body);
-            if(this.accreditation[user.group].post.includes(post.type)){
+            if(this.accreditation[post.type].includes(user.group)){
                 this.managePOST(res,post,user);
             }else{
-                throw logger.buildError(403,"low_accreditation",`Your credentials levels does not allow you to access this section`);
+                logger.alert("ROUTER","Treat POST",`User ${user.id} try to access ${post.type} without permision. Denying access.`);
+                const error = logger.buildError(403,"low_accreditation",`Your credentials levels does not allow you to access this section`);
+                this.respond(res,JSON.stringify(error),error.code);
             }
         })
     }
@@ -161,15 +164,5 @@ module.exports.respond = (res,data,status=200,type='text/html')=>{
 }
 
 //Setup default behavior
-this.setup("freeGetRequests",
-    [
-        "/login.html",
-        "/images/logo.svg",
-        "/images/flaticon.png",
-        "/js/common.js",
-        "/js/login.js",
-        "/css/common.css"
-    ],
-    "push");
 this.setup("defaultRoute","/login.html");
 this.setup("getFolder","client");

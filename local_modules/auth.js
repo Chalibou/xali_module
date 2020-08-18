@@ -99,6 +99,7 @@ module.exports.checkAuth = (req)=>{
         //If user is allready connected we check the token to limit one connexion per account
         if(legit.val && isLocallyRegistered){
             user.id = cookie.id;
+            user.group = authenticatedUsers[cookie.id].group;
             user.lang=cookie.lang;
             resolve(user);
         }else{

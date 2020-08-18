@@ -48,7 +48,7 @@ module.exports.reconnect = ()=>{
     logger.log("DB","Connect",`Reconnexion to DB`);
     mongoClient.connect(this.url,this.options).then(client=>{
         logger.good("DB","Connect",`Ready to listen`);
-        module.exports.client = client.db(process.env.DB_NAME);
+        this.client = client.db(process.env.DB_NAME);
     },
     (error)=>{
         logger.error("DB","Connect",error);
@@ -82,7 +82,7 @@ module.exports.insertOne = (collection,data)=>{
 module.exports.findOne = (collection,critera,projection={_id: 0})=>{
     return new Promise (async(resolve,reject)=>{
         try{
-            resolve(await client.collection(collection).findOne(critera,projection));
+            resolve(await this.client.collection(collection).findOne(critera,projection));
         }catch(error){
             throw error
         }
