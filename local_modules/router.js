@@ -50,12 +50,18 @@ module.exports.treat = (user,req,res)=>{
     if(req.method === "GET"){
         //GET METHOD
         const file = req.url;
+        //Check if file exists
+        if (!this.accreditation[file]) {
+            logger.alert("ROUTER","Treat GET",`User ${user.id} try to access unknown : ${file}. Responding default route.`);
+            this.manageGET(res,`${this.lostRoute}`,user)
+            return;
+        }
         //Check if user has allowance
         if(this.accreditation[file].includes(user.group)){
             this.manageGET(res,file,user);
         }else{
             logger.alert("ROUTER","Treat GET",`User ${user.id} try to access ${file} without permision. Responding default route.`);
-            this.sendDefaultRoute(res,user);
+            this.manageGET(res,`${this.defaultRoute}`,user)
         }
     }else{
         //POST METHOD
@@ -64,8 +70,14 @@ module.exports.treat = (user,req,res)=>{
             body += chunk.toString();
         });
         req.on('end',()=>{
-            //Check if user has allowance
             const post = JSON.parse(body);
+            //Check if file exists
+            if (!this.accreditation[post.type]) {
+                logger.alert("ROUTER","Treat GET",`User ${user.id} try to access unknown : ${file}. Responding default route.`);
+                this.manageGET(res,`${this.defaultRoute}`,user)
+                return;
+            }
+            //Check if user has allowance
             if(this.accreditation[post.type].includes(user.group)){
                 this.managePOST(res,post,user);
             }else{
@@ -138,15 +150,6 @@ module.exports.managePOST = (res,postRequest,user)=>{
 }
 
 /**
- * Send the user back to the default route (Login for example)
- * @param {Object} res Passed response object
- * @param {Object} user user data
- */
-module.exports.sendDefaultRoute = (res,user)=>{
-    this.manageGET(res,`${this.defaultRoute}`,user)
-}
-
-/**
  * Send a valid response to the client
  * @param {Object} res Passed response object
  * @param {String} data Data to be sent
@@ -165,4 +168,5 @@ module.exports.respond = (res,data,status=200,type='text/html')=>{
 
 //Setup default behavior
 this.setup("defaultRoute","/login.html");
+this.setup("lostRoute","/lost.html");
 this.setup("getFolder","client");
