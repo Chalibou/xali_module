@@ -66,17 +66,17 @@ module.exports.setup = (setup)=>{
     if(setup.routes.defaultRoute){
         router.setup("defaultRoute",setup.routes.defaultRoute);
     }
-    if(setup.routes.freeGetRequests){
-        router.setup("freeGetRequests",setup.routes.freeGetRequests,"push")
+    if(setup.routes.accreditation){
+        router.setup("accreditation",setup.routes.accreditation);
     }
     
     //Load post methods
     const post = require(process.cwd()+"/server/post/post.js");
 
     //initialize the mandatory routes
-    router.post("user_register",true,this.register);
-    router.post("user_login",true,this.login);
-    router.post("user_logout",false,this.logout);
+    router.post("user_register",this.register);
+    router.post("user_login",this.login);
+    router.post("user_logout",this.logout);
 
     //Initialize the routes for the application
     for (let i = 0; i < setup.routes.post.length; i++) {
@@ -117,15 +117,10 @@ module.exports.run = ()=>{
         try{
             //Authentication
             const user = await auth.checkAuth(req);
-            if(user.id !== "UKN"){
-                //Check permissions and handle the request
-                router.checkPermission(user,req,res);
-            }else{
-                //Check if request is free, if not the request will be redirected to default
-                router.checkIfFree(user,req,res);   
-            } 
+            //Check permissions and handle the request
+            router.treat(user,req,res);
         }catch(error){
-            router.respond(res,JSON.stringify(error),500);
+            router.respond(res,JSON.stringify(error),error.code);
         };
     }
 
@@ -150,19 +145,19 @@ module.exports.run = ()=>{
  * @param {String} data.userInfo Info of the user
  * @returns {Response} Data Response 
  */
-this.register = async (res,req_user)=>{
+this.register = async (res,data,user)=>{
     try{
         //Check if user has good template
-        await templater.checkDataStructure("user_register",req_user);
+        await templater.checkDataStructure("user_register",data);
         //Check if user does not exists already
-        const found_user = await db.findOne("credentials",{"mail":req_user.mail});
+        const found_user = await db.findOne("credentials",{"mail":data.mail});
         if(found_user){
-            throw logger.buildError(409,'unaviable',`Mail ${req_user.mail} already in use`);
+            throw logger.buildError(409,'unaviable',`Mail ${data.mail} already in use`);
         }else{
             //Get the default data for the user
-            const default_user_data = templater.getObjectConstructors("user")("default");
+            const default_user_data = templater.getObjectConstructors("user")();
             //Register the user
-            const registered_user = await auth.register(req_user,default_user_data);
+            const registered_user = await auth.register(data,"standard",default_user_data);
             //Confirm mail
             auth.confirmMail(registered_user);
             //Respond
@@ -175,15 +170,15 @@ this.register = async (res,req_user)=>{
 }
 
 
-this.login = async (res,req_user)=>{
+this.login = async (res,data,user)=>{
     try{
         //Check if user has good template
-        await templater.checkDataStructure("user_login",req_user);
+        await templater.checkDataStructure("user_login",data);
         //Get the user referenced under the req_user.mail mail
-        const found_user = await db.findOne("credentials",{"mail":req_user.mail});
+        const found_user = await db.findOne("credentials",{"mail":data.mail});
         if(found_user){
             //Check authenticity 
-            const auth_user = await auth.login(found_user,req_user);
+            const auth_user = await auth.login(found_user,data);
             //Fill cookie
             res.setHeader('Set-Cookie',
             [
@@ -199,7 +194,7 @@ this.login = async (res,req_user)=>{
     }
 }
 
-this.logout = (res,req_data,user)=>{
+this.logout = (res,data,user)=>{
     auth.logout(user.id);
     router.respond(res,"",200);
 }

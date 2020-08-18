@@ -26,9 +26,8 @@ const setup = {
         //Allows to create data default models
         objectConstructors:{
             //user_register is required for filling generic users.data property
-            user:(type)=>{
+            user:()=>{
                 return{
-                    type:type,
                     seed:xali.tools.getRandomHexa(25),
                 }
             }
@@ -39,31 +38,37 @@ const setup = {
         //defaultRoute:"/login.html",
 
         /**
-         * List of free Get request to be accessed without authentication, by default the list contains :
-         * "/login.html"
-         * "/images/logo.svg"
-         * "/images/flaticon.png"
-         * "/js/common.js"
-         * "/js/login.js"
-         * "/css/common.css
-        */
-        freeGetRequests:[
-
-        ],
-        /**
          * List of POST methods. Xali's applications recieve POST methods in the root app domain.
          * Post methods body should be an object with a "type" property {String} and "data" property {Object}
-         * This List items should be sonstructed as [POST_object.type,true if a free request (aka without auth),Post method in the module : server_data/post/post.js]
+         * This List items should be sonstructed as [POST_object.type, an integer for accreditation level (0 if a free request (aka without auth)) ,Post method in the module : server_data/post/post.js]
          */
         post:[
             //["user_action",true,"action"],
         ],
-        accreditation:[
-            [
-                ["standard","*"],
-                ["admin","*"]
-            ]
-        ]
+        accreditation:{
+            UKN:{
+                get:[
+                    "/login.html",
+                    "/images/logo.svg",
+                    "/images/flaticon.png",
+                    "/js/common.js",
+                    "/js/login.js",
+                    "/css/common.css"
+                ],
+                post:[
+                    "register",
+                    "login"
+                ]
+            },  
+            standard:{
+                get:[
+                    "/index.html"
+                ],
+                post:[
+                    "logout"
+                ]
+            }
+        }
     }
 }
 

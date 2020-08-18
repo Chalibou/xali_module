@@ -9,10 +9,9 @@ const fs = require('fs');
 const logger = require('./logger.js');
 const templater = require('./templater.js');
 
-this.freePostRequests = [];
 this.errorPage = "The content you want has not been found";
 this.postCallbacks = [];
-this.freeGetRequests = [];
+this.accreditation = {};
 this.defaultRoute = "";
 this.getFolder = "";
 
@@ -37,48 +36,8 @@ module.exports.setup = (target,input,method="")=>{
  * @param {boolean} isFree If true then the callback is free for any user
  * @param {Callback} callback Function to execute on POST
  */
-module.exports.post = (name,isFree,callback)=>{
-    if(isFree){
-        this.freePostRequests.push(name)
-    }
+module.exports.post = (name,callback)=>{
     this.postCallbacks[name] = callback;
-}
-
-/**
- * Check if the request is amongst the free requests, if not we send back the default route
- * @param {Object} req Request
- * @param {Object} res Passed response object
- */
-module.exports.checkIfFree = (user,req,res)=>{
-    if(req.method === "GET"){
-        const file = req.url;
-        if(this.freeGetRequests.includes(file)){
-            this.manageGET(res,file,user);
-        }else{
-            // means AUTH has failed and request is not free  
-            //If request is html type we send default toute 
-            if(file=="/" || file.indexOf(".")==-1){
-                this.sendDefaultRoute(res,user);
-            }else{
-                //We send nothing
-                this.respond(res,"",504);
-            }
-        };
-    }else{
-        let body = '';
-        req.on('data', chunk => {
-            body += chunk.toString();
-        });   
-        req.on('end',()=>{
-            const data = JSON.parse(body);
-            if (this.freePostRequests.includes(data.type)){
-                this.managePOST(res,data);
-            }else{
-                logger.alert("ROUTE","POST",`User ${user.id} emmiting unauthaurized post request ${data.type}`);
-                this.respond(res,"Unauthorized POST request",403)
-            }
-        })        
-    }
 }
 
 /**
@@ -86,12 +45,17 @@ module.exports.checkIfFree = (user,req,res)=>{
  * @param {Object} req Request 
  * @param {Object} res Response object
  */
-module.exports.checkPermission = (user,req,res)=>{
+module.exports.treat = (user,req,res)=>{
     //Type of request
     if(req.method === "GET"){
         //GET METHOD
         const file = req.url;
-        this.manageGET(res,file,user);
+        //Check if user has allowance
+        if(this.accreditation[user.group].get.includes(file)){
+            this.manageGET(res,file,user);
+        }else{
+            throw logger.buildError(403,"low_accreditation",`Your credentials levels does not allow you to access this section`);
+        }
     }else{
         //POST METHOD
         let body = '';
@@ -99,7 +63,13 @@ module.exports.checkPermission = (user,req,res)=>{
             body += chunk.toString();
         });
         req.on('end',()=>{
-            this.managePOST(res,JSON.parse(body),user);
+            //Check if user has allowance
+            const post = JSON.parse(body);
+            if(this.accreditation[user.group].post.includes(post.type)){
+                this.managePOST(res,post,user);
+            }else{
+                throw logger.buildError(403,"low_accreditation",`Your credentials levels does not allow you to access this section`);
+            }
         })
     }
 }

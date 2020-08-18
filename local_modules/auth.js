@@ -42,11 +42,13 @@ module.exports.checkAuth = (req)=>{
         let cookie={};
         let user = {
             id:"",
+            group:"",
             lang:""
         }
         //Parse the cookie to get the info
         if(!req.headers.cookie){
             user.id = "UKN";
+            user.group = "UKN";
             user.lang="en-EN";
             resolve(user);
         }else{
@@ -65,6 +67,7 @@ module.exports.checkAuth = (req)=>{
         //If no login info is present we reject
         if(!cookie.id||!cookie.token){
             user.id = "UKN";
+            user.group = "UKN";
             user.lang = cookie.lang;
             resolve(user);
         }
@@ -100,6 +103,7 @@ module.exports.checkAuth = (req)=>{
             resolve(user);
         }else{
             user.id = "UKN";
+            user.group = "UKN";
             user.lang=cookie.lang;
             resolve(user);
         }
@@ -109,8 +113,10 @@ module.exports.checkAuth = (req)=>{
 /**
  * Register a validated user in the database
  * @param {User_register} user Validated user_register object
+ * @param {*} user_group Accreditation levels
+ * @param {*} user_appData Data to be apped to the registered user
  */
-module.exports.register = (user,default_data)=>{
+module.exports.register = (user,user_group,user_appData)=>{
     return new Promise((resolve,reject)=>{
 
         //Register pending user
@@ -125,7 +131,8 @@ module.exports.register = (user,default_data)=>{
                 user_pwd:hash,
                 mail:user.mail,
                 query_date:Date.now(),
-                data:default_data
+                group:user_group,
+                data:user_appData
             }
             try{
                 await db.insertOne("credentials",userData);
@@ -158,7 +165,10 @@ module.exports.login = (db_user,req_user)=>{
                 const token = jwt.sign(payload, KEY_PRIVATE, logOptions);
 
                 //Add the user to the curently active local (nodeJS) database
-                authenticatedUsers[db_user.id] = {token:token};
+                authenticatedUsers[db_user.id] = {
+                    token:token,
+                    group:db_user.group
+                };
                 logger.good("AUTH","Login",`User ${db_user.id}:${db_user.name} has been logged-in successfully`);
                 
                 resolve({id:db_user.id,token:token});
