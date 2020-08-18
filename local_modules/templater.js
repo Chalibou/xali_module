@@ -9,7 +9,7 @@ const logger = require("./logger.js");
 
 //Data verification
 this.templates={};
-this.dataDefaultModel={};
+this.objectConstructors={};
 
 /**
  * Contains the text to be placed in HTML documents and the associated keys
@@ -78,13 +78,13 @@ module.exports.translateData = (data,lang)=>{
 }
 
 /**
- * Define a default data structure for application objects
+ * Define a data structure for application objects
  * @param {String} name Name of the object
  * @param {Object} object Object structure
  */
-module.exports.loadDataDefaultModel = (object)=>{
+module.exports.loadObjectConstructors = (object)=>{
     for (const key in object) {
-        this.dataDefaultModel[key] = object[key];
+        this.objectConstructors[key] = object[key];
     }
 }
 
@@ -92,11 +92,11 @@ module.exports.loadDataDefaultModel = (object)=>{
  * Get the default data structure for application objects
  * @param {String} name Name of the object
  */
-module.exports.getDataDefaultModel = (name)=>{
-    if (this.dataDefaultModel.hasOwnProperty(name)) {
-        return this.dataDefaultModel[name];
+module.exports.getObjectConstructors = (name)=>{
+    if (this.objectConstructors.hasOwnProperty(name)) {
+        return this.objectConstructors[name];
     }else{
-        logger.error("SETUP","DataDefault",`Requested Data Default model ${name} does not exists in dataDefaultModel : ${JSON.stringify(this.dataDefaultModel)}`);
+        logger.error("SETUP","DataDefault",`Requested Data Default model ${name} does not exists in objectConstructors : ${JSON.stringify(this.objectConstructors)}`);
         return {};
     }
 }

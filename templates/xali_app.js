@@ -24,14 +24,13 @@ const setup = {
         // [["user_login",["mail","pwd"]],...]
         objectStructures:[],
         //Allows to create data default models
-        dataDefault:{
+        objectConstructors:{
             //user_register is required for filling generic users.data property
-            user_register:{
-                isDemoActive:false,
-                seed:xali.tools.getRandomHexa(25),
-                subs:[],
-                shared:[],
-                lastOpened:""
+            user:(type)=>{
+                return{
+                    type:type,
+                    seed:xali.tools.getRandomHexa(25),
+                }
             }
         }
     },
