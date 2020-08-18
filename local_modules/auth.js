@@ -114,7 +114,7 @@ module.exports.register = (user,default_data)=>{
     return new Promise((resolve,reject)=>{
 
         //Register pending user
-        bcrypt.hash(user.pwd, saltRounds, function(err, hash) {
+        bcrypt.hash(user.pwd, saltRounds, async function(err, hash) {
             if(err){
                 throw logger.buildError(500,"hash",err);
             }
@@ -127,14 +127,12 @@ module.exports.register = (user,default_data)=>{
                 query_date:Date.now(),
                 data:default_data
             }
-            
-            db.client.collection("credentials").insertOne(userData)
-            .then(()=>{
+            try{
+                await db.insertOne("credentials",userData);
                 resolve(userData);
-            })
-            .catch((error)=>{
+            }catch(error){
                 throw logger.buildError(500,"insert_errror",error);
-            })
+            }
         })
     });
 }
