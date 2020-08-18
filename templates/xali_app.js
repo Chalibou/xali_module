@@ -57,6 +57,12 @@ const setup = {
          */
         post:[
             //["user_action",true,"action"],
+        ],
+        accreditation:[
+            [
+                ["standard","*"],
+                ["admin","*"]
+            ]
         ]
     }
 }
