@@ -24,6 +24,7 @@ fs.writeFile(`./../../server/mail/dkim_public.key`, '',{ flag: 'wx' },callback);
 
 //Copying files from templates
 fs.copyFile('./templates/css/common.css', './../../client/css/common.css',{ flag: 'wx' },callback);
+fs.copyFile('./templates/css/login.css', './../../client/css/login.css',{ flag: 'wx' },callback);
 fs.copyFile('./templates/js/index.js', './../../client/js/index.js',{ flag: 'wx' },callback);
 fs.copyFile('./templates/js/common.js', './../../client/js/common.js',{ flag: 'wx' },callback);
 fs.copyFile('./templates/js/login.js', './../../client/js/login.js',{ flag: 'wx' },callback);
