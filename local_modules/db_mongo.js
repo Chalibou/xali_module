@@ -7,12 +7,13 @@
 const mongoClient = require('mongodb').MongoClient;
 const logger = require("./logger.js");
 
+let me = this;
+
 //Pure DB
 this.db;
 this.url="";
 this.options={};
-
-module.exports.client = {};
+this.client = {};
 
 /**
  * Connect to a mongodb database
@@ -35,7 +36,7 @@ module.exports.connect = (params,test=false)=>{
     logger.log("DB","Connect",`Reaching DB`);
     mongoClient.connect(this.url,this.options).then(client=>{
         logger.good("DB","Connect",`Ready to listen`);
-        module.exports.client = client.db(process.env.DB_NAME);
+        this.client = client.db(process.env.DB_NAME);
     },
     (error)=>{
         logger.error("DB","Connect",error);
@@ -55,3 +56,23 @@ module.exports.reconnect = ()=>{
         logger.error("DB","Connect",error);
     });
 }
+
+
+module.exports.insertOne = async (collection,data)=>{
+    return new Promise ((resolve,reject)=>{
+        try{
+            await client.collection(collection).insertOne(data)
+            resolve();
+        }catch(error){
+            throw error
+        }
+    })
+}
+
+
+module.exports.compare = ()=>{}
+module.exports.findOne = ()=>{}
+module.exports.findSeveral = ()=>{}
+module.exports.deleteOne = ()=>{}
+module.exports.changeOne = ()=>{}
+module.exports.changeOneProperty = ()=>{}
