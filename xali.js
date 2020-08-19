@@ -164,7 +164,7 @@ this.register = async (res,data,user)=>{
             router.respond(res,"",200);
         }
     }catch(error){
-        logger.alert("APP","Registration",error.message);
+        logger.alert("APP","Registration",error.message+":"+error.message);
         router.respond(res,JSON.stringify(error),error.code);
     }
 }
@@ -174,7 +174,7 @@ this.login = async (res,data,user)=>{
     try{
         //Check if user has good template
         await templater.checkDataStructure("user_login",data);
-        //Get the user referenced under the req_user.mail mail
+        //Get the user referenced under the data.mail mail
         const found_user = await db.findOne("credentials",{"mail":data.mail});
         if(found_user){
             //Check authenticity 
@@ -186,10 +186,10 @@ this.login = async (res,data,user)=>{
             ]);
             router.respond(res,"",200);
         }else{
-            throw logger.buildError(404,'wrong_user',`User ${req_user.mail} does not exists`);
+            throw logger.buildError(404,'wrong_user',`${data.mail}`);
         }  
     }catch(error){
-        logger.alert("APP","Login",error.message);
+        logger.alert("APP","Login",error.message+":"+error.message);
         router.respond(res,JSON.stringify(error),error.code);
     }
 }
