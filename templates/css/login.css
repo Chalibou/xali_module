@@ -43,7 +43,7 @@ body{
 .registerPanel{
     width: 100%;
     height: 100%;
-    padding: 1.5rem;
+    padding: 1.5rem 2.5rem;
     background-color:rgb(170, 170, 170);
 
     display: flex;
