@@ -89,7 +89,32 @@ module.exports.findOne = (collection,critera,projection={_id: 0})=>{
     })
 }
 
-module.exports.findSeveral = ()=>{}
-module.exports.deleteOne = ()=>{}
-module.exports.changeOne = ()=>{}
-module.exports.changeOneProperty = ()=>{}
+module.exports.find = (collection,critera,projection)=>{
+    return new Promise (async(resolve,reject)=>{
+        try{
+            resolve(await this.client.collection(collection).find(critera,projection));
+        }catch(error){
+            throw error
+        }
+    })
+}
+
+module.exports.updateOne = (collection,critera,update)=>{
+    return new Promise (async(resolve,reject)=>{
+        try{
+            resolve(await this.client.collection(collection).updateOne(critera,update));
+        }catch(error){
+            throw error
+        }
+    })
+}
+
+module.exports.deleteOne = (collection,critera)=>{
+    return new Promise (async(resolve,reject)=>{
+        try{
+            resolve(await this.client.collection(collection).deleteOne(critera));
+        }catch(error){
+            throw error
+        }
+    })
+}

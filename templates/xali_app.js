@@ -30,6 +30,13 @@ const setup = {
                 return{
                     seed:xali.tools.getRandomHexa(25),
                 }
+            },
+            exampleOBject:(a,b,c)=>{
+                return{
+                    data1:a,
+                    data2:b,
+                    data3:c
+                }
             }
         }
     },
