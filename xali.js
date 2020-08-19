@@ -164,7 +164,7 @@ this.register = async (res,data,user)=>{
             router.respond(res,"",200);
         }
     }catch(error){
-        logger.alert("APP","Registration",error.message+":"+error.message);
+        logger.alert("APP","Registration",error.token+":"+error.message);
         router.respond(res,JSON.stringify(error),error.code);
     }
 }
@@ -189,7 +189,7 @@ this.login = async (res,data,user)=>{
             throw logger.buildError(404,'wrong_user',`${data.mail}`);
         }  
     }catch(error){
-        logger.alert("APP","Login",error.message+":"+error.message);
+        logger.alert("APP","Login",error.token+":"+error.message);
         router.respond(res,JSON.stringify(error),error.code);
     }
 }
