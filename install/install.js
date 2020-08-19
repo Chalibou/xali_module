@@ -16,6 +16,11 @@ const callback = (err)=>{
     if (err) return console.log(err);
     return;
 }
+
+const copy = (source,destination)=>{
+    fs.copyFile("./templates/"+source,"./../../"+destination,{ flag: 'wx' },callback);
+}
+
 //Creating files
 fs.writeFile(`./../../server/post/post.js`, '//Write here your post methods',{ flag: 'wx' },callback);
 
@@ -49,6 +54,3 @@ console.log('\x1b[33m%s\x1b[0m',"[XALI]--HTTPS CERT AND KEYS PROVIDED IN THE TEM
 
 console.log('[XALI]--SCRIPT END');
 
-const copy = (source,destination)=>{
-    copy("./templates/"+source,"./../../"+destination,{ flag: 'wx' },callback);
-}
