@@ -7,5 +7,6 @@
     "b_lang_ES":"ES",
     "b_logout":"DESCONECTARSE",
     "email":"EMAIL",
-    "password":"CLAVE"
+    "password":"CLAVE",
+    "name":"NOMBRE"
 }

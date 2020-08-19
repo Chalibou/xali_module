@@ -158,6 +158,7 @@ this.register = async (res,data,user)=>{
             const default_user_data = templater.getObjectConstructors("user")();
             //Register the user
             const registered_user = await auth.register(data,"standard",default_user_data);
+            logger.good("AUTH","Register",`Register of user ${registered_user.id} sucessfull`);
             //Confirm mail
             auth.confirmMail(registered_user);
             //Respond
