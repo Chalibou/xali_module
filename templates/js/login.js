@@ -65,9 +65,11 @@ document.getElementById("b_login").addEventListener("click",login);
 document.getElementById("b_lang_EN").addEventListener("click",()=>{changeLang("en-EN");});
 document.getElementById("b_lang_ES").addEventListener("click",()=>{changeLang("es-ES");});
 //Password management
-document.getElementsByClassName("eye_close").forEach(element => {
+const eyes = document.getElementsByClassName("eye_close");
+for (let i = 0; i < eyes.length; i++) {
+    const element = eyes[i];
     element.addEventListener("click",(e)=>{toggleVisibility(e)})
-}); 
+}
 //Modal management
 document.getElementById("modal_wrapper").addEventListener("click",toggleModal);
 document.getElementById("modal").addEventListener("click",(e)=>{e.stopPropagation();});
