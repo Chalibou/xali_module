@@ -61,6 +61,8 @@ const setup = {
             ["/images/eye_close.png"]:["UKN","standard"],
             ["/js/common.js"]:["UKN","standard"],
             ["/js/login.js"]:["UKN","standard"],
+            ["/js/lang/en-EN.js"]:["UKN","standard"],
+            ["/js/lang/es-ES.js"]:["UKN","standard"],
             ["/css/common.css"]:["UKN","standard"],
             ["/css/login.css"]:["UKN","standard"],
             ["user_register"]:["UKN","standard"],
