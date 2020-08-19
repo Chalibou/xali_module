@@ -1,8 +1,11 @@
 {
     "current_lang":"es-ES",
-    "register":"ES AQUI PARA REGISTRARTE",
-    "login":"EL LOGIN !",
-    "langEN":"EN",
-    "langES":"ES",
-    "logout":"LARGATE"
+    "product_name":"MI SUPER PRODUCTO",
+    "b_register":"REGISTRARTE",
+    "b_login":"INGRESA",
+    "b_lang_EN":"EN",
+    "b_lang_ES":"ES",
+    "b_logout":"DESCONECTARSE",
+    "email":"EMAIL",
+    "password":"CLAVE"
 }

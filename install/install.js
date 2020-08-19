@@ -23,25 +23,32 @@ fs.writeFile(`./../../server/mail/dkim_private.key`, '',{ flag: 'wx' },callback)
 fs.writeFile(`./../../server/mail/dkim_public.key`, '',{ flag: 'wx' },callback);
 
 //Copying files from templates
-fs.copyFile('./templates/css/common.css', './../../client/css/common.css',{ flag: 'wx' },callback);
-fs.copyFile('./templates/css/login.css', './../../client/css/login.css',{ flag: 'wx' },callback);
-fs.copyFile('./templates/js/index.js', './../../client/js/index.js',{ flag: 'wx' },callback);
-fs.copyFile('./templates/js/common.js', './../../client/js/common.js',{ flag: 'wx' },callback);
-fs.copyFile('./templates/js/login.js', './../../client/js/login.js',{ flag: 'wx' },callback);
-fs.copyFile('./templates/images/logo.svg', './../../client/images/logo.svg',{ flag: 'wx' },callback);
-fs.copyFile('./templates/images/flaticon.png', './../../client/images/flaticon.png',{ flag: 'wx' },callback);
-fs.copyFile('./templates/index.html', './../../client/index.html',{ flag: 'wx' },callback);
-fs.copyFile('./templates/login.html', './../../client/login.html',{ flag: 'wx' },callback);
-fs.copyFile('./templates/xali_app.js', './../../xali_app.js',{ flag: 'wx' },callback);
-
-fs.copyFile('./templates/lang/en-EN.json', './../../server/lang/en-EN.json',{ flag: 'wx' },callback);
-fs.copyFile('./templates/lang/es-ES.json', './../../server/lang/es-ES.json',{ flag: 'wx' },callback);
-fs.copyFile('./templates/https/server.cert', './../../server/https/server.cert',{ flag: 'wx' },callback);
-fs.copyFile('./templates/https/server.key', './../../server/https/server.key',{ flag: 'wx' },callback);
-fs.copyFile('./templates/jwt/private.key', './../../server/jwt/private.key',{ flag: 'wx' },callback);
-fs.copyFile('./templates/jwt/public.key', './../../server/jwt/public.key',{ flag: 'wx' },callback);
+copy('css/common.css', 'client/css/common.css');
+copy('css/login.css', 'client/css/login.css');
+copy('css/index.css', 'client/css/index.css');
+copy('js/index.js', 'client/js/index.js');
+copy('js/common.js', 'client/js/common.js');
+copy('js/login.js', 'client/js/login.js');
+copy('images/logo.svg', 'client/images/logo.svg');
+copy('images/flaticon.png', 'client/images/flaticon.png');
+copy('images/eye_close.png', 'client/images/eye_close.png');
+copy('images/eye_open.png', 'client/images/eye_open.png');
+copy('images/login_bkg.jpg', 'client/images/login_bkg.jpg');
+copy('index.html', 'client/index.html');
+copy('login.html', 'client/login.html');
+copy('xali_app.js', 'xali_app.js');
+copy('lang/en-EN.json', 'server/lang/en-EN.json');
+copy('lang/es-ES.json', 'server/lang/es-ES.json');
+copy('https/server.cert', 'server/https/server.cert');
+copy('https/server.key', 'server/https/server.key');
+copy('jwt/private.key', 'server/jwt/private.key');
+copy('jwt/public.key', 'server/jwt/public.key');
 
 console.log('\x1b[33m%s\x1b[0m',"[XALI]--JWT KEYS PROVIDED IN THE TEMPLATES SHOULD BE REPLACED BY YOUR OWN VERSIONS");
 console.log('\x1b[33m%s\x1b[0m',"[XALI]--HTTPS CERT AND KEYS PROVIDED IN THE TEMPLATES SHOULD BE REPLACED BY YOUR OWN VERSIONS");
 
 console.log('[XALI]--SCRIPT END');
+
+const copy = (source,destination)=>{
+    copy("./templates/"+source,"./../../"+destination,{ flag: 'wx' },callback);
+}

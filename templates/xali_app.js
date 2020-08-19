@@ -55,7 +55,10 @@ const setup = {
         accreditation:{
             ["/login.html"]:["UKN","standard"],
             ["/images/logo.svg"]:["UKN","standard"],
+            ["/images/login_bkg.jpg"]:["UKN","standard"],
             ["/images/flaticon.png"]:["UKN","standard"],
+            ["/images/eye_open.png"]:["UKN","standard"],
+            ["/images/eye_close.png"]:["UKN","standard"],
             ["/js/common.js"]:["UKN","standard"],
             ["/js/login.js"]:["UKN","standard"],
             ["/css/common.css"]:["UKN","standard"],
@@ -64,6 +67,7 @@ const setup = {
             ["user_login"]:["UKN","standard"],
             ["/"]:["standard"],
             ["/js/index.js"]:["standard"],
+            ["/css/index.css"]:["standard"],
             ["user_logout"]:["standard"]
         }
     }

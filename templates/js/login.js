@@ -15,7 +15,9 @@ const register = ()=>{
             console.log(res);
         },
         (issue)=>{
-            console.error(JSON.parse(issue));
+            const error = JSON.parse(issue);
+            console.log(error.message);
+            messenger.show(error.message,5000,"orange");
         }
     )
     .catch(()=>{
@@ -24,11 +26,12 @@ const register = ()=>{
 }
 
 const login = ()=>{
+    
     const request = JSON.stringify({
         type:"user_login",
         data:{
-            mail:"roger_number_two@roger.ro",
-            pwd:"123456"
+            mail:document.getElementById("form_mail").value,
+            pwd:document.getElementById("form_pwd").value
         }
     });
     
@@ -38,7 +41,9 @@ const login = ()=>{
             window.location.reload(true);
         },
         (issue)=>{
-            console.error(JSON.parse(issue));
+            const error = JSON.parse(issue);
+            console.log(error.message);
+            messenger.show(error.message,5000,"orange");
         }
     )
     .catch(()=>{
@@ -46,29 +51,9 @@ const login = ()=>{
     });
 }
 
-document.getElementById("registerButton").addEventListener("click",register);
-document.getElementById("loginButton").addEventListener("click",login);
-document.getElementById("langEN").addEventListener("click",()=>{changeLang("en-EN");});
-document.getElementById("langES").addEventListener("click",()=>{changeLang("es-ES");});
+document.getElementById("b_register").addEventListener("click",register);
+document.getElementById("b_login").addEventListener("click",login);
+document.getElementById("b_lang_EN").addEventListener("click",()=>{changeLang("en-EN");});
+document.getElementById("b_lang_ES").addEventListener("click",()=>{changeLang("es-ES");});
 
-
-const logout = ()=>{
-    const request = JSON.stringify({
-        type:"user_logout"
-    });
-    
-    ajaxPost(request)
-    .then(
-        ()=>{
-            window.location.reload(true);
-        },
-        (issue)=>{
-            console.error(JSON.parse(issue));
-        }
-    )
-    .catch(()=>{
-
-    });
-}
-
-document.getElementById("logoutButton").addEventListener("click",logout);
+document.getElementById("toggle_visibility").addEventListener("click",(e)=>{toggleVisibility(e)})

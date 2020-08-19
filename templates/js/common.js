@@ -8,6 +8,79 @@ const changeLang = (lang)=>{
 }
 
 /**
+ * Toggle visibility of a password field
+ * @param {HTMLElement} e HTML element following the password field
+ */
+const toggleVisibility = (e)=>{
+    const icon = e.target;
+    const input = icon.parentNode.children[0];
+    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+    input.setAttribute('type', type);
+    // toggle the eye slash icon
+    const form = icon.getAttribute('class') === 'eye_close' ? 'eye_open' : 'eye_close';
+    icon.setAttribute("class",form);
+}
+
+const messenger = {
+    target:document.getElementById("messenger_div"),
+    timeOuts:[],
+    show:(message,time=5000,color="black")=>{
+        messenger.target.innerHTML = message;
+        messenger.target.style.color = color;
+        messenger.target.style.display = "block";
+        messenger.target.style.opacity = 1;
+        messenger.target.style.transition="opacity 0.5s ease";
+
+        messenger.timeOuts.push(window.setTimeout(()=>{
+            messenger.target.style.opacity = 0;
+            messenger.target.style.transition="opacity 4s ease";
+            messenger.timeOuts.push(window.setTimeout(()=>{
+                messenger.target.style.display = "none";
+                messenger.target.style.innerHTML = "";
+            },3000))
+        },time));
+    },
+    highlight:(elmt,time)=>{
+        let elmt_origin_color = elmt.style.color;
+        elmt.style.color = "red";
+        elmt.style.transition="color 0.5s ease";
+        window.setTimeout(()=>{
+            elmt.style.color = elmt_origin_color;
+            elmt.style.transition="color 3s ease";
+        },time);
+    },
+    aknoledgeError: ()=>{
+        return ()=>{
+            messenger.clearTimeouts();
+            messenger.target.style.display = "none";
+            messenger.target.style.innerHTML = "";
+        }
+    },
+    clearTimeouts(){
+        //Clear previous timeOuts
+        for (let i=0; i<messenger.timeOuts.length; i++) {
+            clearTimeout(messenger.timeOuts[i]);
+        }
+        messenger.timeOuts = [];
+    }
+}
+messenger.target.addEventListener("click",messenger.aknoledgeError());
+
+/**
+ * Pwd power check
+ * @param {String} item Password
+ */
+const isGoodPwd = (pwd)=>{
+    const hasNoVoid = pwd.indexOf(' ') == -1
+    const hasForbidden = /\|/.test(pwd);
+    const hasNumber = /\d/.test(pwd);
+    const hasUppercase = /[A-Z]/.test(pwd);
+    const hasSpecial = /[ !@#$%^&*()_+\-=\[\]{};':",.<>\/?]/.test(pwd);
+    const isLongEnough = pwd.length >6;
+    return !hasForbidden&&hasNoVoid&&hasNumber&&hasUppercase&&hasSpecial&&isLongEnough
+}
+
+/**
  * Allows asynchronous POST messaging
  * @memberof Common
  * @param {string} message Structure is [caller]|[param1]|[param2]|...

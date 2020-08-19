@@ -8,28 +8,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="images/png" href="images/flaticon.png">
     <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
 </head>
 
 <body>
 
-    <div class="head_container">
+    <div class="nav_container">
         <nav>
-            <img class="i_logo" alt="Your product">
+            <div class="nav_title">
+                <img src="/images/logo.svg" alt="Logo" class="logo">
+                <h1>#{product_name}</h1>
+            </div>
+            
             <ul>
                 <li>
                     <a href="http://google.fr">A link</a>
-                    <button class="b_register">Register</button>
+                </li>
+                <li>
+                    <button id="b_register" class="b_register">#{b_register}</button>
                 </li>
             </ul>
         </nav>
     </div>
 
+    
     <section class="home">
         INDEX
-        <button id="logoutButton">#{logout}</button>
+        <button id="b_logout">#{b_logout}</button>
     </section>
 
+    <footer>
+        <div>
+            <button id="b_lang_ES">#{b_lang_ES}</button>
+            <button id="b_lang_EN">#{b_lang_EN}</button>
+        </div>
+        
+    </footer>
+    
 </body>
+
+    
+
 
 <script src="js/common.js"></script>
 <script src="js/index.js"></script>

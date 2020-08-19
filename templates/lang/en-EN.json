@@ -1,8 +1,12 @@
 {
     "current_lang":"en-EN",
-    "register":"COME HERE TO REGISTER",
-    "login":"ENTER HERE",
-    "langEN":"EN",
-    "langES":"ES",
-    "logout":"GET OUT"
+    "product_name":"MY PRODUCT",
+    "b_register":"REGISTER",
+    "b_login":"LOGIN",
+    "b_lang_EN":"EN",
+    "b_lang_ES":"ES",
+    "b_logout":"LOGOUT",
+    "email":"E-MAIL",
+    "password":"PASSWORD"
+    
 }

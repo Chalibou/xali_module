@@ -7,8 +7,16 @@ Jaune(206, 156, 39) #CE9C27
 
 */
 :root{
-    --nav_bkg:#1d6fbb;
-    --nav_title_bkg:rgb(216, 216, 216);
+    --bkg_main:rgba(40, 60, 140,1);
+    --bkg_main_darker:rgb(22, 39, 109);
+    --bkg_main_lighter:rgb(100, 126, 231);
+    --bkg_sec:rgb(160, 160, 160);
+    --bkg_sec_darker:rgb(75, 75, 75);
+    --bkg_sec_lighter:rgb(211, 211, 211);
+
+    --font_color_main:rgb(77, 77, 77);
+    --font_color_main_inverse:rgb(240, 240, 240);
+    --font_color_main_emphase:rgb(153, 184, 70);
 }
 
 html{
@@ -22,7 +30,7 @@ html{
 body{
     font-family: 'Mulish', sans-serif;
     font-weight: 300;
-    color: white;
+    color: var(--font_color_main_inverse);
 }
 h1{
     font-size: 2.5rem;
@@ -43,7 +51,7 @@ p{
 }
 
 .nav_container{
-    background:var(--nav_bkg);
+    background:var(--bkg_main);
 }
 nav{
     width: 80%;
@@ -54,9 +62,11 @@ nav{
     justify-content: space-between;
     align-items: center;
 }
+
 nav ul{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     list-style: none;
 }
 
@@ -68,7 +78,8 @@ nav .nav_title{
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color:var(--nav_title_bkg);
+    background-color:var(--bkg_sec_lighter);
+    color: var(--font_color_main);
     border-radius: 5px;
     padding: 1px 10px;
 }
@@ -76,4 +87,107 @@ nav .nav_title .logo{
     margin-right: 1rem;
     height: 3rem;
     width: 3rem;
+}
+
+a{
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 1.5rem;
+    background-color: var(--bkg_sec);
+    color: var(--font_color_main_inverse);
+    padding: 0.3rem 0.5rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-radius: 5px;
+    transition:background-color 0.1s linear,color 0.1s linear;
+}
+a:hover {
+    transition:background-color 0.3s linear,color 0.3s linear;
+    background-color: var(--font_color_main_emphase);
+    color: var(--font_color_main);
+}
+
+button{
+    font-size: 1.4rem;
+    font-family: inherit;
+    font-weight: 700;
+    background-color: var(--bkg_sec);
+    color: var(--font_color_main_inverse);
+    border: none;
+    box-shadow: none;
+    padding: 0.3rem 0.5rem;
+    border-radius: 0;
+    transition:background-color 0.1s linear,color 0.1s linear;
+}
+button:hover{
+    transition:background-color 0.3s linear,color 0.3s linear;
+    background-color:var(--font_color_main_emphase);
+    color: var(--font_color_main);
+}
+button:focus{
+    outline: none;
+    color: var(--font_color_main_inverse);
+}
+
+input{
+    font-family: inherit;
+    font-weight: 700;
+    background-color: var(--bkg_sec_lighter);
+    border: none;
+    padding: 0.4rem;
+    border-radius: 0.3rem;
+}
+input:focus{
+    outline: none;
+}
+
+.pwd_Wrap{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.eye_open{
+    background:url("/images/eye_open.png") no-repeat center center;
+    background-size: cover;
+    width: 15px;
+    height: 15px;
+    margin-left: -20px;
+    cursor: pointer;
+}
+.eye_close{
+    background:url("/images/eye_close.png") no-repeat center center;
+    background-size: cover;
+    width: 15px;
+    height: 15px;
+    margin-left: -20px;
+    cursor: pointer;
+}
+.footer_container{
+    background:var(--bkg_main);
+}
+footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 5vh;
+    margin: auto;
+    width: 80%;
+}
+
+.messenger_div{
+    background-color: none;
+    height: fit-content;
+    margin: auto auto auto 1.5rem;
+    flex: 1;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+@media only screen and (max-width: 700px) {
+    nav{
+        flex-direction: column;
+    }
+    nav ul{
+        margin-top: 1rem;
+    }
 }

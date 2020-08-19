@@ -18,15 +18,15 @@
         <nav>
             <div class="nav_title">
                 <img src="/images/logo.svg" alt="Logo" class="logo">
-                <h1>PRODUCT NAME</h1>
+                <h1>#{product_name}</h1>
             </div>
             
             <ul>
                 <li>
-                    <a href="http://google.fr">A link</a>
+                    <a href="http://google.fr" target="_blank">Help</a>
                 </li>
                 <li>
-                    <button class="b_register">Register</button>
+                    <button id="b_register">#{b_register}</button>
                 </li>
             </ul>
         </nav>
@@ -34,15 +34,28 @@
 
     
     <section class="content">
-        LOGIN
-        <button id="registerButton">#{register}</button>
-        <button id="loginButton">#{login}</button>
-        <button id="langES">#{langES}</button>
-        <button id="langEN">#{langEN}</button>
-        <button id="logoutButton">#{logout}</button>
+        <div class="loginPanelWrap">
+            <div class="loginPanel">
+                <p>#{email}</p>
+                <input id="form_mail" type="email">
+                <p>#{password}</p>
+                <div class="pwd_Wrap">
+                    <input id="form_pwd" type="password">
+                    <div id="toggle_visibility" class="eye_close"></div>
+                </div>
+                <button id="b_login" class="b_login">#{b_login}</button>
+            </div>
+        </div>
     </section>
-
-    
+    <div class="footer_container">
+        <footer>
+            <div>
+                <button id="b_lang_ES">#{b_lang_ES}</button>
+                <button id="b_lang_EN">#{b_lang_EN}</button>
+            </div>
+            <div id="messenger_div" class="messenger_div"></div>
+        </footer>
+    </div>
 </body>
 
 <script src="js/common.js"></script>

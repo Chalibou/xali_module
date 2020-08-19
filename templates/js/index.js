@@ -17,4 +17,4 @@ const logout = ()=>{
     });
 }
 
-document.getElementById("logoutButton").addEventListener("click",logout);
+document.getElementById("b_logout").addEventListener("click",logout);
