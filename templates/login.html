@@ -26,7 +26,7 @@
                     <a href="http://google.fr" target="_blank">Help</a>
                 </li>
                 <li>
-                    <button id="b_register">#{b_register}</button>
+                    <button id="nav_b_register">#{b_register}</button>
                 </li>
             </ul>
         </nav>
@@ -37,10 +37,10 @@
         <div class="loginPanelWrap">
             <div class="loginPanel">
                 <p>#{email}</p>
-                <input id="form_mail" type="email">
+                <input id="login_mail" type="email">
                 <p>#{password}</p>
                 <div class="pwd_Wrap">
-                    <input id="form_pwd" type="password">
+                    <input id="login_pwd" type="password">
                     <div id="toggle_visibility" class="eye_close"></div>
                 </div>
                 <button id="b_login" class="b_login">#{b_login}</button>
@@ -55,6 +55,23 @@
             </div>
             <div id="messenger_div" class="messenger_div"></div>
         </footer>
+    </div>
+
+    <div id="modal_wrapper" class="modal_wrapper">
+        <div id="modal" class="modal">
+            <div class="registerPanel">
+                <p>#{name}</p>
+                <input id="register_name" type="text">
+                <p>#{email}</p>
+                <input id="register_mail" type="email">
+                <p>#{password}</p>
+                <div class="pwd_Wrap">
+                    <input id="register_pwd" type="password">
+                    <div id="toggle_visibility" class="eye_close"></div>
+                </div>
+                <button id="b_register" class="b_login">#{b_register}</button>
+            </div>
+        </div>
     </div>
 </body>
 

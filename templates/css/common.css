@@ -12,6 +12,7 @@ Jaune(206, 156, 39) #CE9C27
     --bkg_main_lighter:rgb(100, 126, 231);
     --bkg_sec:rgb(160, 160, 160);
     --bkg_sec_darker:rgb(75, 75, 75);
+    --bkg_sec_darker_transparent:rgba(75, 75, 75, 0.61);
     --bkg_sec_lighter:rgb(211, 211, 211);
 
     --font_color_main:rgb(77, 77, 77);
@@ -181,6 +182,28 @@ footer{
     flex: 1;
     font-size: 1.5rem;
     font-weight: 700;
+}
+
+.modal_wrapper{
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right:0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bkg_sec_darker_transparent);
+}
+.modal{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right:0;
+    margin: auto;
+    height: fit-content;
+    width: 60%;
 }
 
 @media only screen and (max-width: 700px) {

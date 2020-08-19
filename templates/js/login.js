@@ -3,15 +3,16 @@ const register = ()=>{
     const request = JSON.stringify({
         type:"user_register",
         data:{
-            name:"Roger",
-            mail:"roger_number_two@roger.ro",
-            pwd:"123456"
+            name:document.getElementById("register_name").value,
+            mail:document.getElementById("register_mail").value,
+            pwd:document.getElementById("register_pwd").value
         }
     });
     
     ajaxPost(request)
     .then(
         ()=>{
+            toggleModal();
             messenger.show(toolText.register_success,5000,"green");
         },
         (issue)=>{
@@ -30,8 +31,8 @@ const login = ()=>{
     const request = JSON.stringify({
         type:"user_login",
         data:{
-            mail:document.getElementById("form_mail").value,
-            pwd:document.getElementById("form_pwd").value
+            mail:document.getElementById("login_mail").value,
+            pwd:document.getElementById("login_pwd").value
         }
     });
     
@@ -51,9 +52,20 @@ const login = ()=>{
     });
 }
 
+const toggleModal = ()=>{
+    const wrapper = document.getElementById("modal_wrapper");
+    const type = wrapper.style.display === 'block' ? 'none' : 'block';
+    wrapper.style.display = type;
+}
+
+
 document.getElementById("b_register").addEventListener("click",register);
+document.getElementById("nav_b_register").addEventListener("click",toggleModal);
 document.getElementById("b_login").addEventListener("click",login);
 document.getElementById("b_lang_EN").addEventListener("click",()=>{changeLang("en-EN");});
 document.getElementById("b_lang_ES").addEventListener("click",()=>{changeLang("es-ES");});
-
+//Password management
 document.getElementById("toggle_visibility").addEventListener("click",(e)=>{toggleVisibility(e)})
+//Modal management
+document.getElementById("modal_wrapper").addEventListener("click",toggleModal);
+document.getElementById("modal").addEventListener("click",(e)=>{e.stopPropagation();});
