@@ -11,13 +11,13 @@ const register = ()=>{
     
     ajaxPost(request)
     .then(
-        (res)=>{
-            console.log(res);
+        ()=>{
+            messenger.show(toolText.register_success,5000,"green");
         },
         (issue)=>{
             const error = JSON.parse(issue);
-            console.log(error.message);
-            messenger.show(error.message,5000,"orange");
+            console.log(error);
+            messenger.show(toolText[error.token](error.message),5000,"orange");
         }
     )
     .catch(()=>{
@@ -42,8 +42,8 @@ const login = ()=>{
         },
         (issue)=>{
             const error = JSON.parse(issue);
-            console.log(error.message);
-            messenger.show(error.message,5000,"orange");
+            console.log(error);
+            messenger.show(toolText[error.token](error.message),5000,"orange");
         }
     )
     .catch(()=>{

@@ -5,7 +5,7 @@ console.log( `[XALI]--RUNNING XALI'S SCRIPT`);
 //Creating folders
 fs.mkdirSync(`./../../client/css`, { recursive: true });
 fs.mkdirSync(`./../../client/images`, { recursive: true });
-fs.mkdirSync(`./../../client/js`, { recursive: true });
+fs.mkdirSync(`./../../client/js/lang`, { recursive: true });
 fs.mkdirSync(`./../../server/https`, { recursive: true });
 fs.mkdirSync(`./../..//server/jwt`, { recursive: true });
 fs.mkdirSync(`./../..//server/mail`, { recursive: true });
@@ -34,6 +34,8 @@ copy('css/index.css', 'client/css/index.css');
 copy('js/index.js', 'client/js/index.js');
 copy('js/common.js', 'client/js/common.js');
 copy('js/login.js', 'client/js/login.js');
+copy('js/lang/en-EN.js','client/js/lang/en-EN');
+copy('js/lang/es-ES.js','client/js/lang/es-ES');
 copy('images/logo.svg', 'client/images/logo.svg');
 copy('images/flaticon.png', 'client/images/flaticon.png');
 copy('images/eye_close.png', 'client/images/eye_close.png');

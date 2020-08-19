@@ -152,7 +152,7 @@ this.register = async (res,data,user)=>{
         //Check if user does not exists already
         const found_user = await db.findOne("credentials",{"mail":data.mail});
         if(found_user){
-            throw logger.buildError(409,'unaviable',`Mail ${data.mail} already in use`);
+            throw logger.buildError(409,'mail_unaviable',`${data.mail}`);
         }else{
             //Get the default data for the user
             const default_user_data = templater.getObjectConstructors("user")();
