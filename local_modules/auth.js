@@ -197,14 +197,13 @@ module.exports.confirmMail = (user)=>{
  */
 module.exports.changePwd = (user,newPwd)=>{
     return new Promise(async(resolve,reject)=>{
-        logger.log("AUTH","ChangePwd",`Changing pwd for ${user.id} to ${newPwd}`);
         //Register pending user
         bcrypt.hash(newPwd, saltRounds, async function(err, hash) {
             if(err){
                 throw logger.buildError(500,"hash",err);
             }
             try{
-                await db.updateOne("xali","credentials",{id:user.id},{pwd:hash});
+                await db.updateOne("xali","credentials",{id:user.id},{user_pwd:hash});
                 resolve();
             }catch(error){
                 throw logger.buildError(500,"insert_error",error);

@@ -261,6 +261,7 @@ this.lostPwd = async (res,data,user)=>{
 
         found_user.key = new_key;
         //mailer.sendMail("changeMail",{found_user});
+        
         router.respond(res,"",200);
     }catch(error){
         const err = logger.buildError(501,"getUser_error",error);
