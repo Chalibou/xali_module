@@ -53,7 +53,7 @@ input{
     background-color: var(--font_color_main_emphase);
     border-radius: 0.5rem;
     width: 100%;
-    margin-top: 2.5rem;
+    margin: 2.5rem 0rem;
 }
 
 @media only screen and (max-width: 700px) {

@@ -55,6 +55,7 @@ const setup = {
         ],
         accreditation:{
             ["/login.html"]:["UKN","standard"],
+            ["/forgotten_pwd.html"]:["UKN","standard"],
             ["/images/logo.svg"]:["UKN","standard"],
             ["/images/login_bkg.jpg"]:["UKN","standard"],
             ["/images/flaticon.png"]:["UKN","standard"],

@@ -95,7 +95,7 @@ nav .nav_title .logo{
     position: relative;
 }
 
-a{
+nav a{
     font-family: inherit;
     font-weight: 700;
     font-size: 1.5rem;
@@ -107,9 +107,19 @@ a{
     border-radius: 5px;
     transition:background-color 0.1s linear,color 0.1s linear;
 }
-a:hover {
+nav a:hover {
     transition:background-color 0.3s linear,color 0.3s linear;
     background-color: var(--font_color_main_emphase);
+    color: var(--font_color_main);
+}
+
+a{
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--font_color_main_inverse);
+}
+a:hover {
     color: var(--font_color_main);
 }
 
