@@ -13,8 +13,8 @@ toolText = {
     ,error:(issue)=>{
         switch(issue.token){
             case "unk_request": return "The request you are emmitting is not avaiable"
-
-            default:return `An unknown error occured : ${issue}`
+            case "ukn_mail": return "The request you are emmitting is not avaiable"
+            default:return `An unknown error occured : ${JSON.stringify(issue)}`
         }
     },
 

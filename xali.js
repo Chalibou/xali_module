@@ -7,7 +7,6 @@ const logger = require("./local_modules/logger.js");
 const router = require("./local_modules/router.js");
 const tools = require("./local_modules/tools.js");
 const templater = require("./local_modules/templater.js");
-const { defaultMaxListeners } = require("stream");
 
 module.exports.db = db;
 module.exports.auth = auth;

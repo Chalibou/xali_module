@@ -206,7 +206,7 @@ module.exports.changePwd = (user,newPwd)=>{
                 await db.updateOne("xali","credentials",{id:user.id},{pwd:hash});
                 resolve();
             }catch(error){
-                throw logger.buildError(500,"insert_errror",error);
+                throw logger.buildError(500,"insert_error",error);
             }
         })
     })
