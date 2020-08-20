@@ -7,7 +7,7 @@ Jaune(206, 156, 39) #CE9C27
 
 */
 :root{
-    --bkg_main:rgba(40, 60, 140,1);
+    --bkg_main:rgb(53, 116, 187);
     --bkg_main_darker:rgb(22, 39, 109);
     --bkg_main_lighter:rgb(100, 126, 231);
     --bkg_sec:rgb(160, 160, 160);
