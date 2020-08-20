@@ -7,6 +7,7 @@ const logger = require("./local_modules/logger.js");
 const router = require("./local_modules/router.js");
 const tools = require("./local_modules/tools.js");
 const templater = require("./local_modules/templater.js");
+const { defaultMaxListeners } = require("stream");
 
 module.exports.db = db;
 module.exports.auth = auth;
@@ -238,6 +239,29 @@ this.getUser = async (res,data,user)=>{
     try{
         const found_user = await db.findOne("xali","credentials",{"id":user.id},{_id:0,name:1,mail:1,data:1})
         router.respond(res,JSON.stringify(found_user),200);
+    }catch(error){
+        const err = logger.buildError(501,"getUser_error",error);
+        router.respond(res,JSON.stringify(err),err.code);
+    }
+}
+
+this.forgottenPwd = async (res,data,user)=>{
+    try{
+        let found_user = await db.findOne("xali","credentials",{"mail":data.mail},{_id:0,name:1,mail:1,id:1});
+        if(!found_user){
+            const err = logger.buildError(501,"ukn_mail",data.mail);
+            router.respond(res,JSON.stringify(err),err.code);
+            return
+        }
+        //Generate password for this user
+        const new_key = tools.getRandomPwd(12);
+        await auth.changePwd(found_user,new_key);
+        
+        logger.good("AUTH","ChagePwd",`User ${found_user.id} got its pwd replaced by ${new_key}`)
+
+        found_user.key = new_key;
+        //mailer.sendMail("changeMail",{found_user});
+        router.respond(res,"",200);
     }catch(error){
         const err = logger.buildError(501,"getUser_error",error);
         router.respond(res,JSON.stringify(err),err.code);

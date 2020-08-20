@@ -42,6 +42,7 @@ copy('images/eye_close.png', 'client/images/eye_close.png');
 copy('images/eye_open.png', 'client/images/eye_open.png');
 copy('images/login_bkg.jpg', 'client/images/login_bkg.jpg');
 copy('index.html', 'client/index.html');
+copy('change_pwd.html', 'client/change_pwd.html');
 copy('forgotten_pwd.html', 'client/forgotten_pwd.html');
 copy('login.html', 'client/login.html');
 copy('xali_app.js', 'xali_app.js');

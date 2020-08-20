@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>#{forgotten_pwd}</title>
+    <title>#{change_pwd}</title>
     <meta name="description" content="My project">
     <meta name="author" content="Chali">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,11 +35,12 @@
     
     <section class="content">
         <div class="card">
-            <p>#{forgot_pwd_text}</p>
+            <p>#{change_pwd_text}</p>
             <div class="liner">
                 <input id="i_mail" placeholder="#{generic_mail}" type="mail" style="flex:3">
                 <button id="b_forgotten_pwd" style="flex:1">#{send}</button>
             </div>
+            
         </div>
     </section>
 
@@ -55,9 +56,5 @@
     
     
 </body>
-
 <script src="js/lang/#{current_lang}.js"></script>
 <script src="js/common.js"></script>
-<script>
-    document.getElementById("b_forgotten_pwd").addEventListener("click",lostPwd);
-</script>

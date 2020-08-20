@@ -36,9 +36,9 @@
     <section class="content">
         <div class="loginPanelWrap">
             <div class="loginPanel">
-                <p>#{email}</p>
+                <label>#{email}</label>
                 <input id="login_mail" type="email">
-                <p>#{password}</p>
+                <label>#{password}</label>
                 <div class="pwd_Wrap">
                     <input id="login_pwd" type="password">
                     <div class="eye_close"></div>
@@ -61,14 +61,19 @@
     <div id="modal_wrapper" class="modal_wrapper">
         <div id="modal" class="modal">
             <div class="registerPanel">
-                <p>#{name}</p>
+                <label>#{name}</label>
                 <input id="register_name" type="text">
-                <p>#{email}</p>
+                <label>#{email}</label>
                 <input id="register_mail" type="email">
-                <p>#{password}</p>
+                <label>#{password}</label>
                 <div class="pwd_Wrap">
                     <input id="register_pwd" type="password">
-                    <div id="toggle_visibility" class="eye_close"></div>
+                    <div class="eye_close"></div>
+                </div>
+                <label>#{confirm}</label>
+                <div class="pwd_Wrap">
+                    <input id="register_pwd_confirm" type="password">
+                    <div class="eye_close"></div>
                 </div>
                 <button id="b_register" class="b_login">#{b_register}</button>
             </div>

@@ -103,7 +103,7 @@ module.exports.find = (name,collection,critera,projection)=>{
 module.exports.updateOne = (name,collection,critera,update)=>{
     return new Promise (async(resolve,reject)=>{
         try{
-            resolve(await this.client[name].collection(collection).updateOne(critera,update));
+            resolve(await this.client[name].collection(collection).updateOne(critera,{$set:update}));
         }catch(error){
             throw error
         }

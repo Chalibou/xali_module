@@ -69,6 +69,7 @@ const setup = {
             ["/css/login.css"]:["UKN","standard"],
             ["user_register"]:["UKN","standard"],
             ["user_login"]:["UKN","standard"],
+            ["user_lost_pwd"]:["UKN","standard"],
             ["/"]:["standard"],
             ["/js/index.js"]:["standard"],
             ["/css/index.css"]:["standard"],

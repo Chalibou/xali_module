@@ -1,11 +1,34 @@
 
 const register = ()=>{
+    //Check agreement conditions
+    
+    //Check if passwords are the same
+    const pass = document.getElementById("register_pwd").value;
+    const pass_confirm = document.getElementById("register_pwd_confirm").value;
+    const name = document.getElementById("register_name").value;
+    const mail = document.getElementById("register_mail").value;
+    //Check void fields
+    if(name=="" || mail=="" || pass==""){
+        messenger.show(toolText.empty_fields,5000,"red");
+        return;
+    }
+    //Check password concordance
+    if(pass!=pass_confirm){
+        messenger.show(toolText.different_password,5000,"red");
+        return;
+    }
+    //Check if password is protected enough
+    if(!isGoodPwd(pass)){
+        messenger.show(toolText.weak_password,5000,"red");
+        return;
+    }
+    //Execute request
     const request = JSON.stringify({
         type:"user_register",
         data:{
-            name:document.getElementById("register_name").value,
-            mail:document.getElementById("register_mail").value,
-            pwd:document.getElementById("register_pwd").value
+            name:name,
+            mail:mail,
+            pwd:pass
         }
     });
     
@@ -83,9 +106,7 @@ const isGoodPwd = (pwd)=>{
 document.getElementById("b_register").addEventListener("click",register);
 document.getElementById("nav_b_register").addEventListener("click",toggleModal);
 document.getElementById("b_login").addEventListener("click",login);
-document.getElementById("login_pwd").addEventListener("click",event=>{if(event.key == 'Enter')login});
-document.getElementById("b_lang_EN").addEventListener("click",()=>{changeLang("en-EN");});
-document.getElementById("b_lang_ES").addEventListener("click",()=>{changeLang("es-ES");});
+document.getElementById("login_pwd").addEventListener("keypress",event=>{if(event.key == 'Enter')login();});
 //Password management
 const eyes = document.getElementsByClassName("eye_close");
 for (let i = 0; i < eyes.length; i++) {

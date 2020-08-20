@@ -1,7 +1,7 @@
 {
     "current_lang":"es-ES",
     "product_name":"MI SUPER PRODUCTO",
-    "b_register":"REGISTRARTE",
+    "b_register":"REGISTRARSE",
     "b_login":"INGRESA",
     "b_lang_EN":"EN",
     "b_lang_ES":"ES",
@@ -9,5 +9,9 @@
     "email":"EMAIL",
     "password":"CLAVE",
     "name":"NOMBRE",
-    "forgotten_pwd":"¿ Olvido su clave ?"
+    "forgotten_pwd":"¿ Olvido su clave ?",
+    "forgot_pwd_text":"Pasa a todo el mundo, inscribe aqui el email que utilizo para registrarse y le mandaremos una nueva clave de conexion.",
+    "send":"ENVIAR",
+    "generic_mail":"mi.mail@elweb.com",
+    "confirm":"CONFIRMAR"
 }

@@ -10,23 +10,64 @@ const changeLang = (lang)=>{
 /**
  * Allow a user to be logged out
  */
-const logout = ()=>{
+const logout = async()=>{
     const request = JSON.stringify({
         type:"user_logout"
     });
-    
-    ajaxPost(request)
-    .then(
-        ()=>{
-            window.location.reload(true);
-        },
-        (issue)=>{
-            console.log(issue);
+    try{
+        await ajaxPost(request);
+        window.location.reload(true);
+    }catch(issue){
+        console.log(issue);
+    }
+}
+
+/**
+ * Allow a user to change password
+ */
+const changePwd = async(newPwd)=>{
+    const request = JSON.stringify({
+        type:"user_change_pwd",
+        data:{
+            pwd:newPwd
         }
-    )
-    .catch((err)=>{
-        console.error(err);
     });
+    try{
+        await ajaxPost(request)
+        messenger.show(toolText.changePwd_success,4000,"black");
+    }catch(issue){
+        messenger.show(toolText.error(JSON.parse(issue)),4000,"orange");
+    }
+}
+
+/**
+ * Allow a user to declare forgotten password
+ */
+const lostPwd = async()=>{
+    //Check for mail
+    let mail;
+    try{
+        mail = document.getElementById("i_mail").value;
+    }catch(err){
+        console.log("Missing field for mail : ",err);
+    }
+    
+    if(mail==""){
+        messenger.show(toolText.empty_fields,4000,"red");
+        return
+    }
+    const request = JSON.stringify({
+        type:"user_lost_pwd",
+        data:{
+            mail:mail
+        }
+    });
+    try{
+        await ajaxPost(request)
+        messenger.show(toolText.lostPwd_success,4000,"black");
+    }catch(issue){
+        messenger.show(toolText.error(JSON.parse(issue)),4000,"orange");
+    }
 }
 
 /**
@@ -137,4 +178,12 @@ const ajaxPost = (message)=>{
         xhr.open('POST', "https://localhost/", true);
         xhr.send(message);
     });
+}
+
+//Language management
+try{
+    document.getElementById("b_lang_EN").addEventListener("click",()=>{changeLang("en-EN");});
+    document.getElementById("b_lang_ES").addEventListener("click",()=>{changeLang("es-ES");});
+}catch(err){
+    console.error("Missing buttons for language selection : ",err);
 }

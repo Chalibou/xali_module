@@ -9,5 +9,10 @@
     "email":"E-MAIL",
     "password":"PASSWORD",
     "name":"NAME",
-    "forgotten_pwd":"Forgot your password ?"
+    "forgotten_pwd":"Forgot your password ?",
+    "forgot_pwd_text":"It happens to anyone, write down the mail you used to register and click the button to recieve your new password.",
+    "send":"SEND",
+    "generic_mail":"my.mail@theweb.com",
+    "confirm":"CONFIRM"
+
 }
