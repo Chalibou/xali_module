@@ -1,22 +1,10 @@
-const logout = ()=>{
-    const request = JSON.stringify({
-        type:"user_logout"
-    });
-    
-    ajaxPost(request)
-    .then(
-        ()=>{
-            window.location.reload(true);
-        },
-        (issue)=>{
-            console.log(issue);
-        }
-    )
-    .catch((err)=>{
-        console.error(err);
-    });
-}
-
+//Load user info
 user.getUser();
 
+messenger.show(toolText.hi(user.data.name),6000);
+
+//Language management
+document.getElementById("b_lang_EN").addEventListener("click",()=>{changeLang("en-EN");});
+document.getElementById("b_lang_ES").addEventListener("click",()=>{changeLang("es-ES");});
+//Logout management
 document.getElementById("b_logout").addEventListener("click",logout);

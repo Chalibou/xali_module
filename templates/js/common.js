@@ -7,12 +7,40 @@ const changeLang = (lang)=>{
     window.location.reload(true);
 }
 
+/**
+ * Allow a user to be logged out
+ */
+const logout = ()=>{
+    const request = JSON.stringify({
+        type:"user_logout"
+    });
+    
+    ajaxPost(request)
+    .then(
+        ()=>{
+            window.location.reload(true);
+        },
+        (issue)=>{
+            console.log(issue);
+        }
+    )
+    .catch((err)=>{
+        console.error(err);
+    });
+}
+
+/**
+ * Allow a modal to be toggled on the page
+ */
 const toggleModal = ()=>{
     const wrapper = document.getElementById("modal_wrapper");
     const type = wrapper.style.display === 'block' ? 'none' : 'block';
     wrapper.style.display = type;
 }
 
+/**
+ * Client objects
+ */
 const user = {
     data:{},
     getUser:()=>{
