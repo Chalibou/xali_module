@@ -80,6 +80,7 @@ module.exports.setup = (setup)=>{
     router.post("user_login",this.login);
     router.post("user_logout",this.logout);
     router.post("user_get",this.getUser);
+    router.post("user_lost_pwd",this.lostPwd);
 
     //Initialize the routes for the application
     for (let i = 0; i < setup.routes.post.length; i++) {
@@ -245,7 +246,7 @@ this.getUser = async (res,data,user)=>{
     }
 }
 
-this.forgottenPwd = async (res,data,user)=>{
+this.lostPwd = async (res,data,user)=>{
     try{
         let found_user = await db.findOne("xali","credentials",{"mail":data.mail},{_id:0,name:1,mail:1,id:1});
         if(!found_user){

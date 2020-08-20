@@ -146,7 +146,12 @@ module.exports.managePOST = (res,postRequest,user)=>{
     logger.log("ROUTER","POST",`Responding POST for ${postRequest.type}`);
     //Extract the method to be used for  POST call and execute it
     const postMethod = this.postCallbacks[postRequest.type];
-    postMethod(res,postRequest.data,user);
+    if(postMethod){
+        postMethod(res,postRequest.data,user);
+    }else{
+        logger.error("ROUTER","POST",`POST method ${postRequest.type} is not registered`)
+        this.respond(res,"",404);
+    }
 }
 
 /**
