@@ -51,29 +51,29 @@ module.exports.shuffle = (input)=>{
  */
 module.exports.getRandomPwd = (size)=>{
     if(size<10){size=10};
-    var response="";
-    var letters_lowcase = 'abcdefghijklmnopqrstuvwxyz';
-    var letters_upcase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    var numbers = '0123456789';
-    var symbols = '!@#$%^&*()_+~`}{[]\\:;?><,./-=';
+    let response="";
+    const letters_lowcase = 'abcdefghijklmnopqrstuvwxyz';
+    const letters_upcase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const numbers = '0123456789';
+    const symbols = '!@#$%^&*()_+~`}{[]\\:;?><,./-=';
 
     //We want at least one of each item, so we use getRndInt to set min to 1
-    var num_lowcase = getRndInt(1,size-4);
-    var num_upcase = getRndInt(1,size-num_lowcase-4);
-    var num_number = getRndInt(1,size-num_lowcase-num_upcase-2);
-    var num_symbols = size - num_lowcase - num_upcase - num_number;
+    const num_lowcase = this.getRndInt(1,size-4);
+    const num_upcase = this.getRndInt(1,size-num_lowcase-4);
+    const num_number = this.getRndInt(1,size-num_lowcase-num_upcase-2);
+    const num_symbols = size - num_lowcase - num_upcase - num_number;
 
     for (let i = 0; i < num_lowcase; i++) {
-        response += letters_lowcase.charAt(getRndInt(0,15));
+        response += letters_lowcase.charAt(this.getRndInt(0,15));
     }
     for (let i = 0; i < num_upcase; i++) {
-        response += letters_upcase.charAt(getRndInt(0,15));
+        response += letters_upcase.charAt(this.getRndInt(0,15));
     }
     for (let i = 0; i < num_number; i++) {
-        response += numbers.charAt(getRndInt(0,9));
+        response += numbers.charAt(this.getRndInt(0,9));
     }
     for (let i = 0; i < num_symbols; i++) {
-        response += symbols.charAt(getRndInt(0,28));
+        response += symbols.charAt(this.getRndInt(0,28));
     }
     //Scramble the password
     return this.shuffle(response);

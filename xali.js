@@ -249,7 +249,7 @@ this.lostPwd = async (res,data,user)=>{
     try{
         let found_user = await db.findOne("xali","credentials",{"mail":data.mail},{_id:0,name:1,mail:1,id:1});
         if(!found_user){
-            const err = logger.buildError(301,"ukn_mail",data.mail);
+            const err = logger.buildError(401,"ukn_mail",data.mail);
             router.respond(res,JSON.stringify(err),err.code);
             return
         }
