@@ -83,6 +83,7 @@ const isGoodPwd = (pwd)=>{
 document.getElementById("b_register").addEventListener("click",register);
 document.getElementById("nav_b_register").addEventListener("click",toggleModal);
 document.getElementById("b_login").addEventListener("click",login);
+document.getElementById("login_pwd").addEventListener("click",event=>{if(event.key == 'Enter')login});
 document.getElementById("b_lang_EN").addEventListener("click",()=>{changeLang("en-EN");});
 document.getElementById("b_lang_ES").addEventListener("click",()=>{changeLang("es-ES");});
 //Password management

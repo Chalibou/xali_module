@@ -8,5 +8,6 @@
     "b_logout":"DESCONECTARSE",
     "email":"EMAIL",
     "password":"CLAVE",
-    "name":"NOMBRE"
+    "name":"NOMBRE",
+    "forgotten_pwd":"¿ Olvido su clave ?"
 }

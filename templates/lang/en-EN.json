@@ -8,5 +8,6 @@
     "b_logout":"LOGOUT",
     "email":"E-MAIL",
     "password":"PASSWORD",
-    "name":"NAME"
+    "name":"NAME",
+    "forgotten_pwd":"Forgot your password ?"
 }

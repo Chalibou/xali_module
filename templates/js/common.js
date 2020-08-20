@@ -65,6 +65,7 @@ const messenger = {
     target:document.getElementById("messenger_div"),
     timeOuts:[],
     show:(message,time=5000,color="black")=>{
+        messenger.clearTimeouts();
         messenger.target.innerHTML = message;
         messenger.target.style.color = color;
         messenger.target.style.display = "block";
