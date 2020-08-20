@@ -43,8 +43,8 @@ const toggleModal = ()=>{
  */
 const user = {
     data:{},
-    getUser:async()=>{
-        return new Promise((resolve,reject)=>{
+    getUser:()=>{
+        return new Promise(async(resolve,reject)=>{
             const request = JSON.stringify({
                 type:"user_get"
             });
@@ -56,7 +56,6 @@ const user = {
                 const error = JSON.parse(issue);
                 console.log(error);
                 messenger.show(toolText[error.token](error.message),5000,"orange");
-                reject();
             }
         })
     }

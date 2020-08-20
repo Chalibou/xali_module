@@ -1,7 +1,8 @@
 //Load user info
-user.getUser();
-
-messenger.show(toolText.hi(user.data.name),6000);
+window.onload = async ()=>{
+    await user.getUser();
+    messenger.show(toolText.hi(user.data.name),6000);
+}
 
 //Language management
 document.getElementById("b_lang_EN").addEventListener("click",()=>{changeLang("en-EN");});
