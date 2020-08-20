@@ -13,7 +13,7 @@ const register = ()=>{
     .then(
         ()=>{
             toggleModal();
-            messenger.show(toolText.register_success,5000,"green");
+            messenger.show(toolText.register_success(),5000,"green");
         },
         (issue)=>{
             const error = JSON.parse(issue);

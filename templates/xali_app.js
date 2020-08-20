@@ -48,10 +48,10 @@ const setup = {
         /**
          * List of POST methods. Xali's applications recieve POST methods in the root app domain.
          * Post methods body should be an object with a "type" property {String} and "data" property {Object}
-         * This List items should be sonstructed as [POST_object.type, an integer for accreditation level (0 if a free request (aka without auth)) ,Post method in the module : server_data/post/post.js]
+         * This List items should be sonstructed as [POST_object.type,Post method in the module : server_data/post/post.js]
          */
         post:[
-            //["user_action",true,"action"],
+            //["user_action","action"],
         ],
         accreditation:{
             ["/login.html"]:["UKN","standard"],
@@ -71,7 +71,8 @@ const setup = {
             ["/"]:["standard"],
             ["/js/index.js"]:["standard"],
             ["/css/index.css"]:["standard"],
-            ["user_logout"]:["standard"]
+            ["user_logout"]:["standard"],
+            ["user_get"]:["standard"]
         }
     }
 }

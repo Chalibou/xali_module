@@ -78,11 +78,12 @@ module.exports.setup = (setup)=>{
     router.post("user_register",this.register);
     router.post("user_login",this.login);
     router.post("user_logout",this.logout);
+    router.post("user_get",this.getUser);
 
     //Initialize the routes for the application
     for (let i = 0; i < setup.routes.post.length; i++) {
         const element = setup.routes.post[i];
-        router.post(element[0],element[1],post[element[2]]);
+        router.post(element[0],post[element[2]]);
     }
 
     //Validate the setup
@@ -209,6 +210,6 @@ this.logout = (res,data,user)=>{
  */
 this.getUser = async (res,data,user)=>{
     //Reach db looking for user
-    const user = await db.findOne("xali","credentials",{"id":user.id},{name:1,mail:1,data:1})
-    console.log(user);
+    const found_user = await db.findOne("xali","credentials",{"id":user.id},{name:1,mail:1,data:1})
+    console.log(found_user);
 }
