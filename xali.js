@@ -138,13 +138,22 @@ module.exports.run = ()=>{
  * @namespace MandatoryPostMethods
  */
 
+ /**
+  * @typedef {Object} User
+  * @property {String} id Unique ID on trhe platform, if unknown == UKN
+  * @property {String} group Accreditation group of the user, if unknown == UKN
+  * @property {String} lang Language preference of the user
+  */
 
 /**
  * Post response method for registering a user
  * @memberof MandatoryPostMethods
+ * @param {Object} res HTTP Response
  * @param {Object} data POST agregator object
- * @param {String} data.userId Id of the user
- * @param {String} data.userInfo Info of the user
+ * @param {String} data.name Id of the requerer
+ * @param {String} data.mail mail of the requerer
+ * @param {String} data.pwd Pwd of the requerer
+ * @param {User} user Local info (cookies) of the user
  * @returns {Response} Data Response 
  */
 this.register = async (res,data,user)=>{
@@ -172,7 +181,15 @@ this.register = async (res,data,user)=>{
     }
 }
 
-
+/**
+ * Login a user
+ * @memberof MandatoryPostMethods
+ * @param {Object} res HTTP Response
+ * @param {Object} data POST agregator object
+ * @param {String} data.mail Mail of the requerer
+ * @param {String} data.pwd Pwd of the requerer
+ * @param {User} user Local info (cookies) of the user
+ */
 this.login = async (res,data,user)=>{
     try{
         //Check if user has good template
@@ -197,6 +214,13 @@ this.login = async (res,data,user)=>{
     }
 }
 
+/**
+ * Logout a user
+ * @memberof MandatoryPostMethods
+ * @param {Object} res HTTP Response
+ * @param {Object} data Expected to be null
+ * @param {User} user Local info (cookies) of the user
+ */
 this.logout = (res,data,user)=>{
     auth.logout(user.id);
     router.respond(res,"",200);
@@ -204,9 +228,10 @@ this.logout = (res,data,user)=>{
 
 /**
  * Authenticated user requesting for its informations
- * @param {*} res 
- * @param {*} data 
- * @param {*} user 
+ * @memberof MandatoryPostMethods
+ * @param {Object} res HTTP Response
+ * @param {Object} data Expected to be null
+ * @param {User} user Local info (cookies) of the user
  */
 this.getUser = async (res,data,user)=>{
     //Reach db looking for user
