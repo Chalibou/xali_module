@@ -65,7 +65,7 @@ module.exports.reconnect = (name)=>{
 module.exports.insertOne = (name,collection,data)=>{
     return new Promise (async(resolve,reject)=>{
         try{
-            await this.client.collection(collection).insertOne(data);
+            await this.client[name].collection(collection).insertOne(data);
             resolve();
         }catch(error){
             throw error
@@ -83,7 +83,7 @@ module.exports.insertOne = (name,collection,data)=>{
 module.exports.findOne = (name,collection,critera,projection={_id: 0})=>{
     return new Promise (async(resolve,reject)=>{
         try{
-            resolve(await this.client[name].collection(collection).findOne(critera,projection));
+            resolve(await this.client[name].collection(collection).findOne(critera,{projection: projection}));
         }catch(error){
             throw error
         }
@@ -93,7 +93,7 @@ module.exports.findOne = (name,collection,critera,projection={_id: 0})=>{
 module.exports.find = (name,collection,critera,projection)=>{
     return new Promise (async(resolve,reject)=>{
         try{
-            resolve(await this.client[name].collection(collection).find(critera,projection));
+            resolve(await this.client[name].collection(collection).find(critera,{projection: projection}));
         }catch(error){
             throw error
         }

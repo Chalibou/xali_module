@@ -9,31 +9,14 @@ const logout = ()=>{
             window.location.reload(true);
         },
         (issue)=>{
-            console.error(issue);
+            console.log(issue);
         }
     )
-    .catch((error)=>{
-        console.error(error);
+    .catch((err)=>{
+        console.error(err);
     });
 }
 
-const getUser = ()=>{
-    const request = JSON.stringify({
-        type:"user_get"
-    });
-    
-    ajaxPost(request)
-    .then(
-        (res)=>{
-            console.log(res);
-        },
-        (issue)=>{
-            console.error(issue);
-        }
-    )
-    .catch((error)=>{
-        console.error(error);
-    });
-}
+user.getUser();
 
 document.getElementById("b_logout").addEventListener("click",logout);

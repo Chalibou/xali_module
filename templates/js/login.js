@@ -21,8 +21,8 @@ const register = ()=>{
             messenger.show(toolText[error.token](error.message),5000,"orange");
         }
     )
-    .catch(()=>{
-
+    .catch((err)=>{
+        console.error(err);
     });
 }
 
@@ -47,17 +47,38 @@ const login = ()=>{
             messenger.show(toolText[error.token](error.message),5000,"orange");
         }
     )
-    .catch(()=>{
-
+    .catch((err)=>{
+        console.error(err);
     });
 }
 
-const toggleModal = ()=>{
-    const wrapper = document.getElementById("modal_wrapper");
-    const type = wrapper.style.display === 'block' ? 'none' : 'block';
-    wrapper.style.display = type;
+/**
+ * Toggle visibility of a password field
+ * @param {HTMLElement} e HTML element following the password field
+ */
+const toggleVisibility = (e)=>{
+    const icon = e.target;
+    const input = icon.parentNode.children[0];
+    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+    input.setAttribute('type', type);
+    // toggle the eye slash icon
+    const form = icon.getAttribute('class') === 'eye_close' ? 'eye_open' : 'eye_close';
+    icon.setAttribute("class",form);
 }
 
+/**
+ * Pwd power check
+ * @param {String} item Password
+ */
+const isGoodPwd = (pwd)=>{
+    const hasNoVoid = pwd.indexOf(' ') == -1
+    const hasForbidden = /\|/.test(pwd);
+    const hasNumber = /\d/.test(pwd);
+    const hasUppercase = /[A-Z]/.test(pwd);
+    const hasSpecial = /[ !@#$%^&*()_+\-=\[\]{};':",.<>\/?]/.test(pwd);
+    const isLongEnough = pwd.length >6;
+    return !hasForbidden&&hasNoVoid&&hasNumber&&hasUppercase&&hasSpecial&&isLongEnough
+}
 
 document.getElementById("b_register").addEventListener("click",register);
 document.getElementById("nav_b_register").addEventListener("click",toggleModal);

@@ -210,6 +210,11 @@ this.logout = (res,data,user)=>{
  */
 this.getUser = async (res,data,user)=>{
     //Reach db looking for user
-    const found_user = await db.findOne("xali","credentials",{"id":user.id},{name:1,mail:1,data:1})
-    console.log(found_user);
+    try{
+        const found_user = await db.findOne("xali","credentials",{"id":user.id},{_id:0,name:1,mail:1,data:1})
+        router.respond(res,JSON.stringify(found_user),200);
+    }catch(error){
+        const err = logger.buildError(501,"getUser_error",error);
+        router.respond(res,JSON.stringify(err),err.code);
+    }
 }
