@@ -12,8 +12,8 @@ toolText = {
     ,changePwd_success:"Your password has been changed sucessfully"
     ,error:(issue)=>{
         switch(issue.token){
-            case "unk_request": return "The request you are emmitting is not avaiable"
-            case "ukn_mail": return "The request you are emmitting is not avaiable"
+            case "ukn_mail": return "The mail you entered is not recognized"
+            case "getUser_error": return "The mail you entered is not recognized"
             default:return `An unknown error occured : ${JSON.stringify(issue)}`
         }
     },
