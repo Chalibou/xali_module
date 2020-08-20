@@ -6,6 +6,7 @@ const setup = {
     db:{
         //Data for connecting to your database
         connect:{
+            name:"xali",
             service:"mongodb",
             id:"cotizServer",
             key:"fK*2rxw*lvrT",

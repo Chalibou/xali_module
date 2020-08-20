@@ -47,6 +47,7 @@ module.exports.setup = (setup)=>{
     db.connect(
         {
             service:setup.db.connect.service,
+            name:setup.db.connect.name,
             id:setup.db.connect.id,
             key:setup.db.connect.key,
             adress:setup.db.connect.adress,
@@ -150,7 +151,7 @@ this.register = async (res,data,user)=>{
         //Check if user has good template
         await templater.checkDataStructure("user_register",data);
         //Check if user does not exists already
-        const found_user = await db.findOne("credentials",{"mail":data.mail});
+        const found_user = await db.findOne("xali","credentials",{"mail":data.mail});
         if(found_user){
             throw logger.buildError(409,'mail_unaviable',`${data.mail}`);
         }else{
@@ -176,7 +177,7 @@ this.login = async (res,data,user)=>{
         //Check if user has good template
         await templater.checkDataStructure("user_login",data);
         //Get the user referenced under the data.mail mail
-        const found_user = await db.findOne("credentials",{"mail":data.mail});
+        const found_user = await db.findOne("xali","credentials",{"mail":data.mail});
         if(found_user){
             //Check authenticity 
             const auth_user = await auth.login(found_user,data);
@@ -198,4 +199,16 @@ this.login = async (res,data,user)=>{
 this.logout = (res,data,user)=>{
     auth.logout(user.id);
     router.respond(res,"",200);
+}
+
+/**
+ * Authenticated user requesting for its informations
+ * @param {*} res 
+ * @param {*} data 
+ * @param {*} user 
+ */
+this.getUser = async (res,data,user)=>{
+    //Reach db looking for user
+    const user = await db.findOne("xali","credentials",{"id":user.id},{name:1,mail:1,data:1})
+    console.log(user);
 }

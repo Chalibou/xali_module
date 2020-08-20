@@ -136,7 +136,7 @@ module.exports.register = (user,user_group,user_appData)=>{
                 data:user_appData
             }
             try{
-                await db.insertOne("credentials",userData);
+                await db.insertOne("xali","credentials",userData);
                 resolve(userData);
             }catch(error){
                 throw logger.buildError(500,"insert_errror",error);

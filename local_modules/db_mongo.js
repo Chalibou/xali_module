@@ -17,6 +17,7 @@ this.client = {};
  * Connect to a mongodb database
  * @param {Object} params Object containing the informations for connexion
  * @param {String} params.service Name of service or adress of the database server
+ * @param {String} params.name Name of this database acces (used for application recon)
  * @param {String} params.id Service identification 
  * @param {String} params.key Service password
  * @param {String} params.adress Location of the service
@@ -29,12 +30,12 @@ module.exports.connect = (params,test=false)=>{
     if(test){
         this.url = 'mongodb://localhost:27017';
     }else{
-        this.url = `${service}://${id}:${key}@${adress}?authSource=${authSource}`
+        this.url = `${params.service}://${params.id}:${params.key}@${params.adress}?authSource=${params.authSource}`
     }
-    logger.log("DB","Connect",`Reaching DB`);
+    logger.log("DB","Connect",`Reaching DB : ${params.name}`);
     mongoClient.connect(this.url,this.options).then(client=>{
-        logger.good("DB","Connect",`Ready to listen`);
-        this.client = client.db(process.env.DB_NAME);
+        logger.good("DB","Connect",`${params.name} : Ready to listen`);
+        this.client[params.name] = client.db(params.name);
     },
     (error)=>{
         logger.error("DB","Connect",error);
@@ -44,11 +45,11 @@ module.exports.connect = (params,test=false)=>{
 /**
  * Reconnect to previously connected database
  */
-module.exports.reconnect = ()=>{
+module.exports.reconnect = (name)=>{
     logger.log("DB","Connect",`Reconnexion to DB`);
     mongoClient.connect(this.url,this.options).then(client=>{
         logger.good("DB","Connect",`Ready to listen`);
-        this.client = client.db(process.env.DB_NAME);
+        this.client[name] = client.db(process.env.DB_NAME);
     },
     (error)=>{
         logger.error("DB","Connect",error);
@@ -61,7 +62,7 @@ module.exports.reconnect = ()=>{
  * @param {Object} data Object to insert
  * @returns {Promise} Void message
  */
-module.exports.insertOne = (collection,data)=>{
+module.exports.insertOne = (name,collection,data)=>{
     return new Promise (async(resolve,reject)=>{
         try{
             await this.client.collection(collection).insertOne(data);
@@ -79,40 +80,40 @@ module.exports.insertOne = (collection,data)=>{
  * @param {Object} projection Returned object projection
  * @returns {Promise} Database object
  */
-module.exports.findOne = (collection,critera,projection={_id: 0})=>{
+module.exports.findOne = (name,collection,critera,projection={_id: 0})=>{
     return new Promise (async(resolve,reject)=>{
         try{
-            resolve(await this.client.collection(collection).findOne(critera,projection));
+            resolve(await this.client[name].collection(collection).findOne(critera,projection));
         }catch(error){
             throw error
         }
     })
 }
 
-module.exports.find = (collection,critera,projection)=>{
+module.exports.find = (name,collection,critera,projection)=>{
     return new Promise (async(resolve,reject)=>{
         try{
-            resolve(await this.client.collection(collection).find(critera,projection));
+            resolve(await this.client[name].collection(collection).find(critera,projection));
         }catch(error){
             throw error
         }
     })
 }
 
-module.exports.updateOne = (collection,critera,update)=>{
+module.exports.updateOne = (name,collection,critera,update)=>{
     return new Promise (async(resolve,reject)=>{
         try{
-            resolve(await this.client.collection(collection).updateOne(critera,update));
+            resolve(await this.client[name].collection(collection).updateOne(critera,update));
         }catch(error){
             throw error
         }
     })
 }
 
-module.exports.deleteOne = (collection,critera)=>{
+module.exports.deleteOne = (name,collection,critera)=>{
     return new Promise (async(resolve,reject)=>{
         try{
-            resolve(await this.client.collection(collection).deleteOne(critera));
+            resolve(await this.client[name].collection(collection).deleteOne(critera));
         }catch(error){
             throw error
         }
