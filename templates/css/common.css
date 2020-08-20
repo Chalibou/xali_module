@@ -90,6 +90,11 @@ nav .nav_title .logo{
     width: 3rem;
 }
 
+.content{
+    min-height: 85vh;
+    position: relative;
+}
+
 a{
     font-family: inherit;
     font-weight: 700;

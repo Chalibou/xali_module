@@ -8,12 +8,6 @@ body{
     background:url("/images/login_bkg.jpg") no-repeat center;
 }
 
-.content{
-    min-height: 85vh;
-    position: relative;
-}
-
-
 .loginPanelWrap{
     position: absolute;
     width: 50%;
