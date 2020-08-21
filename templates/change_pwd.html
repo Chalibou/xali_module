@@ -36,11 +36,17 @@
     <section class="content">
         <div class="card">
             <p>#{change_pwd_text}</p>
-            <div class="liner">
-                <input id="i_mail" placeholder="#{generic_mail}" type="mail" style="flex:3">
-                <button id="b_forgotten_pwd" style="flex:1">#{send}</button>
+            <label>#{password}</label>
+            <div class="pwd_Wrap">
+                <input id="i_pwd" type="password">
+                <div class="eye_close"></div>
             </div>
-            
+            <label>#{confirm}</label>
+            <div class="pwd_Wrap">
+                <input id="i_pwd_confirm" type="password">
+                <div class="eye_close"></div>
+            </div>
+            <button id="b_change_pwd">#{send}</button>
         </div>
     </section>
 
@@ -58,3 +64,77 @@
 </body>
 <script src="js/lang/#{current_lang}.js"></script>
 <script src="js/common.js"></script>
+<script>
+
+    /**
+     * Allow a user to declare forgotten password
+     */
+    const changePwd = async()=>{
+        //Check for key
+        let key;
+        try{
+            key = document.getElementById("i_pwd").value;
+            const key_confirm = document.getElementById("i_pwd_confirm").value;
+            if(key != key_confirm){
+                messenger.show(toolText.different_password,4000,"red");
+                return;
+            }
+        }catch(err){
+            console.log("Missing field for key : ",err);
+        }
+
+        if(key==""){
+            messenger.show(toolText.empty_fields,4000,"red");
+            return;
+        }
+        const request = JSON.stringify({
+            type:"user_change_pwd",
+            data:{
+                key:key
+            }
+        });
+        try{
+            await ajaxPost(request)
+            messenger.show(toolText.lostPwd_success,4000,"black");
+        }catch(issue){
+            messenger.show(toolText.error(JSON.parse(issue)),4000,"orange");
+        }
+    }
+
+    /**
+     * Toggle visibility of a password field
+     * @param {HTMLElement} e HTML element following the password field
+     */
+    const toggleVisibility = (e)=>{
+        const icon = e.target;
+        const input = icon.parentNode.children[0];
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        input.setAttribute('type', type);
+        // toggle the eye slash icon
+        const form = icon.getAttribute('class') === 'eye_close' ? 'eye_open' : 'eye_close';
+        icon.setAttribute("class",form);
+    }
+
+    /**
+     * Pwd power check
+     * @param {String} item Password
+     */
+    const isGoodPwd = (pwd)=>{
+        const hasNoVoid = pwd.indexOf(' ') == -1
+        const hasForbidden = /\|/.test(pwd);
+        const hasNumber = /\d/.test(pwd);
+        const hasUppercase = /[A-Z]/.test(pwd);
+        const hasSpecial = /[ !@#$%^&*()_+\-=\[\]{};':",.<>\/?]/.test(pwd);
+        const isLongEnough = pwd.length >6;
+        return !hasForbidden&&hasNoVoid&&hasNumber&&hasUppercase&&hasSpecial&&isLongEnough
+    }
+
+    //Password management
+    const eyes = document.getElementsByClassName("eye_close");
+    for (let i = 0; i < eyes.length; i++) {
+        const element = eyes[i];
+        element.addEventListener("click",(e)=>{toggleVisibility(e)})
+    }
+    //Button management
+    document.getElementById("b_change_pwd").addEventListener("click",changePwd);
+</script>

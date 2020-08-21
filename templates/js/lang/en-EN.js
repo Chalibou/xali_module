@@ -8,7 +8,7 @@ toolText = {
     ,empty_fields:"Fill the fields you left empty"
     ,different_password:"Password typed are not the same"
     ,weak_password:"Your password must be at least 8 characters long, with number, special character, without space"
-    ,lostPwd_success:""
+    ,lostPwd_success:"Your new password has been sent to your email"
     ,changePwd_success:"Your password has been changed sucessfully"
     ,error:(issue)=>{
         switch(issue.token){

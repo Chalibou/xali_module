@@ -80,6 +80,7 @@ module.exports.setup = (setup)=>{
     router.post("user_logout",this.logout);
     router.post("user_get",this.getUser);
     router.post("user_lost_pwd",this.lostPwd);
+    router.post("user_change_pwd",this.changePwd);
 
     //Initialize the routes for the application
     for (let i = 0; i < setup.routes.post.length; i++) {
@@ -245,10 +246,18 @@ this.getUser = async (res,data,user)=>{
     }
 }
 
+/**
+ * Generate a new password for user and send it to him
+ * @memberof MandatoryPostMethods
+ * @param {Object} res HTTP Response
+ * @param {Object} data User infos
+ * @param {User} user Local info (cookies) of the user
+ */
 this.lostPwd = async (res,data,user)=>{
     try{
         let found_user = await db.findOne("xali","credentials",{"mail":data.mail},{_id:0,name:1,mail:1,id:1});
         if(!found_user){
+            logger.log("POST","LostPwd",`Trying to change password for unknown mail ${data.mail}`);
             const err = logger.buildError(401,"ukn_mail",data.mail);
             router.respond(res,JSON.stringify(err),err.code);
             return
@@ -257,14 +266,42 @@ this.lostPwd = async (res,data,user)=>{
         const new_key = tools.getRandomPwd(12);
         await auth.changePwd(found_user,new_key);
         
-        logger.good("AUTH","ChagePwd",`User ${found_user.id} got its pwd replaced by ${new_key}`)
+        logger.good("AUTH","ChangePwd",`User ${found_user.id} got its pwd changed automaticaly`);
 
         found_user.key = new_key;
         //mailer.sendMail("changeMail",{found_user});
-        
+
         router.respond(res,"",200);
     }catch(error){
-        const err = logger.buildError(501,"getUser_error",error);
+        const err = logger.buildError(403,"getUser_error",error);
+        router.respond(res,JSON.stringify(err),err.code);
+    }
+}
+
+/**
+ * Change password for user
+ * @memberof MandatoryPostMethods
+ * @param {Object} res HTTP Response
+ * @param {Object} data User infos
+ * @param {User} user Local info (cookies) of the user
+ */
+this.changePwd = async (res,data,user)=>{
+    try{
+        let found_user = await db.findOne("xali","credentials",{"id":user.id},{_id:0,name:1,mail:1,id:1});
+        if(!found_user){
+            logger.log("POST","LostPwd",`Failing to change password for unknown mail ${user.id}`);
+            const err = logger.buildError(401,"ukn_user","");
+            router.respond(res,JSON.stringify(err),err.code);
+            return
+        }
+        //Generate password for this user
+        await auth.changePwd(found_user,data.key);
+        
+        logger.good("AUTH","ChangePwd",`User ${found_user.id} got its pwd changed`)
+
+        router.respond(res,"",200);
+    }catch(error){
+        const err = logger.buildError(403,"getUser_error",error);
         router.respond(res,JSON.stringify(err),err.code);
     }
 }

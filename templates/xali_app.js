@@ -70,6 +70,7 @@ const setup = {
             ["user_register"]:["UKN","standard"],
             ["user_login"]:["UKN","standard"],
             ["user_lost_pwd"]:["UKN","standard"],
+            ["user_change_pwd"]:["standard"],
             ["/"]:["standard"],
             ["/js/index.js"]:["standard"],
             ["/css/index.css"]:["standard"],

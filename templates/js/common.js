@@ -23,54 +23,6 @@ const logout = async()=>{
 }
 
 /**
- * Allow a user to change password
- */
-const changePwd = async(newPwd)=>{
-    const request = JSON.stringify({
-        type:"user_change_pwd",
-        data:{
-            pwd:newPwd
-        }
-    });
-    try{
-        await ajaxPost(request)
-        messenger.show(toolText.changePwd_success,4000,"black");
-    }catch(issue){
-        messenger.show(toolText.error(JSON.parse(issue)),4000,"orange");
-    }
-}
-
-/**
- * Allow a user to declare forgotten password
- */
-const lostPwd = async()=>{
-    //Check for mail
-    let mail;
-    try{
-        mail = document.getElementById("i_mail").value;
-    }catch(err){
-        console.log("Missing field for mail : ",err);
-    }
-    
-    if(mail==""){
-        messenger.show(toolText.empty_fields,4000,"red");
-        return
-    }
-    const request = JSON.stringify({
-        type:"user_lost_pwd",
-        data:{
-            mail:mail
-        }
-    });
-    try{
-        await ajaxPost(request)
-        messenger.show(toolText.lostPwd_success,4000,"black");
-    }catch(issue){
-        messenger.show(toolText.error(JSON.parse(issue)),4000,"orange");
-    }
-}
-
-/**
  * Allow a modal to be toggled on the page
  */
 const toggleModal = ()=>{
