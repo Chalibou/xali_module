@@ -36,6 +36,11 @@
     <section class="content">
         <div class="card">
             <p>#{change_pwd_text}</p>
+            <label>#{old_password}</label>
+            <div class="pwd_Wrap">
+                <input id="i_current_pwd" type="password">
+                <div class="eye_close"></div>
+            </div>
             <label>#{password}</label>
             <div class="pwd_Wrap">
                 <input id="i_pwd" type="password">
@@ -70,17 +75,14 @@
      * Allow a user to declare forgotten password
      */
     const changePwd = async()=>{
-        //Check for key
-        let key;
-        try{
-            key = document.getElementById("i_pwd").value;
-            const key_confirm = document.getElementById("i_pwd_confirm").value;
-            if(key != key_confirm){
-                messenger.show(toolText.different_password,4000,"red");
-                return;
-            }
-        }catch(err){
-            console.log("Missing field for key : ",err);
+        
+        const current_key = document.getElementById("i_current_pwd").value;
+        const key = document.getElementById("i_pwd").value;
+        const key_confirm = document.getElementById("i_pwd_confirm").value;
+        //Check for key match
+        if(key != key_confirm){
+            messenger.show(toolText.different_password,4000,"red");
+            return;
         }
 
         if(key==""){
@@ -90,6 +92,7 @@
         const request = JSON.stringify({
             type:"user_change_pwd",
             data:{
+                current_key:current_key,
                 key:key
             }
         });

@@ -147,12 +147,10 @@ module.exports.register = (user,user_group,user_appData)=>{
 
 
 module.exports.login = (db_user,req_user)=>{
-    return new Promise((resolve,reject)=>{
-        bcrypt.compare(req_user.pwd, db_user.user_pwd, function(err, res) {
-            if(err){
-                reject(logger.buildError(500,"compare_error","Internal error"));
-            }
-            if(res){
+    return new Promise(async(resolve,reject)=>{
+        try{
+            const isPwdOk = await bcrypt.compare(req_user.pwd, db_user.user_pwd);
+            if(isPwdOk){
                 //Send back a cookie with user and a token
                 //Generate token
                 const payload = {val:true};
@@ -176,10 +174,32 @@ module.exports.login = (db_user,req_user)=>{
             }else{
                 reject(logger.buildError(401,"wrong_key","Incorrect password"));
             }
-        });
+        }catch(error){
+            throw error;
+        }
     });
 }
 
+/**
+ * Compare a clean key with a token key
+ * @param {String} clearKey A key
+ * @param {String} tokenKey A JWT Token
+ * @returns {Promise} Result as a boolean
+ */
+module.exports.compareKey = (clearKey, tokenKey)=>{
+    return new Promise((resolve,reject)=>{
+        bcrypt.compare(clearKey, tokenKey, function(err, res) {
+            if(err){
+                reject(logger.buildError(500,"compare_error","Internal error"));
+            }
+            if(res){
+                resolve(true);
+            }else{
+                resolve(false);
+            }
+        })
+    })
+}
 
 /**
  * Send a mail confirmation mail to a user

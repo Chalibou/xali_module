@@ -72,6 +72,7 @@ const setup = {
             ["user_lost_pwd"]:["UKN","standard"],
             ["user_change_pwd"]:["standard"],
             ["/"]:["standard"],
+            ["/change_pwd.html"]:["standard"],
             ["/js/index.js"]:["standard"],
             ["/css/index.css"]:["standard"],
             ["user_logout"]:["standard"],

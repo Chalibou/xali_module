@@ -287,19 +287,24 @@ this.lostPwd = async (res,data,user)=>{
  */
 this.changePwd = async (res,data,user)=>{
     try{
-        let found_user = await db.findOne("xali","credentials",{"id":user.id},{_id:0,name:1,mail:1,id:1});
+        let found_user = await db.findOne("xali","credentials",{"id":user.id},{_id:0,user_pwd:1,mail:1});
         if(!found_user){
             logger.log("POST","LostPwd",`Failing to change password for unknown mail ${user.id}`);
             const err = logger.buildError(401,"ukn_user","");
             router.respond(res,JSON.stringify(err),err.code);
             return
         }
-        //Generate password for this user
-        await auth.changePwd(found_user,data.key);
-        
-        logger.good("AUTH","ChangePwd",`User ${found_user.id} got its pwd changed`)
-
-        router.respond(res,"",200);
+        //Check if current key is valid
+        const isPwdOk = await auth.compareKey(data.current_key,found_user.user_pwd)
+        if(isPwdOk){
+            //Generate password for this user
+            await auth.changePwd(found_user,data.key);
+            logger.good("AUTH","ChangePwd",`User ${found_user.id} got its pwd changed`)
+            router.respond(res,"",200);
+        }else{
+            const error = logger.buildError(401,"wrong_key","Incorrect password")
+            router.respond(res,JSON.stringify(error),error.code);
+        }
     }catch(error){
         const err = logger.buildError(403,"getUser_error",error);
         router.respond(res,JSON.stringify(err),err.code);
