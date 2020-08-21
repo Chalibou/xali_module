@@ -14,6 +14,9 @@
     .content{
         background-color: var(--bkg_sec_lighter);
     }
+    input{
+        width: 60%;
+    }
 </style>
 
 <body>
@@ -36,7 +39,7 @@
     <section class="content">
         <div class="card">
             <p>#{change_pwd_text}</p>
-            <label>#{old_password}</label>
+            <label>#{current_password}</label>
             <div class="pwd_Wrap">
                 <input id="i_current_pwd" type="password">
                 <div class="eye_close"></div>
@@ -51,7 +54,7 @@
                 <input id="i_pwd_confirm" type="password">
                 <div class="eye_close"></div>
             </div>
-            <button id="b_change_pwd">#{send}</button>
+            <button id="b_change_pwd" style="align-self: center;">#{send}</button>
         </div>
     </section>
 
