@@ -87,9 +87,12 @@
             messenger.show(toolText.different_password,4000,"red");
             return;
         }
-
         if(key==""){
             messenger.show(toolText.empty_fields,4000,"red");
+            return;
+        }
+        if(!isGoodPwd(key)){
+            messenger.show(toolText.weak_password,4000,"red");
             return;
         }
         const request = JSON.stringify({
@@ -101,7 +104,11 @@
         });
         try{
             await ajaxPost(request)
-            messenger.show(toolText.lostPwd_success,4000,"black");
+            messenger.show(toolText.changePwd_success,4000,"black");
+            //clear UI
+            document.getElementById("i_current_pwd").value = "";
+            document.getElementById("i_pwd").value = "";
+            document.getElementById("i_pwd_confirm").value = "";
         }catch(issue){
             messenger.show(toolText.error(JSON.parse(issue)),4000,"orange");
         }

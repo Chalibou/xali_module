@@ -17,5 +17,5 @@ toolText = {
             default:return `An unknown error occured : ${JSON.stringify(issue)}`
         }
     },
-
+    changePwd_success:'Your password was changed sucessfully'
 }

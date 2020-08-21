@@ -287,7 +287,7 @@ this.lostPwd = async (res,data,user)=>{
  */
 this.changePwd = async (res,data,user)=>{
     try{
-        let found_user = await db.findOne("xali","credentials",{"id":user.id},{_id:0,user_pwd:1,mail:1});
+        let found_user = await db.findOne("xali","credentials",{"id":user.id},{_id:0,user_pwd:1,id:1});
         if(!found_user){
             logger.log("POST","LostPwd",`Failing to change password for unknown mail ${user.id}`);
             const err = logger.buildError(401,"ukn_user","");
