@@ -7,6 +7,7 @@ const logger = require("./local_modules/logger.js");
 const router = require("./local_modules/router.js");
 const tools = require("./local_modules/tools.js");
 const templater = require("./local_modules/templater.js");
+const mailer = require("./local_modules/mailer.js");
 
 module.exports.db = db;
 module.exports.auth = auth;
@@ -14,6 +15,7 @@ module.exports.logger = logger;
 module.exports.router = router;
 module.exports.templater = templater;
 module.exports.tools = tools;
+module.exports.mailer = mailer;
 
 /**
  * @var {boolean} isSetUp Check if the application has been setup properly
@@ -56,6 +58,9 @@ module.exports.setup = (setup)=>{
         },
         setup.db.connect.isTest
     );
+
+    //Setup mailer module
+    mailer.setup(setup.mail);
     
     //Setup the objects models
     templater.loadDataStructures(setup.templates.objectStructures);
@@ -81,6 +86,8 @@ module.exports.setup = (setup)=>{
     router.post("user_get",this.getUser);
     router.post("user_lost_pwd",this.lostPwd);
     router.post("user_change_pwd",this.changePwd);
+
+    router.post("send_mail",this.sendMail);
 
     //Initialize the routes for the application
     for (let i = 0; i < setup.routes.post.length; i++) {
@@ -173,7 +180,7 @@ this.register = async (res,data,user)=>{
             const registered_user = await auth.register(data,"standard",default_user_data);
             logger.good("AUTH","Register",`Register of user ${registered_user.id} sucessfull`);
             //Confirm mail
-            auth.confirmMail(registered_user);
+            mailer.confirmMail(registered_user);
             //Respond
             router.respond(res,"",200);
         }
@@ -307,6 +314,16 @@ this.changePwd = async (res,data,user)=>{
         }
     }catch(error){
         const err = logger.buildError(403,"getUser_error",error);
+        router.respond(res,JSON.stringify(err),err.code);
+    }
+}
+
+this.sendMail = (res,data,user)=>{
+    try{
+        mailer.sendMail(data.target,data.subject,data.message);
+        router.respond(res,"GOOD",200);
+    }catch(err){
+        console.log(err);
         router.respond(res,JSON.stringify(err),err.code);
     }
 }

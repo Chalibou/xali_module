@@ -16,6 +16,7 @@
     "forgot_pwd_text":"It happens to anyone, write down the mail you used to register and click the button to recieve your new password.",
     "send":"SEND",
     "generic_mail":"my.mail@theweb.com",
-    "confirm":"CONFIRM"
-
+    "confirm":"CONFIRM",
+    "inconvenience_messaage":"If you do not know what it is all about, sorry for the inconvenience, it seems a client made a mistake while writing its email adress. Anyway you can visit us at <a href='www.cotiz.net' target='_blank'>Cotiz.net</a> if you want to know more !",
+    "company_legals":"COTIZ es un producto Xali <br/>Compañía registrada en el registro mercantil de Cali bajo la referencia 1064522 y 1064523"
 }

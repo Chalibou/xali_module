@@ -202,14 +202,6 @@ module.exports.compareKey = (clearKey, tokenKey)=>{
 }
 
 /**
- * Send a mail confirmation mail to a user
- * @param {User} user User object
- */
-module.exports.confirmMail = (user)=>{
-    logger.log("AUTH","Mail confirmation",`Confirming mail : ${user.mail}`);
-}
-
-/**
  * Change password for an identified user
  * @param {Object} user User object
  * @param {Object} user.id User id

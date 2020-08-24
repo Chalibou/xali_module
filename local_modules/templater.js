@@ -101,14 +101,6 @@ module.exports.getObjectConstructors = (name)=>{
     }
 }
 
-//Setup the module
-const mandatoryDataStructure = [
-    ["user_register",["name","mail","pwd"]],
-    ["user_login",["mail","pwd"]]
-]
-//Load mandatory data structure
-this.loadDataStructures(mandatoryDataStructure);
-
 /**
  * Load a batch of languages in the current {@link module-templater} to be used in text translation
  */
@@ -120,3 +112,33 @@ fs.readdirSync(`${process.cwd()}/server/lang/`).forEach(file => {
         logger.log("TEMPLATES","Load",`Language ${lang} loaded`);
     }
 });
+
+//Filling templates
+
+/**
+ * Fill an html file with data stored in an object
+ * @param {String} template_file File to be found in the templates folder
+ * @param {*} content Object with linked properties to the template file for filling informations
+ * @param {*} lang Language parameter
+ */
+module.exports.fillTemplate = (template_file,content,lang) =>{
+    //Get the template in proper language
+    let data = this.translateData(`${process.cwd()}/server/templates/${template_file}`,lang);
+    //Fill the template with the content object
+    //Template is built as a html file with some >{var_data} to inject data
+    return data.replace(
+        />{(\w*)}/g, // or /{(\w*)}/g for "{this} instead of %this%"
+        function( m, key ){
+            return content.hasOwnProperty(key) ? dico[key] : "N.A";
+        }
+    )
+}
+
+
+//Setup the module
+const mandatoryDataStructure = [
+    ["user_register",["name","mail","pwd"]],
+    ["user_login",["mail","pwd"]]
+]
+//Load mandatory data structure
+this.loadDataStructures(mandatoryDataStructure);

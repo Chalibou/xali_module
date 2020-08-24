@@ -20,6 +20,18 @@ const setup = {
             isTest:true,
         } 
     },
+    mail:{
+        //SMTP PARAMETERS
+        user:"noreply@cotiz.net",
+        pwd:"'3:X6e2A(r.zBw:>",
+        host:"mail.name.com",
+        port:587,
+        domain:'cotiz.net',
+        keySelector:'key1',
+        //MAIL OBJECT PARAMETERS
+        sender:"COTIZ<noreply@cotiz.net>",
+        titleHeader:"Cotiz - "
+    },
     templates:{
         //Allows for object structure verification
         // [["user_login",["mail","pwd"]],...]
@@ -76,7 +88,10 @@ const setup = {
             ["/js/index.js"]:["standard"],
             ["/css/index.css"]:["standard"],
             ["user_logout"]:["standard"],
-            ["user_get"]:["standard"]
+            ["user_get"]:["standard"],
+            
+            ["send_mail"]:["standard"]
+
         }
     }
 }
