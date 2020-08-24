@@ -22,7 +22,7 @@ this.DKIM_PRIVATK = "";
 try{
     DKIM_PRIVATK = fs.readFileSync(`${process.cwd()}\\server\\mail\\dkim_private.key`,"utf-8");
 }catch{
-    logger.error("SETUP","MAILER",`Folder ${process.cwd()}/server/jwt/ should contain valids DKIM public and private key `)
+    logger.error("SETUP","MAILER",`Folder ${process.cwd()}\\server\\mail\\ should contain valids DKIM public and private key `)
     process.exit();
 }
 
