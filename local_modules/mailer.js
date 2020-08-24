@@ -6,6 +6,7 @@
 const logger = require("./logger.js");
 const templater = require("./templater.js");
 const nodemailer = require("nodemailer");
+const fs = require('fs');
 
 //SMTP PARAMETERS
 this.user = "";         //"noreply@cotiz.net"
@@ -21,7 +22,7 @@ this.titleHeader = "";  //"Cotiz - "
 this.DKIM_PRIVATK = "";
 try{
     DKIM_PRIVATK = fs.readFileSync(`${process.cwd()}\\server\\mail\\dkim_private.key`,"utf-8");
-}catch{
+}catch(err){
     logger.error("SETUP","MAILER",`Folder ${process.cwd()}\\server\\mail\\ should contain valids DKIM public and private key `)
     process.exit();
 }
