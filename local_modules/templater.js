@@ -122,16 +122,19 @@ fs.readdirSync(`${process.cwd()}/server/lang/`).forEach(file => {
  * @param {*} lang Language parameter
  */
 module.exports.fillTemplate = (template_file,content,lang) =>{
-    //Get the template in proper language
-    let data = this.translateData(`${process.cwd()}/server/templates/${template_file}`,lang);
-    //Fill the template with the content object
-    //Template is built as a html file with some >{var_data} to inject data
-    return data.replace(
-        />{(\w*)}/g, // or /{(\w*)}/g for "{this} instead of %this%"
-        function( m, key ){
-            return content.hasOwnProperty(key) ? dico[key] : "N.A";
-        }
-    )
+    return new Promise (async(resolve,reject)=>{
+        //Get the template in proper language
+        const template = fs.readFile(`${process.cwd()}/server/templates/${template_file}`,"utf-8");
+        let data = this.translateData(template,lang);
+        //Fill the template with the content object
+        //Template is built as a html file with some >{var_data} to inject data
+        resolve(data.replace(
+            />{(\w*)}/g, // or /{(\w*)}/g for "{this} instead of %this%"
+            function( m, key ){
+                return content.hasOwnProperty(key) ? content[key] : "N.A";
+            }
+        ))
+    })
 }
 
 
