@@ -19,14 +19,6 @@ this.keySelector = "";  //'key1'
 this.sender = "";       //"COTIZ<noreply@cotiz.net>"
 this.titleHeader = "";  //"Cotiz - "
 
-this.DKIM_PRIVATK = "";
-try{
-    DKIM_PRIVATK = fs.readFileSync(`${process.cwd()}\\server\\mail\\dkim_private.key`,"utf-8");
-}catch(err){
-    logger.error("SETUP","MAILER",`Folder ${process.cwd()}\\server\\mail\\ should contain valids DKIM public and private key `)
-    process.exit();
-}
-
 /**
  * Setup the mailer object
  * @param {Object} input Object containing the properties we want to change
@@ -85,10 +77,6 @@ module.exports.sendMail = async (target_mail,subject,message,lang,mail_attacheme
         tls: {
             ciphers: 'SSLv3',
             rejectUnauthorized: false
-        },dkim: {
-            domainName: this.domain,
-            keySelector: this.keySelector,
-            privateKey: DKIM_PRIVATK
         }
     });
 
