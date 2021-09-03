@@ -6,172 +6,244 @@
 
 const fs = require('fs');
 
-const logger = require('./logger.js');
-const templater = require('./templater.js');
+class router{
 
-this.errorPage = "The content you want has not been found";
-this.postCallbacks = [];
-this.accreditation = {};
-this.defaultRoute = "";
-this.getFolder = "";
+    constructor(sourceApp){
+        this.logger = sourceApp.logger;
+        this.templater = sourceApp.templater;
 
-
-/**
- * Setup the handler object
- * @param {Object} input Object containing the properties we want to change
- */
-module.exports.setup = (target,input,method="")=>{
-    if(method=="push"){
-        for (const elmt of input) {
-            this[target].push(elmt);
-        }
-    }else{
-        this[target] = input;
+        this.errorPage = "The content you want has not been found";
+        this.postCallbacks = [];
+        this.accreditation = {};
+        this.defaultRoute = "";
+        this.getFolder = "";
+        //Setup default behavior
+        this.setup("defaultRoute","/login.html");
+        this.setup("lostRoute","/lost.html");
+        this.setup("getFolder","client");
     }
-}
 
-/**
- * Add a route for a post request
- * @param {String} name POST call name 
- * @param {boolean} isFree If true then the callback is free for any user
- * @param {Callback} callback Function to execute on POST
- */
-module.exports.post = (name,callback)=>{
-    this.postCallbacks[name] = callback;
-}
+    /**
+     * Setup the handler object
+     * @param {Object} input Object containing the properties we want to change
+     */
+    setup = (target,input,method="")=>{
+        if(method=="push"){
+            for (const elmt of input) {
+                this[target].push(elmt);
+            }
+        }else{
+            this[target] = input;
+        }
+    }
+    
+    /**
+     * Setup the post method for this interface
+     * @param {Object} post Post object linked to application instance
+     */
+    setPosts(post){
+        const methods_key = Object.keys(post);
+        //Initialize the routes for the application
+        for (let i = 0; i < methods_key.length; i++) {
+            this.postCallbacks[methods_key[i]] = post[methods_key[i]];
+        }
+    }
+    
+    /**
+     * Analyze the request to route it to GET or POST request management
+     * @param {Object} req Request 
+     * @param {Object} res Response object
+     */
+    treat = (user,req,res)=>{
+        //Save some request info into the response
+        res.xali = {
+            referer:req.headers.referer,
+            origin:req.headers.origin,
+            ip:req.connection.remoteAdress,
+            ipForward:req.headers['x-forwarded-for']
+        };
+        //Type of request
+        if(req.method === "GET"){
+            //GET METHOD
+            let file = req.url;
+            let reqArray = file.split("?");
+            if(reqArray[1]){
+                file = reqArray[0];
+            }
 
-/**
- * Analyze the request to route it to GET or POST request management
- * @param {Object} req Request 
- * @param {Object} res Response object
- */
-module.exports.treat = (user,req,res)=>{
-    //Type of request
-    if(req.method === "GET"){
-        //GET METHOD
-        const file = req.url;
+            //Check if request is a transposition from GET to POST. A "?"" sign should be included in the url
+            if(reqArray[1]){
+                let data;
+                try{
+                    data = reqArray[1].replace(/%27/gi, "\"").replace(/%7B/gi, "{").replace(/%7D/gi, "}").replace(/%20/gi, " ");
+                    const post = JSON.parse(data);
+                    //Check if user has allowance
+                    this.checkAccreditation(user,post.type,res,()=>{
+                        this.managePOST(res,post,user);
+                    });
+                }catch(error){
+                    this.logger.error("ROUTER","Translation",`${data} :: ${error}`);
+                    this.respond(res,"Bad request format",303);
+                    return;
+                }
+            }else{
+                //Simple GET request
+                this.checkAccreditation(user,file,res,()=>{
+                    this.manageGET(res,file,user);
+                },()=>{
+                    //Only for html content
+                    if (file.split('.')[1] == null) {
+                        this.logger.alert("ROUTER","Allowance",`Redirecting ${user.type} to default route`);
+                        this.manageGET(res,`${this.defaultRoute}`,user)
+                    }else{
+                        this.respond(res,"",403);
+                    }
+                });
+            }
+        }else{
+            //POST METHOD
+            let body = '';
+            req.on('data', chunk => {
+                body += chunk.toString();
+            });
+            req.on('end',()=>{
+                let post;
+                try{
+                    post = JSON.parse(body);
+                }catch(err){
+                    const error = this.logger.buildError(400,"bad_JSON",`Bad JSON ${err}`);
+                    this.respond(res,JSON.stringify(error),error.code);
+                    return;
+                }
+                //Check accreditations
+                this.checkAccreditation(user,post.type,res,()=>{
+                    this.managePOST(res,post,user);
+                })
+            })
+        }
+    }
+
+    /**
+     * Check if file exists in main app configuration authorizations and if the user has allowance for this request
+     * @param {User} user auth module user type, define the user doing the request
+     * @param {String} target Target request GET or POST
+     * @param {Object} res Request response object
+     * @param {Function} win_callback To execute if file exists and user has allowance (manageGET or managePOST)
+     * @param {Function} fail_callback To execute if file exists and user does not have allowance (usefull for get default route handling)
+     * @returns Exit on accreditation denial
+     */
+    checkAccreditation = (user,target,res,win_callback,fail_callback = ()=>{
+            const error = this.logger.buildError(403,"low_accreditation",`Your credentials levels does not allow you to access this section`);
+            this.respond(res,JSON.stringify(error),error.code);
+    })=>{
         //Check if file exists
-        if (!this.accreditation[file]) {
-            logger.alert("ROUTER","Treat GET",`User ${user.id} try to access unknown : ${file}. Responding default route.`);
-            this.manageGET(res,`${this.lostRoute}`,user)
+        if (!this.accreditation[target]) {
+            this.logger.alert("ROUTER","Accreditation",`User ${user.id} try to access unknown : ${target}. Denying access.`);
+            const error = this.logger.buildError(404,"not_found",`The request you want to perform does not exists or is not permited by your user group`);
+            this.respond(res,JSON.stringify(error),error.code);
             return;
         }
         //Check if user has allowance
-        if(this.accreditation[file].includes(user.group)){
-            this.manageGET(res,file,user);
+        if(this.accreditation[target].includes(user.group)){
+            win_callback();
         }else{
-            logger.alert("ROUTER","Treat GET",`User ${user.id} try to access ${file} without permision. Responding default route.`);
-            this.manageGET(res,`${this.defaultRoute}`,user)
+            this.logger.alert("ROUTER","Accreditation",`User ${user.id} try to access ${target} without permision. Denying access.`);
+            fail_callback();
         }
-    }else{
-        //POST METHOD
-        let body = '';
-        req.on('data', chunk => {
-            body += chunk.toString();
-        });
-        req.on('end',()=>{
-            const post = JSON.parse(body);
-            //Check if file exists
-            if (!this.accreditation[post.type]) {
-                logger.alert("ROUTER","Treat GET",`User ${user.id} try to access unknown : ${file}. Responding default route.`);
-                this.manageGET(res,`${this.defaultRoute}`,user)
+    }
+    
+    /**
+     * Manage the Get request response, at  stage no more verifications are needed
+     * @param {String} getRequest Path of the request
+     * @param {Object} res Passed response object
+     */
+    manageGET = (res,getRequest,user)=>{
+        this.logger.log("ROUTER","GET",`Responding ${user.id} for URL ${getRequest}`);
+        //Solve path for '/' == index.html and no extension == .html
+        if (getRequest=="/") getRequest="/index.html";
+        if (getRequest.indexOf(".")==-1)getRequest+=".html";
+    
+        //Identify file type
+        let type;
+        switch(getRequest.split('.').pop()){
+            case "html":
+                type='text/html';
+                //Return html file with language translation
+                fs.readFile(`${process.cwd()}/${this.getFolder}/${getRequest}`,'utf-8',(error,data)=>{
+                    if(error){
+                        this.respond(res,"",404);
+                        return
+                    }
+                    //Translate it in the user language
+                    data = this.templater.translateData(data,user.lang);
+                    //Respond
+                    this.respond(res,data,200,type);
+                });
                 return;
-            }
-            //Check if user has allowance
-            if(this.accreditation[post.type].includes(user.group)){
-                this.managePOST(res,post,user);
-            }else{
-                logger.alert("ROUTER","Treat POST",`User ${user.id} try to access ${post.type} without permision. Denying access.`);
-                const error = logger.buildError(403,"low_accreditation",`Your credentials levels does not allow you to access this section`);
-                this.respond(res,JSON.stringify(error),error.code);
-            }
-        })
-    }
-}
-
-/**
- * Manage the Get request response, at  stage no more verifications are needed
- * @param {String} getRequest Path of the request
- * @param {Object} res Passed response object
- */
-module.exports.manageGET = (res,getRequest,user)=>{
-    logger.log("ROUTER","GET",`Responding ${user.id} for URL ${getRequest}`);
-    //Solve path for '/' == index.html and no extension == .html
-    if (getRequest=="/") getRequest="/index.html";
-    if (getRequest.indexOf(".")==-1)getRequest+=".html";
-
-    //Identify file type
-    let type;
-    switch(getRequest.split('.').pop()){
-        case "html":
-            type='text/html';
-            //Return html file with language translation
-            fs.readFile(`${process.cwd()}/${this.getFolder}/${getRequest}`,'utf-8',(error,data)=>{
-                if(error){
-                    this.respond(res,"",404);
-                    return
-                }
-                //Translate it in the user language
-                data = templater.translateData(data,user.lang);
-                //Respond
-                this.respond(res,data,200,type);
-            });
-            return;
-        case "css":type='text/css';break;
-        case "js":type='text/js';break;
-        case "png":type='image/png';break;
-        case "m4v":type='video/mp4';break;
-        case "svg":type='image/svg+xml';break;
-        default:type='text/html';break;
-    }
-
-    //Return file as straem if other than html
-    fs.readFile(`${process.cwd()}/${this.getFolder}/${getRequest}`,(error,data)=>{
-        if(error){
-            this.respond(res,"",404);
-            return
+            case "css":type='text/css';break;
+            case "js":type='text/js';break;
+            case "png":type='image/png';break;
+            case "m4v":type='video/mp4';break;
+            case "svg":type='image/svg+xml';break;
+            default:type='text/html';break;
         }
-        //Respond
-        this.respond(res,data,200,type);
-    });
-}
-
-/**
- * Manage the Post request response, at  stage no more verifications are needed
- * @param {Object} postRequest Name of the POST request
- * @param {Object} res HTTPS Response
- * @param {Object} user Cookie user informations
- */
-module.exports.managePOST = (res,postRequest,user)=>{
-    logger.log("ROUTER","POST",`Responding POST for ${postRequest.type}`);
-    //Extract the method to be used for  POST call and execute it
-    const postMethod = this.postCallbacks[postRequest.type];
-    if(postMethod){
-        postMethod(res,postRequest.data,user);
-    }else{
-        logger.error("ROUTER","POST",`POST method ${postRequest.type} is not registered`)
-        this.respond(res,"",404);
+    
+        //Return file as straem if other than html
+        fs.readFile(`${process.cwd()}/${this.getFolder}/${getRequest}`,(error,data)=>{
+            if(error){
+                this.respond(res,"",404);
+                return
+            }
+            //Respond
+            this.respond(res,data,200,type);
+        });
+    }
+    
+    /**
+     * Manage the Post request response, at  stage no more verifications are needed
+     * @param {Object} postRequest Name of the POST request
+     * @param {Object} res HTTPS Response
+     * @param {Object} user Cookie user informations
+     */
+    managePOST = (res,postRequest,user)=>{
+        this.logger.log("ROUTER","POST",`Responding ${user.id} for POST ${postRequest.type}`);
+        //Extract the method to be used for  POST call and execute it
+        const postMethod = this.postCallbacks[postRequest.type];
+        if(postMethod){
+            postMethod(res,postRequest.data,user);
+        }else{
+            this.logger.error("ROUTER","POST",`POST method ${postRequest.type} is not registered`)
+            this.respond(res,"",404);
+        }
+    }
+    
+    /**
+     * Send a valid response to the client
+     * @param {Object} res Passed response object
+     * @param {String} data Data to be sent
+     * @param {Int} status Http status
+     * @param {String} type Type of the data
+     */
+    respond = (res,data,status=200,type='text/html')=>{
+        try{
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            res.setHeader("Access-Control-Allow-Credentials", "true");
+            res.writeHead(status, {  
+                'Content-Type': type  
+            });
+            res.write(data);
+            res.end();
+        }catch(error){
+            this.logger.alert("ROUTER","Respond","An error occured while responding request" + data);
+            data = JSON.stringify(data);
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            res.setHeader("Access-Control-Allow-Credentials", "true");
+            res.writeHead(status, {  
+                'Content-Type': type  
+            });
+            res.write(data);
+            res.end();
+        }
     }
 }
-
-/**
- * Send a valid response to the client
- * @param {Object} res Passed response object
- * @param {String} data Data to be sent
- * @param {Int} status Http status
- * @param {String} type Type of the data
- */
-module.exports.respond = (res,data,status=200,type='text/html')=>{
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.writeHead(status, {  
-        'Content-Type': type  
-    });
-    res.write(data);
-    res.end();
-}
-
-//Setup default behavior
-this.setup("defaultRoute","/login.html");
-this.setup("lostRoute","/lost.html");
-this.setup("getFolder","client");
+module.exports = router;

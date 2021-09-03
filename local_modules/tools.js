@@ -4,6 +4,18 @@
  * @module tools
  */
 
+ const QRCode = require('qrcode');
+    
+ module.exports.buildQr = (data)=>{
+    return new Promise(async(resolve,reject)=>{
+        // Converting the data into base64
+        QRCode.toDataURL(JSON.stringify(data), function (err, code) {
+            if(err) reject(err)
+            resolve(code)
+        })
+    });
+ }
+ 
  /**
   * Generate a random hexadecimal with a given length
   * @param {Int} size Size of the hexa key

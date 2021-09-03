@@ -1,19 +1,47 @@
 {
-  "name": "xali",
-  "version": "0.0.1",
+  "_from": "git://github.com/Chalibou/xali_module.git",
+  "_id": "xali@0.0.1",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/xali",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "xali@git://github.com/Chalibou/xali_module.git",
+    "name": "xali",
+    "escapedName": "xali",
+    "rawSpec": "git://github.com/Chalibou/xali_module.git",
+    "saveSpec": "git://github.com/Chalibou/xali_module.git",
+    "fetchSpec": "git://github.com/Chalibou/xali_module.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "git://github.com/Chalibou/xali_module.git#983f7cc044034629418b23eb950d5cd99a64939e",
+  "_spec": "xali@git://github.com/Chalibou/xali_module.git",
+  "_where": "F:\\Code\\Cotiz 1.2",
+  "author": {
+    "name": "Chalibou"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "fs": "0.0.1-security",
+    "https": "^1.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.0",
+    "nodemailer": "^6.4.11",
+    "puppeteer": "^10.2.0",
+    "qrcode": "^1.4.4"
+  },
+  "deprecated": false,
   "description": "Xali's NodeJS service module",
+  "license": "ISC",
   "main": "xali.js",
+  "name": "xali",
   "scripts": {
     "install": "node ./install/install.js"
   },
-  "author": "Chalibou",
-  "license": "ISC",
-  "dependencies": {
-    "jsonwebtoken": "^8.5.1",
-    "bcrypt": "^5.0.0",
-    "mongodb": "^3.6.0",
-    "fs": "0.0.1-security",
-    "https": "^1.0.0",
-    "nodemailer":"^6.4.11"
-  }
+  "version": "0.0.2"
 }
