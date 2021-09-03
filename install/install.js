@@ -12,7 +12,7 @@ const copy = (source,destination)=>{
 }
 
 //Creating files
-fs.writeFile(`./../../server/post/main_post.js`, '//Write here your post methods',{ flag: 'wx' },callback);
+fs.writeFile(`./../../server/post/post_main.js`, '//Write here your post methods',{ flag: 'wx' },callback);
 
 //Copying files from templates
 
