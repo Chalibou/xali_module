@@ -99,6 +99,10 @@ class xali{
         const post = new postSource(this);
         this.router.setPosts(post);
 
+        //Load routines
+        const routines = require(`${process.cwd()}/server/routines/routines.js`);
+        routines.launchWorks();
+
         process.on('SIGINT',  ()=>{this.logger.exitHandler("ctrlc");});
         process.on('SIGUSR1', ()=>{this.logger.exitHandler("kill1");});
         process.on('SIGUSR2', ()=>{this.logger.exitHandler("kill2");});
