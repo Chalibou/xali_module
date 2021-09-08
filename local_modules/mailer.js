@@ -21,14 +21,6 @@ class mailer{
         //MAIL OBJECT PARAMETERS
         this.sender = "";       //"COTIZ<noreply@cotiz.net>"
         this.titleHeader = "";  //"Cotiz - "
-
-        this.DKIM_PRIVATK = "";
-        try{
-            this.DKIM_PRIVATK = fs.readFileSync(`${process.cwd()}\\server\\mail\\dkim_private.key`,"utf-8");
-        }catch(err){
-            this.logger.error("MAILER","SETUP",`Folder ${process.cwd()}\\server\\mail\\ should contain valids DKIM public and private key `)
-            process.exit();
-        }
     }
     
     /**
@@ -70,11 +62,6 @@ class mailer{
                 ciphers: 'SSLv3',
                 rejectUnauthorized: false
             }
-            //,dkim: {
-            //    domainName: this.domain,
-            //    keySelector: this.keySelector,
-            //    privateKey: DKIM_PRIVATK
-            //}
         });
 
         const mailContent = await this.templater.fillTemplate("standardMail.html",{mailContent:message},lang);
