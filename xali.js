@@ -9,6 +9,7 @@ const xali_router = new require("./local_modules/router.js");
 const tools = require("./local_modules/tools.js");
 const xali_templater = new require("./local_modules/templater.js");
 const xali_mailer = new require("./local_modules/mailer.js");
+const xali_watcher = new require("./local_modules/watcher.js");
 const xali_pdf = new require("./local_modules/pdf.js");
 
 class xali{
@@ -22,6 +23,7 @@ class xali{
         this.router = new xali_router(this); 
         this.mailer = new xali_mailer(this);
         this.pdf = new xali_pdf(this);
+        this.watcher = new xali_watcher(this);
 
         /**
          * @todo Check if repository structure is good
@@ -55,6 +57,11 @@ class xali{
         this.name = setup.name;
         this.logger.setup(setup.name);
         this.templater.setup();
+        if (setup.limiters) {
+            this.watcher.setup(setup.limiters);
+        }else{
+            this.logger.alert("Watcher","Limiter","No limiters setup for this interface")
+        }
 
         //Connect to database
         this.db.connect(
@@ -118,12 +125,13 @@ class xali{
         }
         const app = async (req,res)=>{
             try{
+                this.watcher.eval(req);
                 //Authentication
                 const user = await this.auth.checkAuth(req);
                 //Check permissions and handle the request
                 this.router.treat(user,req,res);
             }catch(error){
-                this.router.respond(res,JSON.stringify(error),error.code);
+                this.router.respond(res,"",error.code);
             };
         }
 
