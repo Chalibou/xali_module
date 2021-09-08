@@ -105,6 +105,7 @@ class xali{
                 const routinesSource = require(`${process.cwd()}/server/routines/${setup.routines}.js`);
                 const routines = new routinesSource(this);
                 routines.launchWorks();
+                this.logger.good("Setup","Routines",`Routines ${setup.routines} armed`);
             }catch{
                 this.logger.error("Setup","Routines",`Routines file /server/routines/${setup.routines}.js could not be found`);
             }
