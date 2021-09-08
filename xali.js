@@ -100,8 +100,17 @@ class xali{
         this.router.setPosts(post);
 
         //Load routines
-        const routines = require(`${process.cwd()}/server/routines/routines.js`);
-        routines.launchWorks();
+        if (setup.routines) {
+            try{
+                const routinesSource = require(`${process.cwd()}/server/routines/${setup.routines}.js`);
+                const routines = new routinesSource(this);
+                routines.launchWorks();
+            }catch{
+                this.logger.error("Setup","Routines",`Routines file /server/routines/${setup.routines}.js could not be found`);
+            }
+        }else{
+            this.logger.alert("Setup","Routines","No routines programmed for this interface");
+        }
 
         process.on('SIGINT',  ()=>{this.logger.exitHandler("ctrlc");});
         process.on('SIGUSR1', ()=>{this.logger.exitHandler("kill1");});
