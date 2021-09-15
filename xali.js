@@ -11,11 +11,13 @@ const xali_templater = new require("./local_modules/templater.js");
 const xali_mailer = new require("./local_modules/mailer.js");
 const xali_watcher = new require("./local_modules/watcher.js");
 const xali_pdf = new require("./local_modules/pdf.js");
+const xali_payu = new require("./local_modules/payu.js");
 
 class xali{
     constructor(setup){
 
         //Setup sub-component
+        this.tools = tools;
         this.logger = new xali_logger(this);
         this.db = new xali_db(this); 
         this.auth = new xali_auth(this); 
@@ -24,26 +26,31 @@ class xali{
         this.mailer = new xali_mailer(this);
         this.pdf = new xali_pdf(this);
         this.watcher = new xali_watcher(this);
+        this.payu = new xali_payu(this);
 
         /**
          * @todo Check if repository structure is good
          */
         
-        if(!Object.prototype.toString.call(setup.templates.dataTemplates) == '[object Array]'){
-            this.logger.error("SETUP","DataTemplate",`Templates.dataTemplates must be of type Array, currently : ${JSON.stringify(setup.templates.dataTemplates)}`);
-            return;
-        }
-        if(!Object.prototype.toString.call(setup.templates.languages) == '[object Array]'){
-            this.logger.error("SETUP","Languages",`Templates.languages must be of type Array, currently : ${JSON.stringify(setup.templates.languages)}`);
-            return;
-        }
-        if(!Object.prototype.toString.call(setup.routes.freeGetRequests) == '[object Array]'){
-            this.logger.error("SETUP","Routes",`Routes.freeGetRequests must be of type Array, currently : ${JSON.stringify(setup.routes.freeGetRequests)}`);
-            return;
-        }
-        if(!Object.prototype.toString.call(setup.routes.post) == '[object Array]'){
-            this.logger.error("SETUP","Post",`Routes.post must be of type Array, currently : ${JSON.stringify(setup.routes.post)}`);
-            return;
+        if (setup.templates) {
+            if(!Object.prototype.toString.call(setup.templates.dataTemplates) == '[object Array]'){
+                this.logger.error("SETUP","DataTemplate",`Templates.dataTemplates must be of type Array, currently : ${JSON.stringify(setup.templates.dataTemplates)}`);
+                return;
+            }
+            if(!Object.prototype.toString.call(setup.templates.languages) == '[object Array]'){
+                this.logger.error("SETUP","Languages",`Templates.languages must be of type Array, currently : ${JSON.stringify(setup.templates.languages)}`);
+                return;
+            }
+            if(!Object.prototype.toString.call(setup.routes.freeGetRequests) == '[object Array]'){
+                this.logger.error("SETUP","Routes",`Routes.freeGetRequests must be of type Array, currently : ${JSON.stringify(setup.routes.freeGetRequests)}`);
+                return;
+            }
+            if(!Object.prototype.toString.call(setup.routes.post) == '[object Array]'){
+                this.logger.error("SETUP","Post",`Routes.post must be of type Array, currently : ${JSON.stringify(setup.routes.post)}`);
+                return;
+            }
+            //Setup the objects models
+            this.templater.loadDataStructures(setup.templates.objectStructures);
         }
 
         //Port setup
@@ -78,10 +85,9 @@ class xali{
         );
 
         //Setup mailer module
-        this.mailer.setup(setup.mail);
-        
-        //Setup the objects models
-        this.templater.loadDataStructures(setup.templates.objectStructures);
+        if (setup.mail) {
+            this.mailer.setup(setup.mail);
+        }
             
         //Setup the router for the application
         if(setup.routes.defaultRoute){
@@ -92,6 +98,12 @@ class xali{
             this.logger.log("ROUTER","Setup","Route system engaged");
         }else{
             this.logger.error("ROUTER","Setup","Route system is not setup");
+        }
+
+        //Setup payment mean
+        if(setup.payu){
+            this.payu.setup(setup.payu);
+            this.logger.log("PAYU","Setup","Payment system set-up");
         }
         
         //Load post methods
