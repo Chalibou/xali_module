@@ -90,3 +90,36 @@ module.exports.getRandomPwd = (size)=>{
     //Scramble the password
     return this.shuffle(response);
 }
+
+module.exports.post = (_host,_path,_data,)=>{
+    return new Promise((resolve,reject)=>{
+        const https = require('https')
+        const data = JSON.stringify(_data);
+        const options = {
+            hostname: _host,
+            port: 443,
+            path: _path,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': data.length
+            }
+        }
+        const req = https.request(options, res => {
+            if (res.statusCode < 200 || res.statusCode > 299) {
+                return reject(new Error(`HTTP status code ${res.statusCode}`))
+            }
+            let body = [];
+            res.on('data', (chunk) => body.push(chunk))
+            res.on('end', () => {
+                const resString = Buffer.concat(body).toString()
+                resolve(resString)
+            })
+        })
+        req.on('error', error => {
+            reject(error);
+        })
+        req.write(data)
+        req.end()
+    })
+}
