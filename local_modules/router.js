@@ -168,7 +168,7 @@ class router{
      * @param {Object} res Passed response object
      */
     manageGET = (res,getRequest,user)=>{
-        this.logger.log("ROUTER","GET",`Responding ${user.id} for URL ${getRequest}`);
+        //this.logger.log("ROUTER","GET",`Responding ${user.id} for URL ${getRequest}`);
         //Solve path for '/' == index.html and no extension == .html
         if (getRequest=="/") getRequest="/index.html";
         if (getRequest.indexOf(".")==-1)getRequest+=".html";
