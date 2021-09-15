@@ -111,10 +111,20 @@ class router{
                 try{
                     post = JSON.parse(body);
                 }catch(err){
-                    const error = this.logger.buildError(400,"bad_JSON",`Bad JSON ${err}`);
-                    this.respond(res,JSON.stringify(error),error.code);
-                    return;
+                    //Not a JSON type body
+                    post = {
+                        type:req.url.split("/")[1],
+                        data:body
+                    }
                 }
+                //For classical POST methods
+                if(!post.type){
+                    post = {
+                        type:req.url.split("/")[1],
+                        data:body
+                    }
+                }
+
                 //Check accreditations
                 this.checkAccreditation(user,post.type,res,()=>{
                     this.managePOST(res,post,user);
