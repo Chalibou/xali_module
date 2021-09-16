@@ -37,7 +37,7 @@ class db{
         }
         this.logger.log("DB","Connect",`Reaching DB : ${params.name}`);
         mongoClient.connect(this.url,this.options).then(client=>{
-            this.logger.good("DB","Connect",`${params.name} : Ready to listen`);
+            this.logger.success("DB","Connect",`${params.name} : Ready to listen`);
             this.client[params.name] = client.db(params.name);
         },
         (error)=>{
@@ -51,7 +51,7 @@ class db{
     reconnect = (name)=>{
         this.logger.log("DB","Connect",`Reconnexion to DB`);
         mongoClient.connect(this.url,this.options).then(client=>{
-            this.logger.good("DB","Connect",`Ready to listen`);
+            this.logger.success("DB","Connect",`Ready to listen`);
             this.client[name] = client.db(process.env.DB_NAME);
         },
         (error)=>{

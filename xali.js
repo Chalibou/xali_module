@@ -117,7 +117,7 @@ class xali{
                 const routinesSource = require(`${process.cwd()}/server/routines/${setup.routines}.js`);
                 const routines = new routinesSource(this);
                 routines.launchWorks();
-                this.logger.good("Setup","Routines",`Routines ${setup.routines} armed`);
+                this.logger.success("Setup","Routines",`Routines ${setup.routines} armed`);
             }catch{
                 this.logger.error("Setup","Routines",`Routines file /server/routines/${setup.routines}.js could not be found`);
             }
@@ -161,13 +161,13 @@ class xali{
             };
         }
 
-        https.createServer(httpsOption,app).listen(this.port,()=>{this.logger.good("APP","Run",`LISTENING : ${this.port}`);});
+        https.createServer(httpsOption,app).listen(this.port,()=>{this.logger.success("APP","Run",`LISTENING : ${this.port}`);});
         if (this.port == 443) {
             http.createServer((req,res)=>{
                 this.logger.alert("HTTP","Transfer",`Request ${req.url} transfered from HTTP to HTTPS`);
                 res.writeHead(301,{Location: `https://${req.headers.host}${req.url}`});
                 res.end();
-            }).listen(80,()=>{this.logger.good("APP","Redirect",`REDIRECT HTTP=>HTTPS ENGAGED`);})
+            }).listen(80,()=>{this.logger.success("APP","Redirect",`REDIRECT HTTP=>HTTPS ENGAGED`);})
         }
     }
 }

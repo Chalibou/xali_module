@@ -11,16 +11,16 @@ class logger{
         this.processName = processName;
     }
     log = (origin,type,message)=>{
-        console.log('\x1b[34m%s\x1b[0m',`~${this.processName}~[${origin}]@{${type}} -> ${message}`);
+        console.log('\x1b[34m%s\x1b[0m',`[${new Date().toISOString()}] ${this.processName}~[${origin}]@{${type}} -> ${message}`);
     }
     alert = (origin,type,message)=>{
-        console.log('\x1b[33m%s\x1b[0m',`~${this.processName}~[${origin}]@{${type}} -> ${message}`);
+        console.log('\x1b[33m%s\x1b[0m',`[${new Date().toISOString()}] ${this.processName}~[${origin}]@{${type}} -> ${message}`);
     }
     error = (origin,type,message,error="")=>{
-        console.log('\x1b[31m%s\x1b[0m',`~${this.processName}~[${origin}]@{${type}} -> ${message}`, error);
+        console.log('\x1b[31m%s\x1b[0m',`[${new Date().toISOString()}] ${this.processName}~[${origin}]@{${type}} -> ${message}`, error);
     }
-    good = (origin,type,message)=>{
-        console.log('\x1b[32m%s\x1b[0m',`~${this.processName}~[${origin}]@{${type}} -> ${message}`);
+    success = (origin,type,message)=>{
+        console.log('\x1b[32m%s\x1b[0m',`[${new Date().toISOString()}] ${this.processName}~[${origin}]@{${type}} -> ${message}`);
     }
     buildError = (_code,_token,_message)=>{
         return {
@@ -32,16 +32,16 @@ class logger{
     exitHandler = (cause,err)=>{
         switch(cause){
             case "ctrlc" :
-                console.log('\x1b[33m%s\x1b[0m',`~${this.processName}~[Leaving]@{Ctrl+c} -> "ADIOS !"`);
+                console.log('\x1b[33m%s\x1b[0m',`[${new Date().toISOString()}] ${this.processName}~[Leaving]@{Ctrl+c} -> "ADIOS !"`);
                 break;
             case "kill1" :
-                console.log('\x1b[33m%s\x1b[0m',`~${this.processName}~[Leaving]@{kill1} -> "ADIOS !"`);
+                console.log('\x1b[33m%s\x1b[0m',`[${new Date().toISOString()}] ${this.processName}~[Leaving]@{kill1} -> "ADIOS !"`);
                 break;
             case "kill2" :
-                console.log('\x1b[33m%s\x1b[0m',`~${this.processName}~[Leaving]@{kill2} -> "ADIOS !"`);
+                console.log('\x1b[33m%s\x1b[0m',`[${new Date().toISOString()}] ${this.processName}~[Leaving]@{kill2} -> "ADIOS !"`);
                 break;
             case "Uexept" :
-                console.log('\x1b[33m%s\x1b[0m',`~${this.processName}~[Leaving]@{Uexeption} -> ${err}`);
+                console.log('\x1b[33m%s\x1b[0m',`[${new Date().toISOString()}] ${this.processName}~[Leaving]@{Uexeption} -> ${err}`);
                 break;
         }
         process.exit();

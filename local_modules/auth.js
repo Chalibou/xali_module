@@ -163,7 +163,7 @@ class auth{
                         token:token,
                         group:db_user.group
                     };
-                    this.logger.good("AUTH","Login",`User ${db_user.id}:${db_user.name} has been logged-in successfully`);
+                    this.logger.success("AUTH","Login",`User ${db_user.id}:${db_user.name} has been logged-in successfully`);
                     
                     resolve({id:db_user.id,token:token});
                 }else{
@@ -224,7 +224,7 @@ class auth{
      * @param {String} id Id of the user
      */
     logout = (id)=>{
-        this.logger.good("AUTH","Logout",`User ${id} has been logged-out successfully`)
+        this.logger.success("AUTH","Logout",`User ${id} has been logged-out successfully`)
         this.authenticatedUsers[id] = null;
     }
 }
