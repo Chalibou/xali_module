@@ -17,8 +17,8 @@ class auth{
         this.logger = sourceApp.logger;
 
         try{
-            this.KEY_PUBLIC = fs.readFileSync(`${process.cwd()}\\server\\jwt\\public.key`,"utf-8");
-            this.KEY_PRIVATE = fs.readFileSync(`${process.cwd()}\\server\\jwt\\private.key`,"utf-8");
+            this.KEY_PUBLIC = fs.readFileSync(`${process.cwd()}/server/jwt/public.key`,"utf-8");
+            this.KEY_PRIVATE = fs.readFileSync(`${process.cwd()}/server/jwt/private.key`,"utf-8");
         }catch{
             this.logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server/jwt/ should contain valids (JWT)-RSA public and private key `)
             process.exit();
