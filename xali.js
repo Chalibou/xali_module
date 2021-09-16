@@ -62,7 +62,7 @@ class xali{
 
         //Logger setup
         this.name = setup.name;
-        this.logger.setup(setup.name);
+        this.logger.setup(setup.name,setup.preserveLogs);
         this.templater.setup();
         if (setup.limiters) {
             this.watcher.setup(setup.limiters);
@@ -125,7 +125,7 @@ class xali{
             this.logger.alert("Setup","Routines","No routines programmed for this interface");
         }
 
-        process.on('SIGINT',  ()=>{this.logger.exitHandler("ctrlc");});
+        process.on('SIGINT', ()=>{this.logger.exitHandler("ctrlc");});
         process.on('SIGUSR1', ()=>{this.logger.exitHandler("kill1");});
         process.on('SIGUSR2', ()=>{this.logger.exitHandler("kill2");});
         //process.on('uncaughtException', (err)=>{this.logger.exitHandler("Uexept",err);});
