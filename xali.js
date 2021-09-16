@@ -122,7 +122,7 @@ class xali{
                 this.logger.error("Setup","Routines",`Routines file /server/routines/${setup.routines}.js could not be found`);
             }
         }else{
-            this.logger.alert("Setup","Routines","No routines programmed for this interface");
+            this.logger.log("Setup","Routines","No routines programmed for this interface");
         }
 
         process.on('SIGINT', ()=>{this.logger.exitHandler("ctrlc");});
