@@ -38,22 +38,43 @@ class payu{
          cart.currency
      */
     generatePaymentKey = (cart)=>{
-        return new Promise(async (resolve,reject)=>{
-            cart.merchantId = this.merchandId;
-            cart.accountId = this.accountId;
-            cart.tax = this.tax;
-            cart.taxReturnBase = this.taxReturnBase;
-            cart.test = this.isSandbox;
-            cart.responseUrl = this.responseUrl;
-            cart.confirmationUrl = this.confirmationUrl;
-            cart.action = this.payuUrl;
-            try{
-                cart.signature = crypto.createHash('md5').update(`${this.privateK}~${this.merchandId}~${cart.referenceCode}~${cart.amount}~${cart.currency}`).digest("hex");
-                resolve(cart);
-            }catch(err){
-                reject(err);
-            }
-        })
+		if(this.isSandbox){
+			cart.merchantId= 508029;
+			cart.ApiKey= "4Vj8eK4rloUd272L48hsrarnUA";
+			cart.referenceCode= "TestPayU";
+			cart.accountId= 512321;
+			cart.description= "Test PAYU";
+			cart.amount= 3;
+			cart.tax= 0;
+			cart.taxReturnBase= 0;
+			cart.currency= "USD";
+			cart.signature= "ba9ffa71559580175585e45ce70b6c37";
+			cart.test= 1;
+			cart.buyerEmail= "test@test.com";
+			cart.responseUrl = this.responseUrl;
+			cart.confirmationUrl = this.confirmationUrl;
+			cart.action = "https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu";
+			return cart
+		}else{
+			return new Promise(async (resolve,reject)=>{
+				cart.merchantId = this.merchandId;
+				cart.accountId = this.accountId;
+				cart.tax = this.tax;
+				cart.taxReturnBase = this.taxReturnBase;
+				cart.test = 0;
+				cart.responseUrl = this.responseUrl;
+				cart.confirmationUrl = this.confirmationUrl;
+				cart.action = this.payuUrl;
+				try{
+					cart.signature = crypto.createHash('md5').update(`${this.privateK}~${this.merchandId}~${cart.referenceCode}~${cart.amount}~${cart.currency}`).digest("hex");
+					resolve(cart);
+				}catch(err){
+					reject(err);
+				}
+			})
+		}
+		
+        
     }
      
  }

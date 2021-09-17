@@ -38,7 +38,7 @@ class mailer{
             this.host = "localhost";
             this.logger.success("MAIL","Setup","Mail system engaged in test mode");
         }else{
-            this.logger.success("MAIL","Setup","Mail system engaged");
+            this.logger.success("MAIL","Setup","Mail system engaged in production mode");
         }
     }
 
