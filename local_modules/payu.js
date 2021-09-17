@@ -7,10 +7,9 @@ const crypto = require("crypto");
 
 class payu{
     constructor(sourceApp){
+        this.isTest = sourceApp.isTest;
         this.logger = sourceApp.logger;
         this.tools = sourceApp.tools;
-        this.payuUrl = "https:///checkout.payulatam.com/ppp-web-gateway-payu/";
-        this.test = 1; //For testing
         this.tax = 0;
         this.taxReturnBase = 0;
     }
@@ -21,6 +20,13 @@ class payu{
         this.confirmationUrl = options.confirmationUrl;
         this.responseUrl = options.responseUrl;
         this.privateK = options.privateK;
+        if (this.isTest) {
+            this.payuUrl = "https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu";
+            this.logger.success("PAYU","Setup","Payment system set-up in test mode");
+        }else{
+            this.payuUrl = "https:///checkout.payulatam.com/ppp-web-gateway-payu/";
+            this.logger.success("PAYU","Setup","Payment system set-up in prod mode");
+        }
     }
      
     /**
@@ -37,7 +43,7 @@ class payu{
             cart.accountId = this.accountId;
             cart.tax = this.tax;
             cart.taxReturnBase = this.taxReturnBase;
-            cart.test = this.test;
+            cart.test = this.isTest;
             cart.responseUrl = this.responseUrl;
             cart.confirmationUrl = this.confirmationUrl;
             cart.action = this.payuUrl;

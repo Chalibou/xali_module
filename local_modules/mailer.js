@@ -10,7 +10,7 @@ class mailer{
     constructor(sourceApp){
         this.logger = sourceApp.logger;
         this.templater = sourceApp.templater;
-
+        this.isTest = sourceApp.isTest;
         //SMTP PARAMETERS
         this.user = "";         //"noreply@cotiz.net"
         this.pwd = "";          //"'3:X6e2A(r.zBw:>"
@@ -33,7 +33,13 @@ class mailer{
             const element = entries[i];
             this[element[0]] = element[1];
         }
-        this.logger.log("MAIL","Setup","Mail system engaged");
+        if (this.isTest) {
+            this.port = 25;
+            this.domain = localhost;
+            this.logger.success("MAIL","Setup","Mail system engaged in test mode");
+        }else{
+            this.logger.success("MAIL","Setup","Mail system engaged");
+        }
     }
 
     /**

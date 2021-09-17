@@ -17,6 +17,8 @@ class xali{
     constructor(setup){
 
         //Setup sub-component
+        this.isTest = setup.isTest;
+        this.name = setup.name;
         this.tools = tools;
         this.logger = new xali_logger(this);
         this.db = new xali_db(this); 
@@ -61,13 +63,12 @@ class xali{
         };
 
         //Logger setup
-        this.name = setup.name;
         this.logger.setup(setup.name,setup.preserveLogs);
         this.templater.setup();
         if (setup.limiters) {
             this.watcher.setup(setup.limiters);
         }else{
-            this.logger.alert("Watcher","Limiter","No limiters setup for this interface")
+            this.logger.log("Watcher","Limiter","No limiters setup for this interface");
         }
 
         //Connect to database
@@ -80,9 +81,13 @@ class xali{
                 adress:setup.db.connect.adress,
                 authSource:setup.db.connect.authSource,
                 options:setup.db.connect.options
-            },
-            setup.db.connect.isTest
+            }
         );
+
+        //Setup payment system
+        if(setup.payu){
+            this.payu.setup(setup.payu);
+        }
 
         //Setup mailer module
         if (setup.mail) {
@@ -95,21 +100,19 @@ class xali{
         }
         if(setup.routes.accreditation){
             this.router.setup("accreditation",setup.routes.accreditation);
-            this.logger.log("ROUTER","Setup","Route system engaged");
+            this.logger.log("ROUTER","Accreditations","Route system engaged");
+            try{
+                //Load post methods
+                const postSource = require(`${process.cwd()}/server/post/${setup.routes.post_name}.js`);
+                const post = new postSource(this);
+                this.router.setPosts(post);
+                this.logger.success("ROUTER","POST",`POST interface ${setup.routes.post_name} ready`);
+            }catch{
+                this.logger.error("ROUTER","POST",`POST file /server/post/${setup.routes.post_name}.js could not be found`);
+            }
         }else{
             this.logger.error("ROUTER","Setup","Route system is not setup");
         }
-
-        //Setup payment mean
-        if(setup.payu){
-            this.payu.setup(setup.payu);
-            this.logger.log("PAYU","Setup","Payment system set-up");
-        }
-        
-        //Load post methods
-        const postSource = require(`${process.cwd()}/server/post/${setup.routes.post_name}.js`);
-        const post = new postSource(this);
-        this.router.setPosts(post);
 
         //Load routines
         if (setup.routines) {
@@ -142,8 +145,8 @@ class xali{
 
         try{
             httpsOption = {
-                key: fs.readFileSync(`${process.cwd()}/server/https/server.key`,'utf-8'),
-                cert: fs.readFileSync(`${process.cwd()}/server/https/server.cert`,'utf-8')
+                key: fs.readFileSync(`${process.cwd()}\\server\\https\\server.key`,'utf-8'),
+                cert: fs.readFileSync(`${process.cwd()}\\server\\https\\server.cert`,'utf-8')
             }
         }catch{
             this.logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server/https/ should contain valids server.key and server.cert `);
