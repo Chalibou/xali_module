@@ -34,7 +34,7 @@ class db{
             this.logger.log("DB","Testing",`Database ${params.name} setup for testing on localhost:27017 without credentials`);
         }else{
             this.url = `${params.service}://${params.id}:${params.key}@${params.adress}?authSource=${params.authSource}`
-            this.logger.log("DB","Testing",`Database ${params.name} setup for ${url}`);
+            this.logger.log("DB","Testing",`Database ${params.name} setup for ${this.url}`);
         }
         this.logger.log("DB","Connect",`Reaching DB : ${params.name}`);
         mongoClient.connect(this.url,this.options).then(client=>{
