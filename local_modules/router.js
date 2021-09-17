@@ -82,8 +82,9 @@ class router{
                         this.managePOST(res,post,user);
                     });
                 }catch(error){
-                    this.logger.error("ROUTER","Translation",`${data} :: ${error}`);
-                    this.respond(res,"Bad request format",303);
+                    this.logger.alert("GET","Post data",`Bad request format avoided : ${reqArray[1]}`)
+                    //Try to handle as a simple get request
+                    this.manageGET(res,file,user);
                     return;
                 }
             }else{
