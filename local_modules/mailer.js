@@ -35,7 +35,7 @@ class mailer{
         }
         if (this.isTest) {
             this.port = 25;
-            this.domain = localhost;
+            this.domain = "localhost";
             this.logger.success("MAIL","Setup","Mail system engaged in test mode");
         }else{
             this.logger.success("MAIL","Setup","Mail system engaged");
