@@ -4,7 +4,6 @@
  */
 
 const nodemailer = require("nodemailer");
-const fs = require('fs');
 
 class mailer{
     constructor(sourceApp){
@@ -28,6 +27,7 @@ class mailer{
      * @param {Object} input Object containing the properties we want to change
      */
     setup = (setup_object)=>{
+
         const entries = Object.entries(setup_object);
         for (let i = 0; i < entries.length; i++) {
             const element = entries[i];
@@ -35,7 +35,7 @@ class mailer{
         }
         if (this.isTest) {
             this.port = 25;
-            this.domain = "localhost";
+            this.host = "localhost";
             this.logger.success("MAIL","Setup","Mail system engaged in test mode");
         }else{
             this.logger.success("MAIL","Setup","Mail system engaged");
