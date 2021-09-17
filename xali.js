@@ -18,6 +18,7 @@ class xali{
 
         //Setup sub-component
         this.isTest = setup.isTest;
+        this.hasDebug = setup.hasDebug;
         this.name = setup.name;
         this.tools = tools;
         this.logger = new xali_logger(this);
@@ -156,6 +157,7 @@ class xali{
             try{
                 this.watcher.eval(req);
                 //Authentication
+                if (this.hasDebug) {this.logger.log("DEBUG","App",`Headers : ${req.headers} \n ===== \n Req : ${req.url} \n ${req.method}`)}
                 const user = await this.auth.checkAuth(req);
                 //Check permissions and handle the request
                 this.router.treat(user,req,res);
