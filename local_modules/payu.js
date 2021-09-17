@@ -19,10 +19,10 @@ class payu{
         this.confirmationUrl = options.confirmationUrl;
         this.responseUrl = options.responseUrl;
         this.privateK = options.privateK;
-        this.isSandbox = options.sandbox;
+        this.isSandbox = options.isSandbox;
         if (this.isSandbox){
             this.payuUrl = "https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu";
-            this.logger.success("PAYU","Setup","Payment system set-up in test mode");
+            this.logger.success("PAYU","Setup","Payment system set-up in sandbox mode");
         }else{
             this.payuUrl = "https:///checkout.payulatam.com/ppp-web-gateway-payu/";
             this.logger.success("PAYU","Setup","Payment system set-up in prod mode");
