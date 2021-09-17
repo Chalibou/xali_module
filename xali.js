@@ -157,7 +157,7 @@ class xali{
             try{
                 this.watcher.eval(req);
                 //Authentication
-                if (this.hasDebug) {this.logger.log("DEBUG","App",`Headers : ${req.headers} \n ===== \n Req : ${req.url} \n ${req.method}`)}
+                if (this.hasDebug) {this.logger.log("DEBUG","App",`\nHeaders : ${JSON.stringify(req.headers)} \n ===== \n Req : ${req.method} || ${req.url} `)}
                 const user = await this.auth.checkAuth(req);
                 //Check permissions and handle the request
                 this.router.treat(user,req,res);
