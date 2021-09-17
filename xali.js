@@ -150,7 +150,10 @@ class xali{
             }
         }catch{
             this.logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server/https/ should contain valids server.key and server.cert `);
-            process.exit();
+            httpsOption = {
+                key: "",
+                cert:""
+            }
         }
         const app = async (req,res)=>{
             try{
