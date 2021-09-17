@@ -19,10 +19,7 @@ class payu{
         this.confirmationUrl = options.confirmationUrl;
         this.responseUrl = options.responseUrl;
         this.privateK = options.privateK;
-		this.isSandbox = options.isSandbox?1:0;
-		this.payuUrl = options.isSandbox?
-		"https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu"
-		:"https:///checkout.payulatam.com/ppp-web-gateway-payu/";
+		this.payuUrl = "https:///checkout.payulatam.com/ppp-web-gateway-payu/";
 		this.logger.success("PAYU","Setup",`Payment system set-up, sandbox is ${options.isSandbox}`);
     }
      
