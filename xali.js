@@ -145,15 +145,12 @@ class xali{
 
         try{
             httpsOption = {
-                key: fs.readFileSync(`${process.cwd()}\\server\\https\\server.key`,'utf-8'),
-                cert: fs.readFileSync(`${process.cwd()}\\server\\https\\server.cert`,'utf-8')
+                key: fs.readFileSync(`${process.cwd()}/server/https/server.key`,'utf-8'),
+                cert: fs.readFileSync(`${process.cwd()}/server/https/server.cert`,'utf-8')
             }
         }catch{
             this.logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server/https/ should contain valids server.key and server.cert `);
-            httpsOption = {
-                key: "",
-                cert:""
-            }
+            process.exit(8);
         }
         const app = async (req,res)=>{
             try{
