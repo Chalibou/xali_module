@@ -91,13 +91,19 @@ class xali{
         }
 
         //Setup mailer module
-        if (setup.mail) {
+        if (setup.mail){
             this.mailer.setup(setup.mail);
         }
             
         //Setup the router for the application
         if(setup.routes.defaultRoute){
             this.router.setup("defaultRoute",setup.routes.defaultRoute);
+        }
+        if (setup.routes.httpsPath) {
+            this.router.setup("httpsPath",setup.routes.httpsPath);
+        }else{
+            this.logger.error("HTTPS",'Certs',"Certificates path are not defined");
+            throw
         }
         if(setup.routes.accreditation){
             this.router.setup("accreditation",setup.routes.accreditation);
@@ -146,8 +152,8 @@ class xali{
 
         try{
             httpsOption = {
-                key: fs.readFileSync(`${process.cwd()}/server/https/server.key`,'utf-8'),
-                cert: fs.readFileSync(`${process.cwd()}/server/https/server.cert`,'utf-8')
+                key: fs.readFileSync(`${this.router.httpsPath}/server.key`,'utf-8'),
+                cert: fs.readFileSync(`${this.router.httpsPath}/server.cert`,'utf-8')
             }
         }catch{
             this.logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server/https/ should contain valids server.key and server.cert `);
