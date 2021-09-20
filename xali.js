@@ -103,7 +103,6 @@ class xali{
             this.router.setup("httpsPath",setup.routes.httpsPath);
         }else{
             this.logger.error("HTTPS",'Certs',"Certificates path are not defined");
-            throw
         }
         if(setup.routes.accreditation){
             this.router.setup("accreditation",setup.routes.accreditation);
