@@ -155,7 +155,7 @@ class xali{
                 cert: fs.readFileSync(`${this.router.httpsPath}server.cert`,'utf-8')
             }
         }catch{
-            this.logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server/https/ should contain valids server.key and server.cert `);
+            this.logger.error("SETUP","AUTH",`Folder ${this.router.httpsPath} should contain valids server.key and server.cert `);
             process.exit(8);
         }
         const app = async (req,res)=>{
