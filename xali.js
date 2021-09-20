@@ -152,7 +152,7 @@ class xali{
         try{
             httpsOption = {
                 key: fs.readFileSync(`${this.router.httpsPath}privkey.pem`,'utf-8'),
-                cert: fs.readFileSync(`${this.router.httpsPath}fullchain.cert`,'utf-8')
+                cert: fs.readFileSync(`${this.router.httpsPath}fullchain.pem`,'utf-8')
             }
         }catch{
             this.logger.error("SETUP","AUTH",`Folder ${this.router.httpsPath} should contain valids server.key and server.cert `);
