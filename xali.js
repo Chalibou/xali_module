@@ -11,7 +11,6 @@ const xali_templater = new require("./local_modules/templater.js");
 const xali_mailer = new require("./local_modules/mailer.js");
 const xali_watcher = new require("./local_modules/watcher.js");
 const xali_pdf = new require("./local_modules/pdf.js");
-const xali_payu = new require("./local_modules/payu.js");
 
 class xali{
     constructor(setup){
@@ -29,7 +28,6 @@ class xali{
         this.mailer = new xali_mailer(this);
         this.pdf = new xali_pdf(this);
         this.watcher = new xali_watcher(this);
-        this.payu = new xali_payu(this);
 
         /**
          * @todo Check if repository structure is good
@@ -85,9 +83,12 @@ class xali{
             }
         );
 
-        //Setup payment system
+        //Setup payments system
         if(setup.payu){
             this.payu.setup(setup.payu);
+        }
+        if(setup.epayco){
+            this.epayco.setup(setup.epayco);
         }
 
         //Setup mailer module
@@ -146,13 +147,12 @@ class xali{
      * @param {Object} res HTTPS Response object
     */
     run(){
-
         let httpsOption;
 
         try{
             httpsOption = {
-                key: fs.readFileSync(`${this.router.httpsPath}privkey.pem`,'utf-8'),
-                cert: fs.readFileSync(`${this.router.httpsPath}fullchain.pem`,'utf-8')
+                key: fs.readFileSync(`${this.router.httpsPath}/privkey.pem`,'utf-8'),
+                cert: fs.readFileSync(`${this.router.httpsPath}/fullchain.pem`,'utf-8')
             }
         }catch{
             this.logger.error("SETUP","AUTH",`Folder ${this.router.httpsPath} should contain valids server.key and server.cert `);
