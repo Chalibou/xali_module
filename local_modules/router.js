@@ -114,7 +114,7 @@ class router{
                 }catch(err){
                     //Not a JSON type body
                     post = {
-                        type:req.url.split("/")[1],
+                        type:req.url.split("/")[1].split("?")[0],
                         data:body
                     }
                 }
