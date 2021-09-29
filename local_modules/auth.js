@@ -205,15 +205,16 @@ class auth{
     changePwd = (user,newPwd)=>{
         return new Promise(async(resolve,reject)=>{
             //Register pending user
+            const that = this;
             bcrypt.hash(newPwd, saltRounds, async function(err, hash) {
                 if(err){
-                    throw this.logger.buildError(500,"hash",err);
+                    reject(err);
                 }
                 try{
-                    await this.db.updateOne("cotiz","credentials",{id:user.id},{user_pwd:hash});
+                    await that.db.updateOne("cotiz","credentials",{id:user.id},{$set:{user_pwd:hash}});
                     resolve();
                 }catch(error){
-                    throw this.logger.buildError(500,"insert_error",error);
+                    reject(error);
                 }
             })
         })
