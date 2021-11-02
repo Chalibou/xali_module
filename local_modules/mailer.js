@@ -4,13 +4,12 @@
  */
 
 const nodemailer = require("nodemailer");
-const fs = require('fs');
 
 class mailer{
     constructor(sourceApp){
         this.logger = sourceApp.logger;
         this.templater = sourceApp.templater;
-
+        this.isTest = sourceApp.isTest;
         //SMTP PARAMETERS
         this.user = "";         //"noreply@cotiz.net"
         this.pwd = "";          //"'3:X6e2A(r.zBw:>"
@@ -21,14 +20,6 @@ class mailer{
         //MAIL OBJECT PARAMETERS
         this.sender = "";       //"COTIZ<noreply@cotiz.net>"
         this.titleHeader = "";  //"Cotiz - "
-
-        this.DKIM_PRIVATK = "";
-        try{
-            this.DKIM_PRIVATK = fs.readFileSync(`${process.cwd()}\\server\\mail\\dkim_private.key`,"utf-8");
-        }catch(err){
-            this.logger.error("MAILER","SETUP",`Folder ${process.cwd()}\\server\\mail\\ should contain valids DKIM public and private key `)
-            process.exit();
-        }
     }
     
     /**
@@ -36,12 +27,19 @@ class mailer{
      * @param {Object} input Object containing the properties we want to change
      */
     setup = (setup_object)=>{
+
         const entries = Object.entries(setup_object);
         for (let i = 0; i < entries.length; i++) {
             const element = entries[i];
             this[element[0]] = element[1];
         }
-        this.logger.log("MAIL","Setup","Mail system engaged");
+        if (this.isTest) {
+            this.port = 25;
+            this.host = "localhost";
+            this.logger.success("MAIL","Setup","Mail system engaged in test mode");
+        }else{
+            this.logger.success("MAIL","Setup","Mail system engaged in production mode");
+        }
     }
 
     /**
@@ -70,11 +68,6 @@ class mailer{
                 ciphers: 'SSLv3',
                 rejectUnauthorized: false
             }
-            //,dkim: {
-            //    domainName: this.domain,
-            //    keySelector: this.keySelector,
-            //    privateKey: DKIM_PRIVATK
-            //}
         });
 
         const mailContent = await this.templater.fillTemplate("standardMail.html",{mailContent:message},lang);

@@ -18,11 +18,10 @@ class pdf{
                 left:"50px"
             },
             printBackground: true,
-            path: `${process.cwd()}/test.pdf`
         }
     }
     
-    buildPdf(template,data,lang){
+    buildPdf(template,data,lang,test=false){
         return new Promise(async(resolve,reject)=>{
             try{
                 const htmlContent = await this.templater.fillTemplate(template,data,lang);
@@ -33,6 +32,7 @@ class pdf{
                 });
                 const page = await browser.newPage();
                 await page.setContent(htmlContent,{"waitUntil" : "networkidle0"});
+                if(test) printOptions.path= `${process.cwd()}/test.pdf`;
                 const pdfBinary = await page.pdf(this.printOptions);
                 await browser.close();
                 resolve(pdfBinary);

@@ -82,8 +82,9 @@ class router{
                         this.managePOST(res,post,user);
                     });
                 }catch(error){
-                    this.logger.error("ROUTER","Translation",`${data} :: ${error}`);
-                    this.respond(res,"Bad request format",303);
+                    this.logger.alert("GET","Post data",`Bad request format avoided : ${reqArray[1]}`)
+                    //Try to handle as a simple get request
+                    this.manageGET(res,file,user);
                     return;
                 }
             }else{
@@ -111,10 +112,20 @@ class router{
                 try{
                     post = JSON.parse(body);
                 }catch(err){
-                    const error = this.logger.buildError(400,"bad_JSON",`Bad JSON ${err}`);
-                    this.respond(res,JSON.stringify(error),error.code);
-                    return;
+                    //Not a JSON type body
+                    post = {
+                        type:req.url.split("/")[1].split("?")[0],
+                        data:body
+                    }
                 }
+                //For classical POST methods
+                if(!post.type){
+                    post = {
+                        type:req.url.split("/")[1],
+                        data:body
+                    }
+                }
+
                 //Check accreditations
                 this.checkAccreditation(user,post.type,res,()=>{
                     this.managePOST(res,post,user);
@@ -158,7 +169,7 @@ class router{
      * @param {Object} res Passed response object
      */
     manageGET = (res,getRequest,user)=>{
-        this.logger.log("ROUTER","GET",`Responding ${user.id} for URL ${getRequest}`);
+        //this.logger.log("ROUTER","GET",`Responding ${user.id} for URL ${getRequest}`);
         //Solve path for '/' == index.html and no extension == .html
         if (getRequest=="/") getRequest="/index.html";
         if (getRequest.indexOf(".")==-1)getRequest+=".html";

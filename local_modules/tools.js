@@ -5,6 +5,7 @@
  */
 
  const QRCode = require('qrcode');
+ const https = require('https')
     
  module.exports.buildQr = (data)=>{
     return new Promise(async(resolve,reject)=>{
@@ -89,4 +90,69 @@ module.exports.getRandomPwd = (size)=>{
     }
     //Scramble the password
     return this.shuffle(response);
+}
+
+/**
+ * Perform POST request
+ * @param {String} _path url
+ * @param {Object} _data data
+ * @returns {Promise} 
+ */
+module.exports.post = (_host,_path,_data)=>{
+    return new Promise((resolve,reject)=>{
+        const options = {
+            hostname: _host,
+            port: 443,
+            path: _path,
+            method: 'POST'
+        }
+        const data = JSON.stringify(_data);
+        const req = https.request(options, res => {
+            if (res.statusCode < 200 || res.statusCode > 299) {
+                return reject(new Error(`HTTP status code ${res.statusCode}`))
+            }
+            let body = [];
+            res.on('data', (chunk) => body.push(chunk))
+            res.on('end', () => {
+                const resString = Buffer.concat(body).toString()
+                resolve(resString)
+            })
+        })
+        req.on('error', error => {
+            reject(error);
+        })
+        req.write(data)
+        req.end()
+    })
+}
+
+/**
+ * Perform GET request
+ * @param {String} _path 
+ * @returns {Promise}
+ */
+module.exports.get = (_host,_path)=>{
+    return new Promise((resolve,reject)=>{
+        const options = {
+            hostname: _host,
+            port: 443,
+            path: _path,
+            method: 'GET'
+        }
+        const req = https.request(options, res => {
+            if (res.statusCode < 200 || res.statusCode > 299) {
+                return reject(new Error(`HTTP status code ${res.statusCode}`))
+            }
+            let body = [];
+            res.on('data', (chunk) => body.push(chunk))
+            res.on('end', () => {
+                const resString = Buffer.concat(body).toString()
+                resolve(resString)
+            })
+        })
+        req.on('error', error => {
+            reject(error);
+        })
+        req.end()
+    })
 }

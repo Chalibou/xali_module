@@ -9,7 +9,7 @@ const mongoClient = require('mongodb').MongoClient;
 class db{
     constructor(sourceApp){
         this.logger = sourceApp.logger;
-
+        this.isTest = sourceApp.isTest;
         this.url="";
         this.options={};
         this.client = {};
@@ -27,17 +27,18 @@ class db{
      * @param {String} params.options Options for connexion
      * @param {Boolean} test Allows testing on localhost:27017
      */
-    connect = (params,test=false)=>{
+    connect = (params)=>{
         this.options = params.options;
-        if(test){
-            this.logger.log("DB","Testing","Database setup to localhost 27017 without credentials");
+        if(this.isTest){
             this.url = 'mongodb://localhost:27017';
+            this.logger.log("DB","Testing",`Database ${params.name} setup for testing on localhost:27017 without credentials`);
         }else{
             this.url = `${params.service}://${params.id}:${params.key}@${params.adress}?authSource=${params.authSource}`
+            this.logger.log("DB","Testing",`Database ${params.name} setup for ${this.url}`);
         }
         this.logger.log("DB","Connect",`Reaching DB : ${params.name}`);
         mongoClient.connect(this.url,this.options).then(client=>{
-            this.logger.good("DB","Connect",`${params.name} : Ready to listen`);
+            this.logger.success("DB","Connect",`${params.name} : Ready to listen`);
             this.client[params.name] = client.db(params.name);
         },
         (error)=>{
@@ -51,7 +52,7 @@ class db{
     reconnect = (name)=>{
         this.logger.log("DB","Connect",`Reconnexion to DB`);
         mongoClient.connect(this.url,this.options).then(client=>{
-            this.logger.good("DB","Connect",`Ready to listen`);
+            this.logger.success("DB","Connect",`Ready to listen`);
             this.client[name] = client.db(process.env.DB_NAME);
         },
         (error)=>{

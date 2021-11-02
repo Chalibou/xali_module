@@ -17,8 +17,8 @@ class auth{
         this.logger = sourceApp.logger;
 
         try{
-            this.KEY_PUBLIC = fs.readFileSync(`${process.cwd()}\\server\\jwt\\public.key`,"utf-8");
-            this.KEY_PRIVATE = fs.readFileSync(`${process.cwd()}\\server\\jwt\\private.key`,"utf-8");
+            this.KEY_PUBLIC = fs.readFileSync(`${process.cwd()}/server/jwt/public.key`,"utf-8");
+            this.KEY_PRIVATE = fs.readFileSync(`${process.cwd()}/server/jwt/private.key`,"utf-8");
         }catch{
             this.logger.error("SETUP","AUTH",`Folder ${process.cwd()}/server/jwt/ should contain valids (JWT)-RSA public and private key `)
             process.exit();
@@ -163,7 +163,7 @@ class auth{
                         token:token,
                         group:db_user.group
                     };
-                    this.logger.good("AUTH","Login",`User ${db_user.id}:${db_user.name} has been logged-in successfully`);
+                    this.logger.success("AUTH","Login",`User ${db_user.id}:${db_user.name} has been logged-in successfully`);
                     
                     resolve({id:db_user.id,token:token});
                 }else{
@@ -205,15 +205,16 @@ class auth{
     changePwd = (user,newPwd)=>{
         return new Promise(async(resolve,reject)=>{
             //Register pending user
+            const that = this;
             bcrypt.hash(newPwd, saltRounds, async function(err, hash) {
                 if(err){
-                    throw this.logger.buildError(500,"hash",err);
+                    reject(err);
                 }
                 try{
-                    await this.db.updateOne("cotiz","credentials",{id:user.id},{user_pwd:hash});
+                    await that.db.updateOne("cotiz","credentials",{id:user.id},{$set:{user_pwd:hash}});
                     resolve();
                 }catch(error){
-                    throw this.logger.buildError(500,"insert_error",error);
+                    reject(error);
                 }
             })
         })
@@ -224,7 +225,7 @@ class auth{
      * @param {String} id Id of the user
      */
     logout = (id)=>{
-        this.logger.good("AUTH","Logout",`User ${id} has been logged-out successfully`)
+        this.logger.success("AUTH","Logout",`User ${id} has been logged-out successfully`)
         this.authenticatedUsers[id] = null;
     }
 }

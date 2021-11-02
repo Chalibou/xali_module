@@ -145,7 +145,7 @@ class templater{
         return new Promise(async (resolve,reject)=>{
             const htmlCore = await this.fillTemplate(template_file,content,lang);
             const htmlContent = {
-                htmlTitle:content.htmlTitle,
+                pageTitle:content.pageTitle,
                 htmlContent:htmlCore
             }
             resolve(await this.fillTemplate("standardHTMLPage.html",htmlContent,lang));
