@@ -67,7 +67,7 @@ class xali{
         if (setup.limiters) {
             this.watcher.setup(setup.limiters);
         }else{
-            this.logger.log("Watcher","Limiter","No limiters setup for this interface");
+            this.logger.alert("Watcher","Limiter","No limiters setup for this interface");
         }
 
         //Connect to database
@@ -106,14 +106,14 @@ class xali{
             this.logger.error("HTTPS",'Certs',"Certificates path are not defined");
         }
         if(setup.routes.accreditation){
-            this.router.setup("accreditation",setup.routes.accreditation);
-            this.logger.log("ROUTER","Accreditations","Route system engaged");
+            this.router.setupAccreditations(setup.routes.accreditation,setup.routes.users);
+            this.logger.success("ROUTER","Accreditations","Route system engaged");
             try{
                 //Load post methods
                 const postSource = require(`${process.cwd()}/server/post/${setup.routes.post_name}.js`);
                 const post = new postSource(this);
                 this.router.setPosts(post);
-                this.logger.success("ROUTER","POST",`POST interface ${setup.routes.post_name} ready`);
+                this.logger.log("ROUTER","POST",`POST interface ${setup.routes.post_name} ready`);
             }catch{
                 this.logger.error("ROUTER","POST",`POST file /server/post/${setup.routes.post_name}.js could not be found`);
             }
@@ -127,7 +127,7 @@ class xali{
                 const routinesSource = require(`${process.cwd()}/server/routines/${setup.routines}.js`);
                 const routines = new routinesSource(this);
                 routines.launchWorks();
-                this.logger.success("Setup","Routines",`Routines ${setup.routines} armed`);
+                this.logger.log("Setup","Routines",`Routines ${setup.routines} armed`);
             }catch{
                 this.logger.error("Setup","Routines",`Routines file /server/routines/${setup.routines}.js could not be found`);
             }
@@ -177,7 +177,7 @@ class xali{
                 this.logger.alert("HTTP","Transfer",`Request ${req.url} transfered from HTTP to HTTPS`);
                 res.writeHead(301,{Location: `https://${req.headers.host}${req.url}`});
                 res.end();
-            }).listen(80,()=>{this.logger.success("APP","Redirect",`REDIRECT HTTP=>HTTPS ENGAGED`);})
+            }).listen(80,()=>{this.logger.log("APP","Redirect",`REDIRECT HTTP=>HTTPS ENGAGED`);})
         }
     }
 }
