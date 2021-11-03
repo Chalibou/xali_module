@@ -14,6 +14,7 @@ class router{
 
         this.errorPage = "The content you want has not been found";
         this.postCallbacks = [];
+        this.userTypes = [];
         this.accreditation = {};
         this.defaultRoute = "";
         this.getFolder = "";
@@ -36,6 +37,51 @@ class router{
             this[target] = input;
         }
     }
+
+    setupAccreditations = (entries, users)=>{
+        this.userTypes = users;
+        const table = Object.entries(entries);
+        for (let i = 0; i < table.length; i++) {
+            const elmt = table[i];
+            //Test for format
+            switch(typeof(elmt[1])){
+                case "object":
+                    //Paste array as is
+                    this.accreditation[elmt[0]] = elmt[1];
+                break;
+                case "string":
+                    //Detect * for all or check for 
+                    if (elmt[1] == "*") {
+                        this.accreditation[elmt[0]] = users;
+                    }else{
+                        //Check for >[usertype] structure
+                        const user = elmt[1].split(">")[1];
+                        if(user){
+                            const index = users.indexOf(user);
+                            if(index){
+                                let userArray = [];
+                                for (let j = index; j < users.length; j++) {
+                                    const userType = users[j];
+                                    userArray.push(userType);
+                                }
+                                this.accreditation[elmt[0]] = userArray;
+                            }else{
+                                this.logger.error("SETUP","Accreditations",`${elmt[0]} : ${elmt[1]} has invalid user type`);
+                                throw `${elmt[0]} : ${elmt[1]} has invalid user type`;
+                            }
+                        }else{
+                            this.logger.error("SETUP","Accreditations",`${elmt[0]} : ${elmt[1]} has bad string declaration`);
+                            throw `${elmt[0]} : ${elmt[1]} has bad string declaration`;
+                        }
+                    }
+                break;
+                default:
+                    this.logger.error("SETUP","Accreditations",`${elmt[0]} : ${elmt[1]} cannot be of type ${typeof(elmt[1])}`);
+                    throw `${elmt[0]} : ${elmt[1]} cannot be of type ${typeof(elmt[1])}`;
+            }
+        }
+        this.logger.success("Setup","Accreditations","Accreditations has been set-up sucessfully");
+    }
     
     /**
      * Setup the post method for this interface
@@ -56,6 +102,7 @@ class router{
      */
     treat = (user,req,res)=>{
         //Save some request info into the response
+
         res.xali = {
             referer:req.headers.referer,
             origin:req.headers.origin,
@@ -113,6 +160,7 @@ class router{
                     post = JSON.parse(body);
                 }catch(err){
                     //Not a JSON type body
+                    this.logger.alert("POST","Format",`Recieved non JSON URL POST format : ${body}`);
                     post = {
                         type:req.url.split("/")[1].split("?")[0],
                         data:body
@@ -150,8 +198,7 @@ class router{
         //Check if file exists
         if (!this.accreditation[target]) {
             this.logger.alert("ROUTER","Accreditation",`User ${user.id} try to access unknown : ${target}. Denying access.`);
-            const error = this.logger.buildError(404,"not_found",`The request you want to perform does not exists or is not permited by your user group`);
-            this.respond(res,JSON.stringify(error),error.code);
+            this.respond(res,`${target} not found`,404);
             return;
         }
         //Check if user has allowance

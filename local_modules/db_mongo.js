@@ -38,7 +38,7 @@ class db{
         }
         this.logger.log("DB","Connect",`Reaching DB : ${params.name}`);
         mongoClient.connect(this.url,this.options).then(client=>{
-            this.logger.success("DB","Connect",`${params.name} : Ready to listen`);
+            this.logger.success("DB","Connect",`${params.name} database connected and ready`);
             this.client[params.name] = client.db(params.name);
         },
         (error)=>{
