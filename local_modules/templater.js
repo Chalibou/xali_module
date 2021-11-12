@@ -136,8 +136,8 @@ class templater{
 
     fillDefaultMail = (template_file,content,lang) =>{
         return new Promise(async (resolve,reject)=>{
-            const mail = await this.fillTemplate("standardMail.html",content,lang);
-            resolve(await this.fillTemplate(template_file,mail,lang));
+            const mail = await this.fillTemplate(template_file,content,lang);
+            resolve(await this.fillTemplate("standardMail.html",{mailContent:mail},lang));
         })
     }
 

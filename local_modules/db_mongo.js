@@ -13,6 +13,7 @@ class db{
         this.url="";
         this.options={};
         this.client = {};
+        this.name;
     } 
 
     /**
@@ -28,6 +29,7 @@ class db{
      * @param {Boolean} test Allows testing on localhost:27017
      */
     connect = (params)=>{
+        this.name = params.name;
         this.options = params.options;
         if(this.isTest){
             this.url = 'mongodb://localhost:27017';
@@ -69,10 +71,10 @@ class db{
     insertOne = (name,collection,data)=>{
         return new Promise (async(resolve,reject)=>{
             try{
-                await this.client[name].collection(collection).insertOne(data);
-                resolve();
+                resolve(await this.client[name].collection(collection).insertOne(data));
             }catch(error){
-                throw error
+                this.logger.error("DB","Insertion",error);
+                reject(error);
             }
         })
     }
