@@ -14,6 +14,7 @@ class db{
         this.options={};
         this.client = {};
         this.name;
+        this.allowance;
     } 
 
     /**
@@ -31,6 +32,8 @@ class db{
     connect = (params)=>{
         this.name = params.name;
         this.options = params.options;
+        this.allowance = params.allowance || {};
+
         if(this.isTest){
             this.url = 'mongodb://localhost:27017';
             this.logger.log("DB","Testing",`Database ${params.name} setup for testing on localhost:27017 without credentials`);
@@ -117,6 +120,16 @@ class db{
         return new Promise (async(resolve,reject)=>{
             try{
                 resolve(await this.client[name].collection(collection).updateOne(critera,update));
+            }catch(error){
+                throw error
+            }
+        })
+    }
+
+    updateMany = (name,collection,critera,update)=>{
+        return new Promise (async(resolve,reject)=>{
+            try{
+                resolve(await this.client[name].collection(collection).updateMany(critera,update));
             }catch(error){
                 throw error
             }

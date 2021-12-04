@@ -106,7 +106,9 @@ class xali{
             this.logger.error("HTTPS",'Certs',"Certificates path are not defined");
         }
         if(setup.routes.accreditation){
-            this.router.setupAccreditations(setup.routes.accreditation,setup.routes.users);
+            this.router.setupUsers(setup.routes.users);
+            this.router.setupAccreditations(setup.routes.accreditation);
+            this.router.setupAllowance(setup.routes.allowance);
             this.logger.success("ROUTER","Accreditations","Route system engaged");
             try{
                 //Load post methods
@@ -114,7 +116,7 @@ class xali{
                 const post = new postSource(this);
                 this.router.setPosts(post);
                 this.logger.log("ROUTER","POST",`POST interface ${setup.routes.post_name} ready`);
-            }catch{
+            }catch(err){
                 this.logger.error("ROUTER","POST",`POST file /server/post/${setup.routes.post_name}.js could not be found`);
             }
         }else{

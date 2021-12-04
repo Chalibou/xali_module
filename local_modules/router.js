@@ -11,11 +11,13 @@ class router{
     constructor(sourceApp){
         this.logger = sourceApp.logger;
         this.templater = sourceApp.templater;
+        this.tools = sourceApp.tools;
 
         this.errorPage = "The content you want has not been found";
         this.postCallbacks = [];
         this.userTypes = [];
         this.accreditation = {};
+        this.allowance = {};
         this.defaultRoute = "";
         this.getFolder = "";
         //Setup default behavior
@@ -38,49 +40,95 @@ class router{
         }
     }
 
-    setupAccreditations = (entries, users)=>{
+    setupUsers = (users)=>{
         this.userTypes = users;
-        const table = Object.entries(entries);
-        for (let i = 0; i < table.length; i++) {
-            const elmt = table[i];
-            //Test for format
-            switch(typeof(elmt[1])){
-                case "object":
-                    //Paste array as is
-                    this.accreditation[elmt[0]] = elmt[1];
-                break;
-                case "string":
-                    //Detect * for all or check for 
-                    if (elmt[1] == "*") {
-                        this.accreditation[elmt[0]] = users;
-                    }else{
-                        //Check for >[usertype] structure
-                        const user = elmt[1].split(">")[1];
-                        if(user){
-                            const index = users.indexOf(user);
-                            if(index){
-                                let userArray = [];
-                                for (let j = index; j < users.length; j++) {
-                                    const userType = users[j];
-                                    userArray.push(userType);
-                                }
-                                this.accreditation[elmt[0]] = userArray;
-                            }else{
-                                this.logger.error("SETUP","Accreditations",`${elmt[0]} : ${elmt[1]} has invalid user type`);
-                                throw `${elmt[0]} : ${elmt[1]} has invalid user type`;
-                            }
-                        }else{
-                            this.logger.error("SETUP","Accreditations",`${elmt[0]} : ${elmt[1]} has bad string declaration`);
-                            throw `${elmt[0]} : ${elmt[1]} has bad string declaration`;
-                        }
+    }
+
+    convertStringToUserArray = (command)=>{
+        //Detect * for all or check for 
+        if (command == "*") {
+            return this.userTypes;
+        }else{
+            //Check for >[usertype] structure
+            const user = command.split(">")[1];
+            if(user){
+                const index = this.userTypes.indexOf(user);
+                if(index){
+                    let userArray = [];
+                    for (let j = index; j < this.userTypes.length; j++) {
+                        const userType = this.userTypes[j];
+                        userArray.push(userType);
                     }
-                break;
-                default:
-                    this.logger.error("SETUP","Accreditations",`${elmt[0]} : ${elmt[1]} cannot be of type ${typeof(elmt[1])}`);
-                    throw `${elmt[0]} : ${elmt[1]} cannot be of type ${typeof(elmt[1])}`;
+                    return userArray;
+                }else{
+                    this.logger.error("SETUP","Accreditations",`${command} has invalid user type`);
+                    throw `${elmt[0]} : ${command} has invalid user type`;
+                }
+            }else{
+                this.logger.error("SETUP","Accreditations",`${command} has bad string declaration`);
+                throw `${command} has bad string declaration`;
+            }
+        }    
+    }
+
+    setupAccreditations = (entries)=>{
+        const acc = Object.entries(entries);
+        for (let i = 0; i < acc.length; i++) {
+            const param = acc[i][0];
+            const val = acc[i][1];
+            //Test for format
+            if (typeof val == "string") {
+                this.accreditation[param] = this.convertStringToUserArray(val);
+            }else{
+                this.accreditation[param] = val;
             }
         }
-        this.logger.success("Setup","Accreditations","Accreditations has been set-up sucessfully");
+        this.logger.success("Setup","Accreditations","Accreditations has been set-up");
+    }
+
+    setupAllowance(entries){
+        const parseObject = (obj)=>{
+            for (var k in obj){
+                if (typeof obj[k] == "object" && !Array.isArray(obj[k])){
+                    parseObject(obj[k]);
+                }else{
+                    if (!Array.isArray(obj[k])){
+                        obj[k] = this.convertStringToUserArray(obj[k])
+                    }
+                }
+            }
+        }
+        parseObject(entries,(elmt)=>{elmt = this.convertStringToUserArray(elmt)});
+        this.allowance = entries;
+        this.logger.success("Setup","Allowance","Allowance has been set-up");
+    }
+
+    /**
+     * Check if user type has allowance for acces/modification/creation/deletion of data
+     * @param {*} user 
+     * @param {*} operation 
+     * @param {*} dataType 
+     * @param {*} dataField 
+     */
+    checkAccess(user,operation,dataType,dataField){
+        try {
+            switch (operation) {
+                case "get":
+                case "set":
+                    //Check for exemption 
+                    if (this.allowance[dataType][operation].exempt.some((elmt)=>{return elmt == dataField})) {
+                        return false;
+                    }
+                    this.allowance[dataType][operation].role.some((elmt)=>{return elmt == user});
+                    return this.allowance[dataType][operation].role.some((elmt)=>{return elmt == user});
+                case "new":
+                case "del":
+                    return this.allowance[dataType][operation].some((elmt)=>{return elmt == user});
+            }
+        } catch (error) {
+            this.logger.error("DB","Allowance",`Allowance error : ${error}`);
+            return false;
+        }
     }
     
     /**
@@ -283,25 +331,18 @@ class router{
      * @param {String} type Type of the data
      */
     respond = (res,data,status=200,type='text/html')=>{
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+        res.writeHead(status, {  
+            'Content-Type': type  
+        });
         try{
-            res.setHeader("Access-Control-Allow-Origin", "*");
-            res.setHeader("Access-Control-Allow-Credentials", "true");
-            res.writeHead(status, {  
-                'Content-Type': type  
-            });
             res.write(data);
-            res.end();
         }catch(error){
-            this.logger.alert("ROUTER","Respond","An error occured while responding request" + data);
-            data = JSON.stringify(data);
-            res.setHeader("Access-Control-Allow-Origin", "*");
-            res.setHeader("Access-Control-Allow-Credentials", "true");
-            res.writeHead(status, {  
-                'Content-Type': type  
-            });
-            res.write(data);
-            res.end();
+            this.logger.alert("ROUTER","Respond","An error occured while responding request " + data + error);   
+            res.write(JSON.stringify(data));  
         }
+        res.end();
     }
 }
 module.exports = router;
