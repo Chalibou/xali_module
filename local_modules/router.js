@@ -119,8 +119,11 @@ class router{
                     if (this.allowance[dataType][operation].exempt.some((elmt)=>{return elmt == dataField})) {
                         return false;
                     }
-                    this.allowance[dataType][operation].role.some((elmt)=>{return elmt == user});
-                    return this.allowance[dataType][operation].role.some((elmt)=>{return elmt == user});
+                    if (this.allowance[dataType][operation].role.some((elmt)=>{return elmt == user})){
+                        return this.allowance[dataType][operation].exempt
+                    }else{
+                        return false;
+                    };
                 case "new":
                 case "del":
                     return this.allowance[dataType][operation].some((elmt)=>{return elmt == user});
@@ -129,6 +132,47 @@ class router{
             this.logger.error("DB","Allowance",`Allowance error : ${error}`);
             return false;
         }
+    }
+
+    /**
+     * Generate structure from data type and save it to database. Alimented by this.allowance[type].struc
+     * @param {*} collection 
+     * @param {*} data 
+     */
+    createStructure = (collection,data)=>{
+        console.log('data >>> ',data);
+        const struc = this.allowance[collection].struc;
+        let obj = {
+            id:this.tools.getRandomHexa(16)
+        }
+        for (let i = 0; i < struc.length; i++) {
+            const elmt = struc[i];
+            const detail = elmt.split('#');
+            try {
+                switch (detail[0]) {
+                    case 'a':
+                        if (data[detail[1]]) {
+                            obj[detail[1]] = data[detail[1]]
+                        }else{
+                            obj[detail[1]] = [];
+                        }
+                    break;
+                    case 'o':
+                        if (data[detail[1]]) {
+                            obj[detail[1]] = data[detail[1]]
+                        }else{
+                            obj[detail[1]] = {};
+                        }
+                    break;
+                    default:
+                        obj[elmt] = data[elmt]
+                    break;
+                }
+            } catch (e) {
+                obj[elmt] = undefined;
+            }
+        }
+        return obj;
     }
     
     /**

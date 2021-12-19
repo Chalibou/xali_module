@@ -9,6 +9,7 @@ const fs = require('fs');
 class templater{
     constructor(sourceApp){
         this.logger = sourceApp.logger;
+        this.db = sourceApp.db;
 
         this.templates={};
         this.objectConstructors={};
@@ -151,6 +152,5 @@ class templater{
             resolve(await this.fillTemplate("standardHTMLPage.html",htmlContent,lang));
         })
     }
-
 }
 module.exports = templater;

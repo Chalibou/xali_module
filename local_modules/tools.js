@@ -156,3 +156,34 @@ module.exports.get = (_host,_path)=>{
         req.end()
     })
 }
+
+
+/**
+ * Perform GET request
+ * @param {String} _path 
+ * @returns {Promise}
+ */
+module.exports.compareArrays = (_old,_new)=>{
+    //Compare old vs new (data.val) to identify operations to perform (add, remove)
+    const actions = {
+        add:[],
+        del:[]
+    }
+
+    for (let i = _new.length-1; i >= 0; i--) {
+        const newItem = _new[i];
+        if (_old.some((elmt)=>{return elmt == newItem})) {
+            //Remove elements from both clones
+            _new.splice(_new.indexOf(newItem),1);
+            _old.splice(_old.indexOf(newItem),1);
+        }else{
+            //newItem is a value to be added
+            actions.add.push(newItem);
+        }
+    }
+    //Remaining of oldItemClone is to be deleted
+    actions.del = _old;
+    return actions;
+}
+
+

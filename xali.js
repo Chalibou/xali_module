@@ -117,7 +117,7 @@ class xali{
                 this.router.setPosts(post);
                 this.logger.log("ROUTER","POST",`POST interface ${setup.routes.post_name} ready`);
             }catch(err){
-                this.logger.error("ROUTER","POST",`POST file /server/post/${setup.routes.post_name}.js could not be found`);
+                this.logger.error("ROUTER","POST",`POST file /server/post/${setup.routes.post_name}.js error : ${err}`);
             }
         }else{
             this.logger.error("ROUTER","Setup","Route system is not setup");
@@ -130,8 +130,8 @@ class xali{
                 const routines = new routinesSource(this);
                 routines.launchWorks();
                 this.logger.log("Setup","Routines",`Routines ${setup.routines} armed`);
-            }catch{
-                this.logger.error("Setup","Routines",`Routines file /server/routines/${setup.routines}.js could not be found`);
+            }catch(err){
+                this.logger.error("Setup","Routines",`Routines file /server/routines/${setup.routines}.js error : ${err}`);
             }
         }else{
             this.logger.log("Setup","Routines","No routines programmed for this interface");
