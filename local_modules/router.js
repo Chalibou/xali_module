@@ -145,10 +145,13 @@ class router{
         let obj = {
             id:this.tools.getRandomHexa(16)
         }
+<<<<<<< HEAD
         if(struc.length == 0){
             obj = Object.assign(data, obj);
             return obj;
         }
+=======
+>>>>>>> b440bf45b5a59f6762c1fa4dc1bc28912fdfd534
         for (let i = 0; i < struc.length; i++) {
             const elmt = struc[i];
             const detail = elmt.split('#');
