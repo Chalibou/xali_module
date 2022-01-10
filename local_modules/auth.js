@@ -119,21 +119,25 @@ class auth{
      * @param {*} user_group Accreditation levels
      * @param {*} user_appData Data to be apped to the registered user
      */
-    register = (user,user_group,user_appData)=>{
+    register = (user,user_appData,database)=>{
         return new Promise(async (resolve,reject)=>{
             //Register pending user
             try{
-                const hash = await bcrypt.hash(user.pwd, saltRounds);
-                const userData = {
-                    id:tools.getRandomHexa(16),
-                    name:user.name,
-                    user_pwd:hash,
-                    mail:user.mail,
-                    query_date:Date.now(),
-                    group:user_group,
-                    data:user_appData
+                let genKey;
+                if (!user.pwd || user.pwd =="") {
+                    //Generate a random password
+                    genKey = tools.getRandomPwd(14);
+                    user.pwd = genKey;
                 }
-                await this.db.insertOne("cotiz","credentials",userData);
+                const hash = await bcrypt.hash(user.pwd, saltRounds);
+                let userData = user_appData;
+                userData.id = tools.getRandomHexa(20);
+                userData.name = user.name;
+                userData.user_pwd = hash;
+                userData.mail = user.mail;
+                await this.db.insertOne(database,"credentials",userData);
+                this.logger.success("USER","Registration",`User ${userData.name}/${userData.id} registered sucessfully`);
+                userData.generatedKey = genKey;
                 resolve(userData);
             }catch(error){
                 throw this.logger.buildError(500,"register_error",error);
@@ -156,7 +160,7 @@ class auth{
                         expiresIn:  "12h",
                         algorithm:  "RS256"
                     };
-                    const token = jwt.sign(payload, this.KEY_PRIVATE, logOptions);
+                    const token = jwt.sign(payload, { key: this.KEY_PRIVATE, passphrase: 'xali' }, logOptions);
 
                     //Add the user to the curently active local (nodeJS) database
                     this.authenticatedUsers[db_user.id] = {
@@ -167,7 +171,7 @@ class auth{
                     
                     resolve({id:db_user.id,token:token});
                 }else{
-                    reject(this.logger.buildError(401,"wrong_key","Incorrect password"));
+                    resolve(undefined);
                 }
             }catch(error){
                 throw error;
@@ -202,7 +206,7 @@ class auth{
      * @param {Object} user.id User id
      * @param {String} newPwd New password
      */
-    changePwd = (user,newPwd)=>{
+    changePwd = (user,newPwd,database)=>{
         return new Promise(async(resolve,reject)=>{
             //Register pending user
             const that = this;
@@ -211,7 +215,7 @@ class auth{
                     reject(err);
                 }
                 try{
-                    await that.db.updateOne("cotiz","credentials",{id:user.id},{$set:{user_pwd:hash}});
+                    await that.db.updateOne(database,"credentials",{id:user.id},{$set:{user_pwd:hash}});
                     resolve();
                 }catch(error){
                     reject(error);

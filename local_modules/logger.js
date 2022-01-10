@@ -35,6 +35,11 @@ class logger{
         this.pushLog('E',origin,type,message);
         console.log('\x1b[31m%s\x1b[0m',`[${new Date().toISOString()}] ${this.processName}~[${origin}]@{${type}} -> ${message}`, error);
     }
+    test = (origin,type,message,object)=>{
+        this.pushLog('E',origin,type,message);
+        console.log('\x1b[3m\x1b[90m%s\x1b[0m',`[${new Date().toISOString()}] ${this.processName}~[${origin}]@{${type}} -> ${message}`);
+        if (object) console.log('\x1b[1m\x1b[90m%s\x1b[0m',object);
+    }
     success = (origin,type,message)=>{
         this.pushLog('S',origin,type,message);
         console.log('\x1b[32m%s\x1b[0m',`[${new Date().toISOString()}] ${this.processName}~[${origin}]@{${type}} -> ${message}`);

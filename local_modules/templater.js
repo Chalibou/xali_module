@@ -9,6 +9,7 @@ const fs = require('fs');
 class templater{
     constructor(sourceApp){
         this.logger = sourceApp.logger;
+        this.db = sourceApp.db;
 
         this.templates={};
         this.objectConstructors={};
@@ -136,8 +137,8 @@ class templater{
 
     fillDefaultMail = (template_file,content,lang) =>{
         return new Promise(async (resolve,reject)=>{
-            const mail = await this.fillTemplate("standardMail.html",content,lang);
-            resolve(await this.fillTemplate(template_file,mail,lang));
+            const mail = await this.fillTemplate(template_file,content,lang);
+            resolve(await this.fillTemplate("standardMail.html",{mailContent:mail},lang));
         })
     }
 
@@ -151,6 +152,5 @@ class templater{
             resolve(await this.fillTemplate("standardHTMLPage.html",htmlContent,lang));
         })
     }
-
 }
 module.exports = templater;

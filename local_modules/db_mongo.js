@@ -13,6 +13,8 @@ class db{
         this.url="";
         this.options={};
         this.client = {};
+        this.name;
+        this.allowance;
     } 
 
     /**
@@ -28,7 +30,10 @@ class db{
      * @param {Boolean} test Allows testing on localhost:27017
      */
     connect = (params)=>{
+        this.name = params.name;
         this.options = params.options;
+        this.allowance = params.allowance || {};
+
         if(this.isTest){
             this.url = 'mongodb://localhost:27017';
             this.logger.log("DB","Testing",`Database ${params.name} setup for testing on localhost:27017 without credentials`);
@@ -38,7 +43,7 @@ class db{
         }
         this.logger.log("DB","Connect",`Reaching DB : ${params.name}`);
         mongoClient.connect(this.url,this.options).then(client=>{
-            this.logger.success("DB","Connect",`${params.name} : Ready to listen`);
+            this.logger.success("DB","Connect",`${params.name} database connected and ready`);
             this.client[params.name] = client.db(params.name);
         },
         (error)=>{
@@ -69,10 +74,10 @@ class db{
     insertOne = (name,collection,data)=>{
         return new Promise (async(resolve,reject)=>{
             try{
-                await this.client[name].collection(collection).insertOne(data);
-                resolve();
+                resolve(await this.client[name].collection(collection).insertOne(data));
             }catch(error){
-                throw error
+                this.logger.error("DB","Insertion",error);
+                reject(error);
             }
         })
     }
@@ -115,6 +120,16 @@ class db{
         return new Promise (async(resolve,reject)=>{
             try{
                 resolve(await this.client[name].collection(collection).updateOne(critera,update));
+            }catch(error){
+                throw error
+            }
+        })
+    }
+
+    updateMany = (name,collection,critera,update)=>{
+        return new Promise (async(resolve,reject)=>{
+            try{
+                resolve(await this.client[name].collection(collection).updateMany(critera,update));
             }catch(error){
                 throw error
             }

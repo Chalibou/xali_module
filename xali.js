@@ -11,6 +11,7 @@ const xali_templater = new require("./local_modules/templater.js");
 const xali_mailer = new require("./local_modules/mailer.js");
 const xali_watcher = new require("./local_modules/watcher.js");
 const xali_pdf = new require("./local_modules/pdf.js");
+const xali_post = new require("./local_modules/post.js");
 
 class xali{
     constructor(setup){
@@ -28,6 +29,7 @@ class xali{
         this.mailer = new xali_mailer(this);
         this.pdf = new xali_pdf(this);
         this.watcher = new xali_watcher(this);
+        this.post = new xali_post(this);
 
         /**
          * @todo Check if repository structure is good
@@ -67,7 +69,7 @@ class xali{
         if (setup.limiters) {
             this.watcher.setup(setup.limiters);
         }else{
-            this.logger.log("Watcher","Limiter","No limiters setup for this interface");
+            this.logger.alert("Watcher","Limiter","No limiters setup for this interface");
         }
 
         //Connect to database
@@ -106,16 +108,18 @@ class xali{
             this.logger.error("HTTPS",'Certs',"Certificates path are not defined");
         }
         if(setup.routes.accreditation){
-            this.router.setup("accreditation",setup.routes.accreditation);
-            this.logger.log("ROUTER","Accreditations","Route system engaged");
+            this.router.setupUsers(setup.routes.users);
+            this.router.setupAccreditations(setup.routes.accreditation);
+            this.router.setupAllowance(setup.routes.allowance);
+            this.logger.success("ROUTER","Accreditations","Route system engaged");
             try{
                 //Load post methods
                 const postSource = require(`${process.cwd()}/server/post/${setup.routes.post_name}.js`);
                 const post = new postSource(this);
                 this.router.setPosts(post);
-                this.logger.success("ROUTER","POST",`POST interface ${setup.routes.post_name} ready`);
-            }catch{
-                this.logger.error("ROUTER","POST",`POST file /server/post/${setup.routes.post_name}.js could not be found`);
+                this.logger.log("ROUTER","POST",`POST interface ${setup.routes.post_name} ready`);
+            }catch(err){
+                this.logger.error("ROUTER","POST",`POST file /server/post/${setup.routes.post_name}.js error : ${err}`);
             }
         }else{
             this.logger.error("ROUTER","Setup","Route system is not setup");
@@ -127,9 +131,9 @@ class xali{
                 const routinesSource = require(`${process.cwd()}/server/routines/${setup.routines}.js`);
                 const routines = new routinesSource(this);
                 routines.launchWorks();
-                this.logger.success("Setup","Routines",`Routines ${setup.routines} armed`);
-            }catch{
-                this.logger.error("Setup","Routines",`Routines file /server/routines/${setup.routines}.js could not be found`);
+                this.logger.log("Setup","Routines",`Routines ${setup.routines} armed`);
+            }catch(err){
+                this.logger.error("Setup","Routines",`Routines file /server/routines/${setup.routines}.js error : ${err}`);
             }
         }else{
             this.logger.log("Setup","Routines","No routines programmed for this interface");
@@ -177,7 +181,7 @@ class xali{
                 this.logger.alert("HTTP","Transfer",`Request ${req.url} transfered from HTTP to HTTPS`);
                 res.writeHead(301,{Location: `https://${req.headers.host}${req.url}`});
                 res.end();
-            }).listen(80,()=>{this.logger.success("APP","Redirect",`REDIRECT HTTP=>HTTPS ENGAGED`);})
+            }).listen(80,()=>{this.logger.log("APP","Redirect",`REDIRECT HTTP=>HTTPS ENGAGED`);})
         }
     }
 }
