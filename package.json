@@ -34,7 +34,8 @@
     "nodemailer": "^6.4.11",
     "puppeteer": "^10.2.0",
     "qrcode": "^1.4.4",
-    "ansi-regex":">=5.0.1"
+    "ansi-regex":">=5.0.1",
+	"xml2js": "^0.4.23"
   },
   "deprecated": false,
   "description": "Xali's NodeJS service module",
