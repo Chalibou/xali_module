@@ -29,7 +29,7 @@ class db{
      * @param {String} params.options Options for connexion
      * @param {Boolean} test Allows testing on localhost:27017
      */
-    connect = (params)=>{
+    connect = (params,callback=()=>{})=>{
         this.name = params.name;
         this.options = params.options;
         this.allowance = params.allowance || {};
@@ -45,6 +45,7 @@ class db{
         mongoClient.connect(this.url,this.options).then(client=>{
             this.logger.success("DB","Connect",`${params.name} database connected and ready`);
             this.client[params.name] = client.db(params.name);
+            callback();
         },
         (error)=>{
             this.logger.error("DB","Connect",error);
@@ -120,6 +121,16 @@ class db{
         return new Promise (async(resolve,reject)=>{
             try{
                 resolve(await this.client[name].collection(collection).updateOne(critera,update));
+            }catch(error){
+                throw error
+            }
+        })
+    }
+
+    replaceOne = (name,collection,critera,update)=>{
+        return new Promise (async(resolve,reject)=>{
+            try{
+                resolve(await this.client[name].collection(collection).replaceOne(critera,update));
             }catch(error){
                 throw error
             }

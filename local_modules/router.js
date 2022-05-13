@@ -291,19 +291,39 @@ class router{
             const error = this.logger.buildError(403,"low_accreditation",`Your credentials levels does not allow you to access this section`);
             this.respond(res,JSON.stringify(error),error.code);
     })=>{
-        //Check if file exists
-        if (!this.accreditation[target]) {
+        let folder;
+        if(target.includes("/")){
+            folder = target.substring(0, target.lastIndexOf("/")+1);
+        }else{
+            folder = target;
+        }
+        if (!this.accreditation[folder]) {
             this.logger.alert("ROUTER","Accreditation",`User ${user.id} try to access unknown : ${target}. Denying access.`);
             this.respond(res,`${target} not found`,404);
             return;
         }
         //Check if user has allowance
-        if(this.accreditation[target].includes(user.group)){
-            win_callback();
+        if(this.accreditation[folder].includes(user.group)){
+            //Check and test for folder exemptions
+            if(!this.accreditation[target]){
+                win_callback();
+                return;
+            }else{
+                if(this.accreditation[target].includes(user.group)){
+                    win_callback();
+                    return;
+                }else{
+                    this.logger.alert("ROUTER","Accreditation",`User ${user.id} try to access ${target} without permision. Denying access.`);
+                    fail_callback();
+                    return;
+                }
+            }
         }else{
             this.logger.alert("ROUTER","Accreditation",`User ${user.id} try to access ${target} without permision. Denying access.`);
             fail_callback();
+            return;
         }
+       
     }
     
     /**

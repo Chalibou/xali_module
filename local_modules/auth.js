@@ -115,11 +115,13 @@ class auth{
 
     /**
      * Register a validated user in the database
-     * @param {User_register} user Validated user_register object
-     * @param {*} user_group Accreditation levels
-     * @param {*} user_appData Data to be apped to the registered user
+     * @param {*} user User object
+     * @param {*} user.mail Mail
+     * @param {*} user.pwd Pass
+     * @param {*} user.group User group
+     * @param {*} datbase Database for user creation
      */
-    register = (user,user_appData,database)=>{
+    register = (user,info,database)=>{
         return new Promise(async (resolve,reject)=>{
             //Register pending user
             try{
@@ -130,17 +132,25 @@ class auth{
                     user.pwd = genKey;
                 }
                 const hash = await bcrypt.hash(user.pwd, saltRounds);
-                let userData = user_appData;
-                userData.id = tools.getRandomHexa(20);
-                userData.name = user.name;
-                userData.user_pwd = hash;
-                userData.mail = user.mail;
+                let userData = {
+                    id:tools.getRandomHexa(20),
+                    pwd:hash,
+                    immortal:false,
+                    status:"pending",
+                    registrationTime:Date.now(),
+                    seed:tools.getRandomHexa(25),
+                    name:user.name,
+                    mail:user.mail,
+                    group:user.group,
+                    lang:user.lang,
+                    info:info
+                }
                 await this.db.insertOne(database,"credentials",userData);
-                this.logger.success("USER","Registration",`User ${userData.name}/${userData.id} registered sucessfully`);
+                this.logger.success("USER","Registration",`User ${userData.mail}/${userData.id} registered sucessfully`);
                 userData.generatedKey = genKey;
                 resolve(userData);
             }catch(error){
-                throw this.logger.buildError(500,"register_error",error);
+                reject(error);
             }
         });
     }

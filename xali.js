@@ -72,7 +72,12 @@ class xali{
             this.logger.alert("Watcher","Limiter","No limiters setup for this interface");
         }
 
-        //Connect to database
+        process.on('SIGINT', ()=>{this.logger.exitHandler("ctrlc");});
+        process.on('SIGUSR1', ()=>{this.logger.exitHandler("kill1");});
+        process.on('SIGUSR2', ()=>{this.logger.exitHandler("kill2");});
+        //process.on('uncaughtException', (err)=>{this.logger.exitHandler("Uexept",err);});
+
+        //Connect to main database
         this.db.connect(
             {
                 service:setup.db.connect.service,
@@ -82,67 +87,63 @@ class xali{
                 adress:setup.db.connect.adress,
                 authSource:setup.db.connect.authSource,
                 options:setup.db.connect.options
+            },()=>{
+                //Async setup requiring database access
+                //Mail system
+                if (setup.mail){
+                    this.mailer.setup(setup.mail);
+                }
+                //Setup the router for the application
+                if(setup.routes.defaultRoute){
+                    this.router.setup("defaultRoute",setup.routes.defaultRoute);
+                }
+                if (setup.routes.httpsPath) {
+                    this.router.setup("httpsPath",setup.routes.httpsPath);
+                }else{
+                    this.logger.error("HTTPS",'Certs',"Certificates path are not defined");
+                }
+                //Route system
+                if(setup.routes.accreditation){
+                    this.router.setupUsers(setup.routes.users);
+                    this.router.setupAccreditations(setup.routes.accreditation);
+                    this.router.setupAllowance(setup.routes.allowance);
+                    this.logger.success("ROUTER","Accreditations","Route system engaged");
+                    try{
+                        //Load post methods
+                        const postSource = require(`${process.cwd()}/server/post/${setup.routes.post_name}.js`);
+                        const post = new postSource(this);
+                        this.router.setPosts(post);
+                        this.logger.log("ROUTER","POST",`POST interface ${setup.routes.post_name} ready`);
+                    }catch(err){
+                        this.logger.error("ROUTER","POST",`POST file /server/post/${setup.routes.post_name}.js error : ${err}`);
+                    }
+                }else{
+                    this.logger.error("ROUTER","Setup","Route system is not setup");
+                }
+                
+                //Worker system
+                if (setup.routines) {
+                    try{
+                        const routinesSource = require(`${process.cwd()}/server/routines/${setup.routines}.js`);
+                        const routines = new routinesSource(this);
+                        routines.launchWorks();
+                        this.logger.log("Setup","Routines",`Routines ${setup.routines} armed`);
+                    }catch(err){
+                        this.logger.error("Setup","Routines",`Routines file /server/routines/${setup.routines}.js error : ${err}`);
+                    }
+                }else{
+                    this.logger.log("Setup","Routines","No routines programmed for this interface");
+                }
+                //Setup payments system
+                if(setup.payu){
+                    this.payu.setup(setup.payu);
+                }
+                if(setup.epayco){
+                    this.epayco.setup(setup.epayco);
+                }
+                this.run();
             }
         );
-
-        //Setup payments system
-        if(setup.payu){
-            this.payu.setup(setup.payu);
-        }
-        if(setup.epayco){
-            this.epayco.setup(setup.epayco);
-        }
-
-        //Setup mailer module
-        if (setup.mail){
-            this.mailer.setup(setup.mail);
-        }
-            
-        //Setup the router for the application
-        if(setup.routes.defaultRoute){
-            this.router.setup("defaultRoute",setup.routes.defaultRoute);
-        }
-        if (setup.routes.httpsPath) {
-            this.router.setup("httpsPath",setup.routes.httpsPath);
-        }else{
-            this.logger.error("HTTPS",'Certs',"Certificates path are not defined");
-        }
-        if(setup.routes.accreditation){
-            this.router.setupUsers(setup.routes.users);
-            this.router.setupAccreditations(setup.routes.accreditation);
-            this.router.setupAllowance(setup.routes.allowance);
-            this.logger.success("ROUTER","Accreditations","Route system engaged");
-            try{
-                //Load post methods
-                const postSource = require(`${process.cwd()}/server/post/${setup.routes.post_name}.js`);
-                const post = new postSource(this);
-                this.router.setPosts(post);
-                this.logger.log("ROUTER","POST",`POST interface ${setup.routes.post_name} ready`);
-            }catch(err){
-                this.logger.error("ROUTER","POST",`POST file /server/post/${setup.routes.post_name}.js error : ${err}`);
-            }
-        }else{
-            this.logger.error("ROUTER","Setup","Route system is not setup");
-        }
-
-        //Load routines
-        if (setup.routines) {
-            try{
-                const routinesSource = require(`${process.cwd()}/server/routines/${setup.routines}.js`);
-                const routines = new routinesSource(this);
-                routines.launchWorks();
-                this.logger.log("Setup","Routines",`Routines ${setup.routines} armed`);
-            }catch(err){
-                this.logger.error("Setup","Routines",`Routines file /server/routines/${setup.routines}.js error : ${err}`);
-            }
-        }else{
-            this.logger.log("Setup","Routines","No routines programmed for this interface");
-        }
-
-        process.on('SIGINT', ()=>{this.logger.exitHandler("ctrlc");});
-        process.on('SIGUSR1', ()=>{this.logger.exitHandler("kill1");});
-        process.on('SIGUSR2', ()=>{this.logger.exitHandler("kill2");});
-        //process.on('uncaughtException', (err)=>{this.logger.exitHandler("Uexept",err);});
     }
 
     /**
